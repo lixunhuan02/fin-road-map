@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b1120">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="交易专家全域知识地图 — 股票·债券·期货·大宗商品四维全品类交易知识体系">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<title>交易专家全域知识地图</title>
+<style>
+/* ==================== CSS变量 & 主题 ==================== */
+:root {
+  --st: env(safe-area-inset-top, 0px);
+  --sb: env(safe-area-inset-bottom, 0px);
+  --status-h: 44px;
+  --nav-h: 48px;
+  --prog-h: 3px;
+  --bottom-h: 48px;
+  --z-nav: 100;
+  --z-overlay: 200;
+  --z-sidebar: 150;
+  --z-settings: 300;
+  --sidebar-w: 300px;
+  --font-base: 15px;
+  --font-scale: 1;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+
+  /* 深色模式（默认） */
+  --bg-primary: #0b1120;
+  --bg-secondary: #131c31;
+  --bg-tertiary: #1a2744;
+  --bg-card: #131c31;
+  --bg-hover: #1e3050;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #1e3050;
+  --border-light: #1a2744;
+  --accent-gold: #f59e0b;
+  --accent-gold-light: #fbbf24;
+  --accent-gold-dim: #b45309;
+  --accent-red: #ef4444;
+  --accent-red-bg: rgba(239,68,68,0.12);
+  --accent-green: #22c55e;
+  --accent-green-bg: rgba(34,197,94,0.12);
+  --highlight-blue: #60a5fa;
+  --highlight-blue-bg: rgba(96,165,250,0.12);
+  --highlight-red: #f87171;
+  --highlight-orange: #fb923c;
+  --highlight-orange-bg: rgba(251,146,60,0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-tertiary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-hover: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --accent-gold: #d97706;
+  --accent-gold-dim: #b45309;
+  --accent-red: #dc2626;
+  --accent-red-bg: rgba(220,38,38,0.08);
+  --accent-green: #16a34a;
+  --accent-green-bg: rgba(22,163,74,0.08);
+  --highlight-blue: #2563eb;
+  --highlight-blue-bg: rgba(37,99,235,0.08);
+  --highlight-orange: #ea580c;
+  --highlight-orange-bg: rgba(234,88,12,0.1);
+  --highlight-red: #dc2626;
+}
+
+[data-font="small"] { --font-scale: 0.875; }
+[data-font="medium"] { --font-scale: 1; }
+[data-font="large"] { --font-scale: 1.125; }
+
+/* ==================== 全局重置 ==================== */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  font-size: calc(var(--font-base) * var(--font-scale));
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+a { color: var(--accent-gold); text-decoration: none; }
+::selection { background: var(--accent-gold); color: #0b1120; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 2px; }
+
+/* ==================== 顶部导航栏 ==================== */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  padding-top: calc(var(--status-h) + var(--st));
+  height: calc(var(--status-h) + var(--st) + var(--nav-h));
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex; align-items: flex-end;
+  padding-left: 8px; padding-right: 8px;
+  padding-bottom: 4px;
+  z-index: var(--z-nav);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.nav-inner {
+  display: flex; align-items: center;
+  width: 100%; height: var(--nav-h);
+  gap: 4px;
+}
+.nav-logo {
+  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+.nav-logo small {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  letter-spacing: 0.8px;
+  margin-left: 4px;
+}
+.nav-tabs-wrap {
+  flex: 1;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  display: flex;
+  gap: 2px;
+  padding: 0 2px;
+}
+.nav-tabs-wrap::-webkit-scrollbar { display: none; }
+.nav-tab {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+.nav-tab:active { transform: scale(0.95); }
+.nav-tab.active {
+  color: var(--accent-gold);
+  background: var(--highlight-orange-bg);
+}
+.nav-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.nav-btn {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+  font-size: 1.1rem;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.nav-btn:active { background: var(--bg-hover); transform: scale(0.92); }
+
+/* ==================== 全局进度条 ==================== */
+.global-progress-bar {
+  position: fixed;
+  top: calc(var(--status-h) + var(--st) + var(--nav-h));
+  left: 0; right: 0;
+  height: var(--prog-h);
+  background: var(--bg-tertiary);
+  z-index: calc(var(--z-nav) - 1);
+}
+.global-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+  transition: width var(--transition-slow);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ==================== 主布局 ==================== */
+.main-wrap {
+  padding-top: calc(var(--status-h) + var(--st) + var(--nav-h) + var(--prog-h));
+  padding-bottom: calc(var(--bottom-h) + var(--sb));
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* ==================== 左侧覆盖式目录 ==================== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  max-width: 85vw;
+  background: var(--bg-secondary);
+  z-index: var(--z-sidebar);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--status-h) + var(--st));
+}
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-header {
+  padding: 12px 16px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.sidebar-header .title {
+  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+}
+.sidebar-header .pct {
+  font-size: 0.75rem;
+  color: var(--accent-gold-light);
+  font-weight: 600;
+}
+.sidebar-close {
+  width: 36px; height: 36px;
+  border: none; background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 目录树 */
+.tree-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 0; }
+.tree-item { }
+.tree-hd {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  user-select: none;
+  min-height: 40px;
+}
+.tree-hd:active { background: var(--bg-hover); }
+.tree-hd.active { background: var(--highlight-blue-bg); border-left: 3px solid var(--highlight-blue); }
+.tree-arrow {
+  width: 16px; text-align: center;
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+.tree-arrow.open { transform: rotate(90deg); }
+.tree-cb {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  color: transparent;
+}
+.tree-cb.checked {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: #0b1120;
+}
+.tree-lbl {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.3;
+}
+.tree-hd.lv1 .tree-lbl { font-weight: 600; font-size: 0.88rem; }
+.tree-hd.lv2 .tree-lbl { font-weight: 500; }
+.tree-hd.lv3 .tree-lbl { font-size: 0.78rem; color: var(--text-secondary); }
+.tree-hd.lv3.active .tree-lbl { color: var(--text-primary); }
+.tree-child { overflow: hidden; max-height: 0; transition: max-height var(--transition-normal); }
+.tree-child.open { max-height: 2000px; }
+
+/* ==================== 主阅读区 ==================== */
+.content-area {
+  padding: 12px 14px 4px;
+  max-width: 100%;
+}
+.content-area.no-module {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: calc(100vh - var(--status-h) - var(--st) - var(--nav-h) - var(--prog-h) - var(--bottom-h) - var(--sb) - 120px);
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* ==================== 内容卡片 ==================== */
+.content-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px 18px;
+  margin-bottom: 14px;
+  animation: fadeUp 0.3s ease both;
+}
+.content-card.s1 { animation-delay: 0s; }
+.content-card.s2 { animation-delay: 0.06s; }
+.content-card.s3 { animation-delay: 0.12s; }
+.content-card.s4 { animation-delay: 0.18s; }
+.content-card.s5 { animation-delay: 0.24s; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 模块徽标 & 标题 */
+.module-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: var(--accent-gold);
+  color: #0b1120;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+.module-title {
+  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+/* 章节标题 */
+.section-title {
+  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: var(--accent-gold);
+  margin: 16px 0 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+.section-title .num { color: var(--text-muted); margin-right: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+.subsection-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 12px 0 6px;
+}
+.subsection-title .tag {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.tag-blue { background: var(--highlight-blue-bg); color: var(--highlight-blue); }
+.tag-orange { background: var(--highlight-orange-bg); color: var(--highlight-orange); }
+.tag-red { color: var(--highlight-red); }
+.tag-gold { background: var(--highlight-orange-bg); color: var(--accent-gold); }
+
+/* 正文 & 列表 */
+.content-card p { font-size: 0.88rem; line-height: 1.75; color: var(--text-primary); margin-bottom: 8px; }
+.content-card ul, .content-card ol { padding-left: 18px; margin-bottom: 8px; }
+.content-card li { font-size: 0.88rem; line-height: 1.7; color: var(--text-primary); margin-bottom: 4px; }
+
+/* ==================== 三层高亮系统 ==================== */
+.hl-principle { background: var(--highlight-blue-bg); padding: 0 4px; border-radius: 3px; color: var(--highlight-blue); font-weight: 500; }
+.hl-formula { color: var(--highlight-red); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.hl-signal { background: var(--highlight-orange-bg); padding: 2px 6px; border-radius: 4px; color: var(--highlight-orange); font-weight: 700; }
+.hl-bold { font-weight: 700; color: var(--text-primary); }
+
+/* ==================== 术语悬浮注释 ==================== */
+.term {
+  color: var(--accent-gold);
+  border-bottom: 1px dashed var(--accent-gold-dim);
+  position: relative;
+  cursor: help;
+}
+.term:hover::after, .term:active::after {
+  content: attr(data-desc);
+  position: fixed;
+  bottom: calc(var(--sb) + 50px);
+  left: 12px; right: 12px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  border: 1px solid var(--border-color);
+  font-weight: 400;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ==================== 对比表格 ==================== */
+.table-wrap { overflow-x: auto; margin: 10px 0; border-radius: var(--radius-sm); border: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; }
+.table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 480px; }
+.table-wrap th, .table-wrap td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+.table-wrap th { background: var(--bg-secondary); font-weight: 600; color: var(--accent-gold); font-size: 0.72rem; letter-spacing: 0.3px; white-space: nowrap; }
+.table-wrap td { color: var(--text-primary); }
+.table-wrap tr:last-child td { border-bottom: none; }
+.table-wrap tr:active td { background: var(--bg-hover); }
+
+/* ==================== 流程图 ==================== */
+.flow-chart {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 6px; padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+  border: 1px solid var(--border-color);
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.76rem;
+  text-align: center;
+  min-width: 50px;
+  color: var(--text-primary);
+}
+.flow-node.blue { border-color: var(--highlight-blue); background: var(--highlight-blue-bg); }
+.flow-node.gold { border-color: var(--accent-gold); background: var(--highlight-orange-bg); }
+.flow-node.red { border-color: var(--accent-red); background: var(--accent-red-bg); }
+.flow-node.green { border-color: var(--accent-green); background: var(--accent-green-bg); }
+.flow-node.orange { border-color: var(--highlight-orange); background: var(--highlight-orange-bg); }
+.flow-arrow { color: var(--text-muted); font-size: 0.75rem; flex-shrink: 0; }
+.flow-label { width: 100%; font-size: 0.65rem; color: var(--text-muted); text-align: center; padding: 4px 0 0; }
+
+/* ==================== 代码块 ==================== */
+.code-block {
+  background: #080e1a;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin: 10px 0;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  -webkit-overflow-scrolling: touch;
+}
+.code-block .keyword { color: #c084fc; }
+.code-block .number { color: #f59e0b; }
+.code-block .string { color: #22c55e; }
+.code-block .comment { color: #64748b; font-style: italic; }
+.code-block .func { color: #60a5fa; }
+.code-block .err { color: var(--accent-red); }
+
+/* ==================== 实战规则卡片 ==================== */
+.rule-card {
+  background: var(--highlight-orange-bg);
+  border-left: 4px solid var(--highlight-orange);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+.rule-card .rule-title { font-weight: 700; color: var(--highlight-orange); font-size: 0.85rem; margin-bottom: 6px; }
+.rule-card ul { list-style: none; padding-left: 0 !important; }
+.rule-card li { padding: 3px 0; font-size: 0.83rem; color: var(--text-primary); }
+.rule-card li::before { content: '▸ '; color: var(--highlight-orange); font-weight: 700; }
+
+/* ==================== 缺陷/警告框 ==================== */
+.warning-box {
+  background: var(--accent-red-bg);
+  border-left: 4px solid var(--accent-red);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+.warning-box .warn-title { font-weight: 700; color: var(--accent-red); font-size: 0.82rem; margin-bottom: 4px; }
+.warning-box ul { list-style: none; padding-left: 0 !important; }
+.warning-box li { padding: 2px 0; font-size: 0.82rem; color: var(--text-primary); }
+.warning-box li::before { content: '⚠ '; }
+
+/* ==================== 信息框 ==================== */
+.info-box {
+  background: var(--highlight-blue-bg);
+  border-left: 4px solid var(--highlight-blue);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+.info-box .info-title { font-weight: 700; color: var(--highlight-blue); font-size: 0.82rem; margin-bottom: 4px; }
+.info-box p { font-size: 0.82rem !important; margin-bottom: 0 !important; }
+
+/* ==================== 核心重点 ==================== */
+.core-points {
+  background: linear-gradient(135deg, var(--highlight-blue-bg), var(--bg-card));
+  border: 1px solid var(--highlight-blue);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin: 10px 0;
+}
+.core-points .cp-title { font-weight: 700; color: var(--highlight-blue); font-size: 0.85rem; margin-bottom: 6px; }
+.core-points ul { list-style: none; padding-left: 0 !important; }
+.core-points li { padding: 2px 0; font-size: 0.82rem; color: var(--text-primary); }
+.core-points li .tag { font-size: 0.6rem; padding: 1px 6px; border-radius: 3px; margin-right: 4px; }
+.core-points li .tag.must { background: var(--accent-red-bg); color: var(--accent-red); }
+.core-points li .tag.understand { background: var(--highlight-blue-bg); color: var(--highlight-blue); }
+
+/* ==================== 底部状态栏 ==================== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding-bottom: var(--sb);
+  height: calc(var(--bottom-h) + var(--sb));
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  z-index: var(--z-nav);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.bottom-inner {
+  display: flex; align-items: center;
+  height: var(--bottom-h);
+  padding: 0 10px;
+  gap: 8px;
+}
+.bottom-info {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex: 1;
+  overflow: hidden;
+}
+.bottom-info strong { color: var(--accent-gold); }
+.bottom-info .sep { color: var(--text-muted); margin: 0 3px; }
+.bottom-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.bottom-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  display: flex; align-items: center; gap: 3px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.bottom-btn:active { background: var(--bg-hover); transform: scale(0.95); }
+.bottom-btn.danger:active { border-color: var(--accent-red); color: var(--accent-red); }
+
+/* ==================== 设置抽屉 ==================== */
+.settings-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: var(--z-settings);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.settings-overlay.open { opacity: 1; pointer-events: auto; }
+.settings-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  background: var(--bg-secondary);
+  z-index: calc(var(--z-settings) + 1);
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--status-h) + var(--st));
+}
+.settings-drawer.open { transform: translateX(0); }
+.settings-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.settings-header h3 { font-family: 'DM Serif Display', 'Noto Serif SC', serif; font-size: 0.95rem; color: var(--accent-gold); }
+.settings-close {
+  width: 36px; height: 36px;
+  border: none; background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer; font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.settings-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px; }
+.setting-group { margin-bottom: 20px; }
+.setting-group-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+.setting-row .lbl { font-size: 0.82rem; color: var(--text-primary); }
+.setting-row .desc { font-size: 0.68rem; color: var(--text-muted); margin-top: 1px; }
+
+.btn-group { display: flex; gap: 4px; }
+.opt-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn:active { background: var(--bg-hover); }
+.opt-btn.active { background: var(--accent-gold); color: #0b1120; border-color: var(--accent-gold); }
+
+.progress-stats { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 10px; }
+.progress-stats .val { color: var(--accent-gold); font-weight: 600; }
+
+.reset-btns { display: flex; flex-direction: column; gap: 6px; }
+.reset-btn {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.reset-btn.danger { background: var(--accent-red-bg); color: var(--accent-red); border-color: var(--accent-red); }
+.reset-btn.danger:active { background: var(--accent-red); color: #fff; }
+.reset-btn.ghost { background: transparent; color: var(--text-muted); }
+.reset-btn.ghost:active { background: var(--accent-red-bg); color: var(--accent-red); border-color: var(--accent-red); }
+
+/* ==================== 空状态 ==================== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty-state .txt { font-size: 0.85rem; line-height: 1.6; }
+
+/* ==================== 建设中占位 ==================== */
+.placeholder-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+/* ==================== 可折叠详细内容 ==================== */
+.collapse-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  margin: 6px 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.collapse-toggle:active { background: var(--highlight-orange-bg); }
+.collapse-body { display: none; margin-top: 6px; }
+.collapse-body.open { display: block; }
+
+/* ==================== 浅色模式覆盖 ==================== */
+[data-theme="light"] .code-block { background: #f1f5f9; color: #334155; }
+[data-theme="light"] .code-block .comment { color: #94a3b8; }
+[data-theme="light"] .code-block .keyword { color: #7c3aed; }
+[data-theme="light"] .code-block .number { color: #d97706; }
+[data-theme="light"] .code-block .string { color: #16a34a; }
+[data-theme="light"] .code-block .func { color: #2563eb; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 顶部导航栏 ==================== -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="nav-logo">交易专家<small>KNOWLEDGE MAP</small></div>
+    <div class="nav-tabs-wrap" id="assetTabs">
+      <button class="nav-tab active" data-asset="stocks">股票</button>
+      <button class="nav-tab" data-asset="bonds">债券</button>
+      <button class="nav-tab" data-asset="futures">期货</button>
+      <button class="nav-tab" data-asset="commodities">大宗商品</button>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" id="menuBtn" title="目录">☰</button>
+      <button class="nav-btn" id="settingsBtn" title="设置">⚙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== 全局进度条 ==================== -->
+<div class="global-progress-bar">
+  <div class="global-progress-fill" id="globalProgressFill" style="width:0%"></div>
+</div>
+
+<!-- ==================== 左侧覆盖式目录 ==================== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="title">知识地图</span>
+    <span class="pct" id="sidebarPct">0%</span>
+    <button class="sidebar-close" id="sidebarClose">✕</button>
+  </div>
+  <div class="tree-wrap" id="treeContainer"></div>
+</aside>
+
+<!-- ==================== 主阅读区 ==================== -->
+<div class="main-wrap">
+  <main class="content-area" id="contentArea">
+    <div id="contentContainer"></div>
+  </main>
+</div>
+
+<!-- ==================== 底部状态栏 ==================== -->
+<div class="bottom-bar">
+  <div class="bottom-inner">
+    <div class="bottom-info" id="bottomInfo">
+      全局: <strong id="bottomGlobalPct">0%</strong>
+      <span class="sep">|</span>
+      <span id="bottomAssetLabel">股票</span>: <strong id="bottomAssetPct" style="color:var(--accent-gold)">0%</strong>
+    </div>
+    <div class="bottom-actions">
+      <button class="bottom-btn" id="resetProgressBtn">↺ 重置进度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 设置面板 ==================== -->
+<div class="settings-overlay" id="settingsOverlay"></div>
+<div class="settings-drawer" id="settingsDrawer">
+  <div class="settings-header">
+    <h3>设置</h3>
+    <button class="settings-close" id="settingsClose">✕</button>
+  </div>
+  <div class="settings-body">
+    <div class="setting-group">
+      <div class="setting-group-label">主题</div>
+      <div class="btn-group" id="themeGroup">
+        <button class="opt-btn" data-theme="dark">深色</button>
+        <button class="opt-btn" data-theme="light">浅色</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-group-label">字体大小</div>
+      <div class="btn-group" id="fontGroup">
+        <button class="opt-btn" data-font="small">小</button>
+        <button class="opt-btn active" data-font="medium">中</button>
+        <button class="opt-btn" data-font="large">大</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-group-label">学习进度</div>
+      <div class="progress-stats" id="settingsProgress">
+        <div>全局总进度: <span class="val" id="stgGlobal">0%</span></div>
+        <div>股票: <span class="val" id="stgStocks">0%</span></div>
+        <div>债券: <span class="val" id="stgBonds">0%</span></div>
+        <div>期货: <span class="val" id="stgFutures">0%</span></div>
+        <div>大宗商品: <span class="val" id="stgCommodities">0%</span></div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-group-label">重置</div>
+      <div class="reset-btns">
+        <button class="reset-btn danger" id="resetProgressOnly">↺ 仅重置学习进度</button>
+        <button class="reset-btn ghost" id="resetAll">⚠ 全部设置重置</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// 知识内容数据结构
+// ================================================================
+const ASSET_KEYS = ['stocks','bonds','futures','commodities'];
+const ASSET_NAMES = { stocks:'股票', bonds:'债券', futures:'期货', commodities:'大宗商品' };
+const DIM_KEYS = ['fundamental','technical','resonance'];
+const DIM_NAMES = { fundamental:'基本面分析', technical:'技术分析', resonance:'宏观+技术共振分析' };
+
+// 占位内容模板：提醒用户该模块内容建设中
+function placeholderContent(dimName, moduleTitle) {
+  return `<div class="content-card s1" style="text-align:center;padding:40px 20px">
+    <div style="font-size:2.5rem;margin-bottom:12px">📖</div>
+    <div style="font-size:1rem;color:var(--text-primary);font-weight:600;margin-bottom:8px">${dimName} · ${moduleTitle}</div>
+    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">内容建设中，敬请期待<br>完整内容将涵盖核心名词释义、量化指标体系、行情复盘、实战规则等全套知识</div>
+  </div>`;
+}
+
+// ================================================================
+// 知识数据 - 完整内容
+// ================================================================
+const knowledgeData = {
+  stocks: {
+    name: '股票',
+    color: '#f59e0b',
+    dimensions: {
+      fundamental: {
+        name: '基本面分析',
+        modules: [
+          { id:'stock_fund_1', title:'模块1：DCF估值模型',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> DCF模型的核心公式、两阶段折现法的完整演算</li>
+<li><span class="tag must">必学</span> 终值计算与加权平均资本成本（WACC）的含义</li>
+<li><span class="tag must">必学</span> 自由现金流（FCF）与经营性现金流的区别</li>
+<li><span class="tag understand">了解</span> 终值对估值的敏感性分析（g每±1%估值变动±30%）</li>
+<li><span class="tag understand">了解</span> DCF的四大先天缺陷与改良方案</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>DCF估值不是"精确值"，而是价格区间，误差±20%属于正常范围</li>
+<li>永续增长率g绝不能超过GDP长期增速（中国约4%，美国约2.5%）</li>
+<li>终值通常占DCF估值的60-80%，终端假设微调即可大幅改变结论</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 什么是DCF估值模型？</h4>
+<p><strong class="hl-principle">DCF（Discounted Cash Flow，现金流折现模型）</strong>是一种将企业未来所有预期现金流，按照合适的折现率折算回今天现值的估值方法。核心逻辑非常简单：<span class="hl-formula">一家企业的价值 = 它未来能产生的所有现金，在今天值多少钱</span>。</p>
+<p>类比理解：假设你的朋友承诺"明年此时还你110元"，如果当前一年期存款利率是10%，那么他今天向你借<span class="hl-bold">100元</span>就是公平的——因为100元存银行一年后正好变成110元。DCF做的就是这件事：把未来的现金流"打折"算回今天。</p>
+
+<h4 class="subsection-title">1.2 核心要素拆解</h4>
+<div class="table-wrap"><table>
+<tr><th>要素</th><th>符号</th><th>含义</th><th>通俗类比</th></tr>
+<tr><td>自由现金流</td><td>FCF</td><td>企业经营活动产生的、扣除必要资本开支后，可自由分配给股东和债权人的现金</td><td>你每月工资扣掉房租水电后"真正可自由支配"的钱</td></tr>
+<tr><td>折现率</td><td>r / WACC</td><td>将未来现金流折算为现值的"折扣率"，反映资金的时间价值和风险补偿</td><td>通货膨胀+风险溢价——现在的100元比未来的100元更值钱</td></tr>
+<tr><td>终值</td><td>TV</td><td>预测期之后企业持续经营产生的全部价值</td><td>你的"退休金账户"——可预测的几年之后，剩余职业生涯的总价值</td></tr>
+<tr><td>永续增长率</td><td>g</td><td>企业进入稳定期后的长期年均增长率</td><td>成熟企业像麦当劳，每年同店销售增长约2-3%</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 底层运算逻辑</h4>
+<p><span class="hl-formula">Enterprise Value = Σ[FCFₜ / (1+r)ᵗ] + TV / (1+r)ⁿ</span></p>
+<p>其中：t = 第t年，n = 预测期总年数，TV = 终值</p>
+<p><span class="hl-formula">TV = FCFₙ × (1+g) / (r-g)</span></p>
+<p>WACC（加权平均资本成本）的计算公式：<span class="hl-formula">WACC = E/(E+D) × rₑ + D/(E+D) × r_d × (1-T)</span></p>
+<p>其中：E=股权市值，D=债务市值，rₑ=股权成本（通常用CAPM模型：rₑ = r_f + β × (r_m - r_f)），r_d=债务成本，T=税率</p>
+
+<h4 class="subsection-title">完整演算案例</h4>
+<div class="code-block">
+<span class="comment">// 某科技公司DCF估值演算</span>
+<span class="comment">// 假设条件：WACC=10%，预测期5年，永续增长率g=3%</span>
+
+<span class="comment">// 第1-5年自由现金流预测（亿元）</span>
+FCF₁ = 1.0     PV(FCF₁) = 1.0 / 1.10¹    = 0.909
+FCF₂ = 1.2     PV(FCF₂) = 1.2 / 1.10²    = 0.992
+FCF₃ = 1.4     PV(FCF₃) = 1.4 / 1.10³    = 1.052
+FCF₄ = 1.6     PV(FCF₄) = 1.6 / 1.10⁴    = 1.093
+FCF₅ = 1.8     PV(FCF₅) = 1.8 / 1.10⁵    = 1.118
+
+<span class="comment">// 终值计算（永续增长模型）</span>
+TV  = 1.8 × (1+0.03) / (0.10 - 0.03) = 26.49亿
+PV(TV) = 26.49 / 1.10⁵ = 16.45亿
+
+<span class="comment">// 企业价值</span>
+EV = 0.909 + 0.992 + 1.052 + 1.093 + 1.118 + 16.45
+   = <span class="number">21.61亿</span>
+
+<span class="comment">// 敏感性分析：g每变化1%的影响</span>
+g=2% → TV = 1.8×1.02/(0.10-0.02) = 22.95 → EV = 21.05
+<span class="err">g=4% → TV = 1.8×1.04/(0.10-0.04) = 31.20 → EV = 28.76（误差+33%）</span>
+</div>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 理论起源</h4>
+<p>DCF模型的理论基础来源于<span class="hl-principle">Irving Fisher (1930)</span>的利息理论，以及<span class="hl-principle">John Burr Williams (1938)</span>在《投资价值理论》中系统阐述的"股息折现模型"（DDM）。1960年代，Merton Miller和Franco Modigliani在《股息政策、增长与股票估值》一文中将DCF正式确立为企业估值的标准化框架（来源：Modigliani & Miller, American Economic Review, 1961）。</p>
+
+<h4 class="subsection-title">2.2 适用边界</h4>
+<p><strong class="hl-bold">适用场景：</strong></p>
+<ul>
+<li>现金流稳定可预测的企业（消费、公用事业、基础设施）</li>
+<li>资本结构稳定的成熟企业</li>
+<li>长期持股的价值投资者（投资期限≥3年）</li>
+</ul>
+<p><strong class="hl-bold">不适用场景：</strong></p>
+<ul>
+<li>亏损期企业（无正FCF，如早期生物科技公司）</li>
+<li>高波动周期股（FCF剧烈波动，预测无意义）</li>
+<li>金融行业（银行/保险的FCF定义与实体企业完全不同）</li>
+<li>初创企业（没有历史数据支撑假设）</li>
+</ul>
+
+<h4 class="subsection-title">2.3 先天短板</h4>
+<div class="warning-box">
+<div class="warn-title">⚠ DCF四大先天缺陷</div>
+<ul>
+<li><strong>1. 终值占比过高：</strong>典型DCF中终值占企业总价值的60-80%，而终值估算依赖于g和r两个极度主观的参数。g每±1%，估值变化±30%（中信证券量化研究，2023）</li>
+<li><strong>2. 假设高度敏感：</strong>WACC中β系数取值、市场风险溢价、永续增长率等5个核心参数的主观倾向可使估值产生3倍以上的差异</li>
+<li><strong>3. 无法处理不确定性：</strong>DCF是一个"确定折现"模型，无法量化地应对不确定性。蒙特卡洛模拟可以部分解决，但增加了复杂性</li>
+<li><strong>4. 忽略资本结构动态：</strong>标准DCF假设WACC固定不变，但现实中企业资本结构随生命周期动态变化</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">③</span> 全套量化指标体系</h3>
+
+<h4 class="subsection-title">3.1 DCF输入参数阈值标准</h4>
+<div class="table-wrap"><table>
+<tr><th>参数</th><th>合理区间</th><th>来源</th></tr>
+<tr><td>WACC（大市值）</td><td>7%-10%</td><td>沪深300成份股WACC中位数8.2%（Wind，2023）</td></tr>
+<tr><td>WACC（小市值）</td><td>10%-15%</td><td>中证500成份股WACC中位数11.5%（Wind，2023）</td></tr>
+<tr><td>永续增长率g（A股）</td><td>2%-4%</td><td>不超过名义GDP增速（中国约4-5%）</td></tr>
+<tr><td>永续增长率g（美股）</td><td>1.5%-3%</td><td>美国长期GDP增速约2-3%</td></tr>
+<tr><td>预测期长度</td><td>5-10年</td><td>超过10年的FCF预测误差过大，无实际参考意义</td></tr>
+</table></div>
+
+<h4 class="subsection-title">3.2 DCF的机构改良版本</h4>
+<div class="table-wrap"><table>
+<tr><th>改良方案</th><th>机构</th><th>改进点</th></tr>
+<tr><td>两阶段DCF</td><td>高盛</td><td>高速增长期+稳定期两段折现，适用成长期企业</td></tr>
+<tr><td>三阶段DCF</td><td>摩根士丹利</td><td>高速增长→过渡→稳定三段，适用生命周期中期的企业</td></tr>
+<tr><td>调整现值法(APV)</td><td>瑞银</td><td>将DCF拆为"全权益融资下的价值"+税盾价值，更透明地处理资本结构影响</td></tr>
+<tr><td>FCF Yield修正</td><td>中信证券</td><td>用FCF/企业价值(EV)替代PE，消除折旧摊销差异，拐点判断准确率从58%提升至72%</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">④</span> 全行情场景拆解</h3>
+<div class="table-wrap"><table>
+<tr><th>行情场景</th><th>DCF有效性</th><th>调整建议</th></tr>
+<tr><td>低利率牛市</td><td>有效（低WACC推高DCF估值）</td><td>DCF给的高估值为合理参考，可适当提升目标价</td></tr>
+<tr><td>加息熊市</td><td>部分失效（高折现率压低DCF估值）</td><td>DCF会低估底部，应结合PB/股息率判断</td></tr>
+<tr><td>流动性驱动行情</td><td>完全失效</td><td>2015年A股杠杆牛市，DCF严重低估涨幅。应改用资金流向分析</td></tr>
+<tr><td>危机暴跌</td><td>短暂失效</td><td>2020年3月新冠暴跌时DCF仍指向合理估值，但市场恐慌严重低估。危机时DCF可作为"价值锚"</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">⑤</span> 行情传导完整链路</h3>
+<div class="flow-chart">
+  <div class="flow-node blue">宏观利率↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">WACC↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node gold">DCF估值↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node green">目标价上调</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node orange">机构买入↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">股价上涨</div>
+  <div class="flow-label">传导周期：2-6个月（来源：中金公司2023年策略报告）</div>
+</div>
+<p><strong class="hl-bold">阻断机制：</strong>2015年A股杠杆牛市期间，尽管降息降准推低WACC，但股价涨幅（上证+150%，2014.7-2015.6）远超DCF估值提升幅度——因资金驱动（融资余额从7000亿暴增至2.27万亿）完全替代了基本面定价逻辑。</p>
+
+<h3 class="section-title"><span class="num">⑥</span> 双向真实行情复盘</h3>
+
+<h4 class="subsection-title">案例一：贵州茅台DCF复盘（2018-2021）</h4>
+<p><strong class="hl-bold">时间线：</strong>2018年10月（PE 22x，股价约500元）→ 2021年2月（PE 73x，股价约2600元）</p>
+<p><strong class="hl-bold">DCF运行逻辑：</strong>2018年茅台的DCF估值约为800-1000元（基于15%增速、WACC 9%、g 3%）。当时股价500元相较于DCF估值有<span class="hl-formula">折扣率约40-50%</span>——正是格雷厄姆所说的"安全边际"。</p>
+<p><strong class="hl-bold">驱动因素：</strong>2019-2020年央行连续降准降息（1年期LPR从4.35%降至3.85%），WACC下降至约7.5%，重新估算后DCF估值提升至约1200-1500元。叠加北向资金持续净买入，最终股价冲至2600元，远超DCF合理估值区间——市场进入<span class="hl-signal">情绪溢价阶段</span>。</p>
+<p><strong class="hl-bold">启示：</strong>DCF在低估区间（折扣率40%+）提供了极好的买入信号，但在高估区间（溢价50%+）无法判断泡沫何时破裂——需要技术面（MACD顶背离）和情绪面（融资买入占比超10%）辅助。</p>
+
+<h4 class="subsection-title">案例二：美股科技股DCF在2022年加息的失效</h4>
+<p><strong class="hl-bold">时间线：</strong>2022年1月→2022年10月，纳斯达克指数跌33%</p>
+<p><strong class="hl-bold">DCF失效原因：</strong>美联储加息从0-0.25%到4.25%，高成长科技股的WACC从8%升至14%+。DCF模型显示这些企业估值在"合理区间内波动"，但实际股价跌幅远超DCF预期的修正幅度，因为DCF无法量化流动性收缩对估值的瞬时冲击。</p>
+<p><strong class="hl-bold">关键教训：</strong><span class="hl-formula">DCF在利率快速变化的环境下对成长股的估值严重滞后</span>——2022年1月按照原WACC计算的DCF估值仍显示合理，但下跌过程中WACC快速上升，DCF目标价"追着市场跑"。</p>
+
+<h3 class="section-title"><span class="num">⑦</span> 实战可直接落地交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 DCF实盘应用标准流程</div>
+<ul>
+<li><span class="hl-signal">入场信号：</span>当前股价低于DCF估值底部区间（即合理估值±20%的下沿）30%以上，形成安全边际</li>
+<li><span class="hl-signal">加仓信号：</span>每多出10%的折扣率，视为安全边际进一步扩大，可加仓</li>
+<li><span class="hl-signal">离场信号：</span>股价超过DCF估值顶部区间（上沿）20%以上，进入情绪溢价区，分批减仓</li>
+<li><span class="hl-signal">硬性止损：</span>若DCF估值因基本面恶化（如FCF连续2年低于预期30%+）而下调，则无条件减仓</li>
+<li><strong>持仓周期：</strong>DCF策略的持仓周期通常为2-5年，不适合短线交易</li>
+<li><strong>再平衡：</strong>每半年重新检视DCF假设参数，根据最新财报调整FCF预测</li>
+</ul>
+</div>
+<div class="rule-card">
+<div class="rule-title">⚠ 仓位与风控</div>
+<ul>
+<li><strong>上限：</strong>单一DCF策略持仓不超过总资金的30%</li>
+<li><strong>分散：</strong>使用DCF选出的仓位应分散到3-5个不同行业</li>
+<li><strong>交叉验证：</strong>DCF必须与相对估值法（PE/PB百分位）交叉验证，两个方法同时指向低估再入场</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑧</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「DCF估值就是精确价格」</strong> — 实际上DCF最多给出一个宽幅区间（±20%误差），精确到小数点的DCF估值是伪精确。DCF的目的是判断"贵不贵"而非"值多少钱"。</li>
+<li><strong>误区2：「永续增长率越高越好」</strong> — 设置g=6%以上的永续增长会让DCF估值天文数字般膨胀。全球没有任何一家企业能永远以6%增长。合理上限：中国≤4%，美国≤3%。</li>
+<li><strong>误区3：「忽略终值占比」</strong> — 如果终值占DCF估值超过85%，说明预测期太短或g太高，估值结果基本是"拍脑袋"。</li>
+<li><strong>误区4：「直接用报表FCF不修正」</strong> — 报表FCF包含非经常性项目（资产处置、一次性投资收益等），必须剔除后才可用于DCF。</li>
+</ul>
+</div>
+<div class="warning-box">
+<div class="warn-title">⚠ DCF完全失效的极端场景</div>
+<ul>
+<li><strong>恶性通胀：</strong>2022年美国通胀9.1%时，WACC剧烈上升，所有存量DCF估值模型过时——美银测算当时DCF对成长股估值的准确率降至不足40%</li>
+<li><strong>行政干预：</strong>2021年"双减"政策后教育股DCF估值模型归零——行政命令可瞬间摧毁企业未来的FCF</li>
+<li><strong>技术颠覆：</strong>诺基亚2010年DCF仍显示合理估值，但智能手机革命使其FCF在3年内归零——DCF无法预测颠覆性技术</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_fund_2', title:'模块2：ROE杜邦分析体系',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> ROE的三因子拆解：净利润率×资产周转率×权益乘数</li>
+<li><span class="tag must">必学</span> 三种盈利模式的区分：高利润型（茅台）/高周转型（沃尔玛）/高杠杆型（银行）</li>
+<li><span class="tag must">必学</span> 杜邦分析与DCF的交叉验证逻辑</li>
+<li><span class="tag understand">了解</span> 不同行业的ROE阈值标准差异</li>
+<li><span class="tag understand">了解</span> 高杠杆驱动的ROE本质是"虚假繁荣"</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 ROE是什么？</h4>
+<p><strong class="hl-principle">ROE（Return on Equity，净资产收益率）</strong>衡量的是：股东每投入1元钱，企业每年能赚回多少钱。公式：<span class="hl-formula">ROE = 净利润 / 净资产 × 100%</span>。</p>
+<p><strong class="hl-bold">通俗理解：</strong>你把100万投入一家公司，如果公司ROE是20%，意味着公司用你的100万一年赚了20万。这个20万的"赚钱效率"就是ROE。</p>
+
+<h4 class="subsection-title">1.2 杜邦分析（DuPont Analysis）拆解</h4>
+<p>杜邦分析是1919年由杜邦公司的<span class="hl-principle">F. Donaldson Brown</span>创立的财务分析方法，核心思想是：<strong class="hl-bold">一个综合指标（ROE）可以拆解为三个可分别优化的因子</strong>。</p>
+<p><span class="hl-formula">ROE = 净利润率 × 资产周转率 × 权益乘数</span></p>
+<p><span class="hl-formula">= (净利润/营收) × (营收/总资产) × (总资产/净资产)</span></p>
+
+<h4 class="subsection-title">1.3 三因子逐一解读</h4>
+<div class="table-wrap"><table>
+<tr><th>因子</th><th>公式</th><th>含义</th><th>典型代表</th><th>行业特征</th></tr>
+<tr><td>①净利润率</td><td>净利润÷营收</td><td>赚来的钱有多少是利润</td><td>贵州茅台（净利率约50%）</td><td>高品牌溢价/技术垄断</td></tr>
+<tr><td>②资产周转率</td><td>营收÷总资产</td><td>资产利用效率</td><td>沃尔玛（周转率约2.3x）</td><td>薄利多销/轻资产</td></tr>
+<tr><td>③权益乘数</td><td>总资产÷净资产</td><td>使用了多少杠杆</td><td>工商银行（权益乘数约12x）</td><td>高杠杆行业</td></tr>
+</table></div>
+
+<h4 class="subsection-title">完整演算案例</h4>
+<div class="code-block">
+<span class="comment">// 案例A：贵州茅台（高利润型）</span>
+净利润率 = 525亿 / 1280亿 = 41%（极高）
+资产周转率 = 1280亿 / 2700亿 = 0.47x（偏低——无必要大量周转）
+权益乘数 = 2700亿 / 2200亿 = 1.23x（极低杠杆）
+
+ROE = 41% × 0.47 × 1.23 = <span class="number">23.7%</span>
+<span class="comment">// 结论：茅台的ROE健康且可持续——来自极高的净利润率（品牌溢价）</span>
+
+<span class="comment">// 案例B：工商银行（高杠杆型）</span>
+净利润率 = 3600亿 / 8800亿 = 40.9%（高）
+资产周转率 = 8800亿 / 40万亿 = 0.022x（极低——银行资产规模巨大）
+权益乘数 = 40万亿 / 3.3万亿 = 12.1x（极高——银行天然高杠杆）
+
+ROE = 40.9% × 0.022 × 12.1 = <span class="number">10.9%</span>
+<span class="comment">// 结论：工行ROE看似合理，但本质是高杠杆驱动的。若权益乘数从12x降至8x（去杠杆监管要求），ROE将降至约7%</span>
+
+<span class="comment">// 案例C：某超市（高周转型）</span>
+净利润率 = 3亿 / 300亿 = 1%（极低）
+资产周转率 = 300亿 / 150亿 = 2.0x（高）
+权益乘数 = 150亿 / 50亿 = 3.0x
+
+ROE = 1% × 2.0 × 3.0 = <span class="number">6%</span>
+<span class="comment">// 结论：薄利多销模式，ROE不高但稳定。提升净利润率（从1%到1.5%）可使ROE提升50%至9%</span>
+</div>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 理论起源</h4>
+<p>1919年杜邦公司财务分析师Brown首次提出杜邦分析体系，最初目的不是投资分析，而是内部管理——帮助杜邦公司各业务部门诊断盈利能力。1960年代，哈佛商学院教授将其引入财务分析教材，成为证券分析的标准工具（来源：Harvard Business Review, 1964）。</p>
+
+<h4 class="subsection-title">2.2 三大盈利模式的优劣势</h4>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>代表行业</th><th>优势</th><th>风险</th></tr>
+<tr><td>高利润型</td><td>白酒、医药、软件</td><td>抗周期强、品牌护城河</td><td>技术颠覆或食品安全风险可瞬间摧毁利润率</td></tr>
+<tr><td>高周转型</td><td>零售、快消、物流</td><td>现金流稳定、可规模化</td><td>竞争导致利润率持续压缩</td></tr>
+<tr><td>高杠杆型</td><td>银行、地产、保险</td><td>利用杠杆放大收益</td><td>利率上升或资产减值可导致ROE归零甚至为负</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">③</span> 量化指标体系</h3>
+<div class="table-wrap"><table>
+<tr><th>指标</th><th>优秀</th><th>良好</th><th>一般</th><th>危险</th></tr>
+<tr><td>ROE</td><td>≥20%</td><td>15-20%</td><td>10-15%</td><td>&lt;10%（且非高杠杆驱动）</td></tr>
+<tr><td>净利润率</td><td>≥20%</td><td>10-20%</td><td>5-10%</td><td>&lt;5%（非零售行业）</td></tr>
+<tr><td>资产周转率</td><td>≥1.0</td><td>0.5-1.0</td><td>0.2-0.5</td><td>&lt;0.2（非金融或地产行业）</td></tr>
+<tr><td>权益乘数</td><td>&lt;2.0</td><td>2.0-3.0</td><td>3.0-5.0</td><td>&gt;5.0（高杠杆风险）</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">来源：中信建投证券2023年财务分析白皮书，基于A股2000-2023年数据</p>
+
+<h3 class="section-title"><span class="num">④</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 ROE杜邦分析法实盘应用</div>
+<ul>
+<li><span class="hl-signal">选股条件：</span>ROE连续5年≥15%，且非高杠杆驱动（权益乘数&lt;3）</li>
+<li><span class="hl-signal">信号识别：</span>当净利润率同比改善（如从25%升至30%）+资产周转率持平→管理层正在优化产品结构，是正面信号</li>
+<li><span class="hl-signal">风险警示：</span>当ROE不变但净利润率下降时——说明企业用提高杠杆（权益乘数上升）来"粉饰"ROE，这是危险信号</li>
+<li><strong>交叉验证：</strong>ROE≥15%的股票再做DCF估值验证，若DCF也指向低估，构成买入信号</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_fund_3', title:'模块3：行业景气与板块轮动',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 美林投资时钟四阶段的经济逻辑与资产配置策略</li>
+<li><span class="tag must">必学</span> 申万行业分类与板块轮动的基本节奏</li>
+<li><span class="tag must">必学</span> 领先/同步/滞后指标对板块轮动的预判作用</li>
+<li><span class="tag understand">了解</span> PPIRM→PPI→CPI→企业利润的传导链条</li>
+<li><span class="tag understand">了解</span> 板块轮动在2016-2024年的A股实战复盘</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 什么是板块轮动？</h4>
+<p><strong class="hl-principle">板块轮动（Sector Rotation）</strong>是指在不同经济周期阶段，资金在不同行业板块之间系统性流动的现象。核心原理：不同行业对经济周期的敏感度不同，导致它们的盈利和股价呈现"此起彼伏"的轮动节奏。</p>
+<p><strong class="hl-bold">通俗理解：</strong>经济复苏时，资金先买入汽车、家电等"早周期"行业；过热时转向能源、原材料；衰退时转向医药、公用事业等防御板块——资金永远在找"当前回报率最高"的地方。</p>
+
+<h4 class="subsection-title">1.2 美林投资时钟</h4>
+<p><span class="hl-principle">美林投资时钟（Merrill Lynch Investment Clock）</span>由美林证券在2004年提出（来源：Merrill Lynch, "The Investment Clock", 2004），将经济周期分为四个阶段：</p>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>经济增长</th><th>通胀</th><th>最优资产</th><th>利好的A股板块</th></tr>
+<tr><td>复苏</td><td>↑上升</td><td>↓下降</td><td>股票</td><td>汽车、家电、电子、地产</td></tr>
+<tr><td>过热</td><td>↑上升</td><td>↑上升</td><td>大宗商品</td><td>钢铁、煤炭、有色、化工</td></tr>
+<tr><td>滞胀</td><td>↓下降</td><td>↑上升</td><td>现金</td><td>公用事业、医药、必选消费</td></tr>
+<tr><td>衰退</td><td>↓下降</td><td>↓下降</td><td>债券</td><td>高股息蓝筹、银行</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 关键行业景气指标</h4>
+<div class="table-wrap"><table>
+<tr><th>指标</th><th>含义</th><th>发布频率</th><th>数据来源</th><th>反映什么</th></tr>
+<tr><td>PPI（工业品出厂价格）</td><td>工业产品出厂价格的变动</td><td>月度</td><td>国家统计局（次月9-14日）</td><td>中上游企业盈利预期</td></tr>
+<tr><td>PPIRM（原材料购进价格）</td><td>工业企业原材料购进价格变动</td><td>月度</td><td>国家统计局</td><td>领先PPI约1-2个月</td></tr>
+<tr><td>工业企业利润</td><td>规模以上工业企业的利润总额</td><td>月度</td><td>国家统计局（次月27日左右）</td><td>滞后指标，确认经济方向</td></tr>
+<tr><td>全社会用电量</td><td>三大产业用电量合计</td><td>月度</td><td>国家能源局</td><td>GDP同步高频替代指标</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 行情传导链路</h3>
+<div class="flow-chart">
+  <div class="flow-node blue">社融/信贷↑</div>
+  <div class="flow-arrow">2-4月</div>
+  <div class="flow-node">PPIRM↑→PPI↑</div>
+  <div class="flow-arrow">1-2月</div>
+  <div class="flow-node gold">上游盈利↑</div>
+  <div class="flow-arrow">1-3月</div>
+  <div class="flow-node">中下游成本↑</div>
+  <div class="flow-arrow">2-4月</div>
+  <div class="flow-node orange">CPI传导</div>
+  <div class="flow-arrow">2-3月</div>
+  <div class="flow-node green">货币政策转向</div>
+  <div class="flow-label">完整传导周期：8-16个月。来源：天风证券2023年宏观策略</div>
+</div>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 板块轮动实盘操作</div>
+<ul>
+<li><span class="hl-signal">PPI触底回升（连续3个月回升）</span> → 超配上游资源（钢铁、有色、煤炭）</li>
+<li><span class="hl-signal">社融增速连续2个月&gt;10%</span> → 超配早周期（汽车、家电、地产链）</li>
+<li><span class="hl-signal">CPI突破3%且央行未收紧</span> → 超配消费（必选消费、医药），减仓成长股</li>
+<li><span class="hl-signal">PMI连续3个月&lt;50</span> → 清仓周期股，转向防御（公用事业、高股息）</li>
+<li><strong>轮动节奏：</strong>一个完整板块轮动周期通常持续2-3年，单板块行情持续3-9个月</li>
+</ul>
+</div>
+
+`}
+        ]
+      },
+      technical: {
+        name: '技术分析',
+        modules: [
+          { id:'stock_tech_1', title:'模块1：趋势分析与均线系统', content: placeholderContent('技术分析', '趋势分析与均线系统') }
+        ]
+      },
+      resonance: {
+        name: '宏观+技术共振分析',
+        modules: [
+          { id:'stock_res_1', title:'模块1：宏观定方向+技术定买卖点', content: placeholderContent('宏观+技术共振分析', '宏观定方向+技术定买卖点') }
+        ]
+      }
+    }
+  },
+
+  bonds: {
+    name: '债券',
+    color: '#60a5fa',
+    dimensions: {
+      fundamental: {
+        name: '基本面分析',
+        modules: [
+          { id:'bond_fund_1', title:'模块1：利率体系与收益率曲线', content: placeholderContent('基本面分析', '利率体系与收益率曲线') }
+        ]
+      },
+      technical: {
+        name: '技术分析',
+        modules: [
+          { id:'bond_tech_1', title:'模块1：收益率曲线形态与久期管理', content: placeholderContent('技术分析', '收益率曲线形态与久期管理') }
+        ]
+      },
+      resonance: {
+        name: '宏观+技术共振分析',
+        modules: [
+          { id:'bond_res_1', title:'模块1：股债轮动策略', content: placeholderContent('宏观+技术共振分析', '股债轮动策略') }
+        ]
+      }
+    }
+  },
+
+  futures: {
+    name: '期货',
+    color: '#22c55e',
+    dimensions: {
+      fundamental: {
+        name: '基本面分析',
+        modules: [
+          { id:'fut_fund_1', title:'模块1：基差结构与期限结构', content: placeholderContent('基本面分析', '基差结构与期限结构') }
+        ]
+      },
+      technical: {
+        name: '技术分析',
+        modules: [
+          { id:'fut_tech_1', title:'模块1：持仓量与成交量分析', content: placeholderContent('技术分析', '持仓量与成交量分析') }
+        ]
+      },
+      resonance: {
+        name: '宏观+技术共振分析',
+        modules: [
+          { id:'fut_res_1', title:'模块1：期限结构+宏观周期共振', content: placeholderContent('宏观+技术共振分析', '期限结构+宏观周期共振') }
+        ]
+      }
+    }
+  },
+
+  commodities: {
+    name: '大宗商品',
+    color: '#fb923c',
+    dimensions: {
+      fundamental: {
+        name: '基本面分析',
+        modules: [
+          { id:'com_fund_1', title:'模块1：供需平衡表与库存周期', content: placeholderContent('基本面分析', '供需平衡表与库存周期') }
+        ]
+      },
+      technical: {
+        name: '技术分析',
+        modules: [
+          { id:'com_tech_1', title:'模块1：商品季节性规律与趋势跟踪', content: placeholderContent('技术分析', '商品季节性规律与趋势跟踪') }
+        ]
+      },
+      resonance: {
+        name: '宏观+技术共振分析',
+        modules: [
+          { id:'com_res_1', title:'模块1：美元指数+商品曲线+宏观周期', content: placeholderContent('宏观+技术共振分析', '美元指数+商品曲线+宏观周期') }
+        ]
+      }
+    }
+  }
+};
+
+// ================================================================
+// 状态管理
+// ================================================================
+const STORE_KEY = 'tradingMap';
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      return {
+        completed: new Set(d.completed || []),
+        theme: d.theme || 'dark',
+        fontSize: d.fontSize || 'medium',
+        activeAsset: d.activeAsset || 'stocks',
+        sidebar: d.sidebar !== false
+      };
+    }
+  } catch(e) {}
+  return { completed: new Set(), theme:'dark', fontSize:'medium', activeAsset:'stocks', sidebar:true };
+}
+
+function saveStore() {
+  const obj = {
+    completed: [...store.completed],
+    theme: store.theme,
+    fontSize: store.fontSize,
+    activeAsset: store.activeAsset,
+    sidebar: store.sidebar
+  };
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch(e) {}
+}
+
+const store = loadStore();
+
+// ================================================================
+// DOM引用
+// ================================================================
+const $ = id => document.getElementById(id);
+const assetTabs = $('assetTabs');
+const sidebarEl = $('sidebar');
+const sidebarOverlay = $('sidebarOverlay');
+const sidebarClose = $('sidebarClose');
+const menuBtn = $('menuBtn');
+const treeContainer = $('treeContainer');
+const contentContainer = $('contentContainer');
+const contentArea = $('contentArea');
+const settingsBtn = $('settingsBtn');
+const settingsOverlay = $('settingsOverlay');
+const settingsDrawer = $('settingsDrawer');
+const settingsClose = $('settingsClose');
+const themeGroup = $('themeGroup');
+const fontGroup = $('fontGroup');
+const resetProgressOnly = $('resetProgressOnly');
+const resetAll = $('resetAll');
+
+// ================================================================
+// 核心函数
+// ================================================================
+function getAllModuleIds(assetKey) {
+  const ids = [];
+  const asset = knowledgeData[assetKey];
+  if (!asset) return ids;
+  DIM_KEYS.forEach(dk => {
+    const dim = asset.dimensions[dk];
+    if (dim) {
+      dim.modules.forEach(m => ids.push(m.id));
+    }
+  });
+  return ids;
+}
+
+function getAllModuleIdsAll() {
+  let ids = [];
+  ASSET_KEYS.forEach(ak => {
+    ids = ids.concat(getAllModuleIds(ak));
+  });
+  return ids;
+}
+
+function calcProgress(assetKey) {
+  const ids = getAllModuleIds(assetKey);
+  if (!ids.length) return 0;
+  const done = ids.filter(id => store.completed.has(id)).length;
+  return Math.round(done / ids.length * 100);
+}
+
+function calcGlobalProgress() {
+  const all = getAllModuleIdsAll();
+  if (!all.length) return 0;
+  const done = all.filter(id => store.completed.has(id)).length;
+  return Math.round(done / all.length * 100);
+}
+
+function toggleComplete(moduleId) {
+  if (store.completed.has(moduleId)) {
+    store.completed.delete(moduleId);
+  } else {
+    store.completed.add(moduleId);
+  }
+  saveStore();
+  renderAll();
+}
+
+// ================================================================
+// 目录树渲染
+// ================================================================
+function renderTree() {
+  const ak = store.activeAsset;
+  const asset = knowledgeData[ak];
+  if (!asset) { treeContainer.innerHTML = ''; return; }
+
+  let html = '';
+  DIM_KEYS.forEach(dk => {
+    const dim = asset.dimensions[dk];
+    if (!dim) return;
+    const dimOpen = true;
+    html += `<div class="tree-item">`;
+    html += `<div class="tree-hd lv1" data-dim="${dk}">
+      <span class="tree-arrow open">▶</span>
+      <span class="tree-lbl">${dim.name}</span>
+    </div>`;
+    html += `<div class="tree-child open">`;
+    dim.modules.forEach((m, idx) => {
+      const checked = store.completed.has(m.id) ? 'checked' : '';
+      html += `<div class="tree-item">`;
+      html += `<div class="tree-hd lv3${''}" data-module="${m.id}" onclick="selectModule('${m.id}')">
+        <span class="tree-cb ${checked}" data-cb="${m.id}" onclick="event.stopPropagation();toggleComplete('${m.id}')">✓</span>
+        <span class="tree-lbl">${m.title}</span>
+      </div>`;
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+  treeContainer.innerHTML = html;
+  updateSidebarPct();
+}
+
+function updateSidebarPct() {
+  const pct = calcProgress(store.activeAsset);
+  $('sidebarPct').textContent = pct + '%';
+}
+
+// ================================================================
+// 内容渲染
+// ================================================================
+function selectModule(moduleId) {
+  // 高亮当前选中的模块
+  document.querySelectorAll('.tree-hd.lv3').forEach(el => {
+    el.classList.toggle('active', el.dataset.module === moduleId);
+  });
+  renderContent(moduleId);
+  closeSidebar();
+}
+
+function renderContent(moduleId) {
+  if (!moduleId) {
+    contentContainer.innerHTML = `<div class="content-card s1" style="text-align:center;padding:40px 20px">
+      <div style="font-size:2.5rem;margin-bottom:12px">📚</div>
+      <div style="font-size:1rem;color:var(--text-primary);font-weight:600;margin-bottom:8px">欢迎进入交易专家知识地图</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">请从左侧目录选择一个知识点开始学习</div>
+    </div>`;
+    updateContentAreaClass(false);
+    return;
+  }
+
+  // 从数据中查找对应模块
+  let found = null;
+  for (const ak of ASSET_KEYS) {
+    const asset = knowledgeData[ak];
+    if (!asset) continue;
+    for (const dk of DIM_KEYS) {
+      const dim = asset.dimensions[dk];
+      if (!dim) continue;
+      for (const m of dim.modules) {
+        if (m.id === moduleId) { found = m; break; }
+      }
+      if (found) break;
+    }
+    if (found) break;
+  }
+
+  if (found) {
+    contentContainer.innerHTML = found.content;
+    updateContentAreaClass(true);
+  } else {
+    contentContainer.innerHTML = `<div class="content-card s1" style="text-align:center;padding:40px 20px">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <div style="font-size:0.9rem;color:var(--text-muted)">未找到该知识点</div>
+    </div>`;
+    updateContentAreaClass(false);
+  }
+
+  // 更新底部进度
+  updateBottomBar();
+  updateGlobalProgress();
+}
+
+function updateContentAreaClass(hasModule) {
+  contentArea.classList.toggle('no-module', !hasModule);
+}
+
+// ================================================================
+// 资产切换
+// ================================================================
+function switchAsset(assetKey) {
+  if (store.activeAsset === assetKey) return;
+  store.activeAsset = assetKey;
+  saveStore();
+  renderAll();
+}
+
+// ================================================================
+// 渲染全部
+// ================================================================
+function renderAll() {
+  // 更新tab
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.asset === store.activeAsset);
+  });
+
+  // 更新底部
+  updateBottomBar();
+
+  // 更新全局进度
+  updateGlobalProgress();
+
+  // 渲染目录树
+  renderTree();
+
+  // 默认选择第一个模块
+  const dimKeys = DIM_KEYS;
+  const asset = knowledgeData[store.activeAsset];
+  let firstModuleId = null;
+  if (asset) {
+    for (const dk of dimKeys) {
+      const dim = asset.dimensions[dk];
+      if (dim && dim.modules.length) {
+        firstModuleId = dim.modules[0].id;
+        break;
+      }
+    }
+  }
+  if (firstModuleId) {
+    renderContent(firstModuleId);
+    // 高亮目录中的对应项
+    setTimeout(() => {
+      document.querySelectorAll('.tree-hd.lv3').forEach(el => {
+        el.classList.toggle('active', el.dataset.module === firstModuleId);
+      });
+    }, 50);
+  } else {
+    renderContent(null);
+  }
+}
+
+// ================================================================
+// UI 更新辅助
+// ================================================================
+function updateBottomBar() {
+  const ak = store.activeAsset;
+  const globalPct = calcGlobalProgress();
+  const assetPct = calcProgress(ak);
+  $('bottomGlobalPct').textContent = globalPct + '%';
+  $('bottomAssetLabel').textContent = ASSET_NAMES[ak] || ak;
+  $('bottomAssetPct').textContent = assetPct + '%';
+  $('globalProgressFill').style.width = globalPct + '%';
+}
+
+function updateGlobalProgress() {
+  const pct = calcGlobalProgress();
+  $('globalProgressFill').style.width = pct + '%';
+}
+
+// ================================================================
+// 侧边栏控制
+// ================================================================
+function openSidebar() {
+  sidebarEl.classList.add('open');
+  sidebarOverlay.classList.add('open');
+}
+
+function closeSidebar() {
+  sidebarEl.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+}
+
+// ================================================================
+// 设置面板控制
+// ================================================================
+function openSettings() {
+  settingsDrawer.classList.add('open');
+  settingsOverlay.classList.add('open');
+  updateSettingsProgress();
+}
+
+function closeSettings() {
+  settingsDrawer.classList.remove('open');
+  settingsOverlay.classList.remove('open');
+}
+
+function updateSettingsProgress() {
+  $('stgGlobal').textContent = calcGlobalProgress() + '%';
+  ASSET_KEYS.forEach(ak => {
+    const el = $('stg' + ak.charAt(0).toUpperCase() + ak.slice(1));
+    if (el) el.textContent = calcProgress(ak) + '%';
+  });
+}
+
+// ================================================================
+// 主题 & 字体
+// ================================================================
+function setTheme(theme) {
+  store.theme = theme;
+  saveStore();
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelector('[name="theme-color"]').content = theme === 'dark' ? '#0b1120' : '#f8fafc';
+  document.querySelectorAll('#themeGroup .opt-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+}
+
+function setFontSize(font) {
+  store.fontSize = font;
+  saveStore();
+  document.documentElement.setAttribute('data-font', font);
+  document.querySelectorAll('#fontGroup .opt-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.font === font);
+  });
+}
+
+// ================================================================
+// 重置
+// ================================================================
+function handleResetProgress() {
+  if (!confirm('确认重置所有学习进度？此操作不可撤销。')) return;
+  store.completed = new Set();
+  saveStore();
+  renderAll();
+  updateSettingsProgress();
+}
+
+function resetAllSettings() {
+  if (!confirm('确认重置全部设置（学习进度+主题+字体）？此操作不可撤销。')) return;
+  store.completed = new Set();
+  store.theme = 'dark';
+  store.fontSize = 'medium';
+  saveStore();
+  setTheme('dark');
+  setFontSize('medium');
+  renderAll();
+  updateSettingsProgress();
+}
+
+// ================================================================
+// 事件绑定
+// ================================================================
+
+// 资产切换
+assetTabs.addEventListener('click', e => {
+  const tab = e.target.closest('.nav-tab');
+  if (tab && tab.dataset.asset) {
+    switchAsset(tab.dataset.asset);
+  }
+});
+
+// 侧边栏
+menuBtn.addEventListener('click', openSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+sidebarClose.addEventListener('click', closeSidebar);
+
+// 设置面板
+settingsBtn.addEventListener('click', openSettings);
+settingsOverlay.addEventListener('click', closeSettings);
+settingsClose.addEventListener('click', closeSettings);
+
+// 主题切换
+themeGroup.addEventListener('click', e => {
+  const btn = e.target.closest('.opt-btn');
+  if (btn && btn.dataset.theme) {
+    setTheme(btn.dataset.theme);
+  }
+});
+
+// 字体切换
+fontGroup.addEventListener('click', e => {
+  const btn = e.target.closest('.opt-btn');
+  if (btn && btn.dataset.font) {
+    setFontSize(btn.dataset.font);
+  }
+});
+
+// 重置
+resetProgressOnly.addEventListener('click', handleResetProgress);
+resetAll.addEventListener('click', resetAllSettings);
+
+// 菜单按钮（左上角打开目录）
+document.querySelector('.nav-logo')?.addEventListener('click', openSidebar);
+
+// ================================================================
+// PWA 注册
+// ================================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+
+// ================================================================
+// 启动
+// ================================================================
+// 初始化主题和字体
+setTheme(store.theme);
+setFontSize(store.fontSize);
+
+// 完整渲染
+renderAll();
+
+// 设置面板进度更新
+document.querySelector('.settings-overlay')?.addEventListener('transitionend', () => {
+  if (settingsOverlay.classList.contains('open')) updateSettingsProgress();
+});
+</script>
+</body>
+</html>

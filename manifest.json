@@ -1,0 +1,46 @@
+{
+  "name": "交易专家全域知识地图",
+  "short_name": "交易知识地图",
+  "description": "股票·债券·期货·大宗商品四维全品类交易知识体系，基本面/技术/共振三位一体深度学习",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
+  "categories": ["finance", "education"],
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "股票",
+      "short_name": "股票",
+      "description": "股票基本面、技术分析、共振交易知识",
+      "url": "/?asset=stocks"
+    },
+    {
+      "name": "债券",
+      "short_name": "债券",
+      "description": "债券基本面、收益率曲线、久期管理知识",
+      "url": "/?asset=bonds"
+    },
+    {
+      "name": "期货",
+      "short_name": "期货",
+      "description": "期货基差、持仓量、期现套利知识",
+      "url": "/?asset=futures"
+    },
+    {
+      "name": "大宗商品",
+      "short_name": "大宗商品",
+      "description": "商品供需平衡、库存周期、产业链知识",
+      "url": "/?asset=commodities"
+    }
+  ]
+}
