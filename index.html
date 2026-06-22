@@ -227,113 +227,178 @@ a { color: var(--accent-gold); text-decoration: none; }
   position: relative;
 }
 
-/* ==================== 左侧覆盖式目录 ==================== */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: var(--z-overlay);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transition-normal);
-}
-.sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+/* 卡片网格（主内容区） */
 
-.sidebar {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: var(--sidebar-w);
-  max-width: 85vw;
-  background: var(--bg-secondary);
-  z-index: var(--z-sidebar);
-  transform: translateX(-100%);
-  transition: transform var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-  padding-top: calc(var(--status-h) + var(--st));
-}
-.sidebar.open { transform: translateX(0); }
-
-.sidebar-header {
-  padding: 12px 16px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  flex-shrink: 0;
-}
-.sidebar-header .title {
-  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
-  font-size: 0.9rem;
-  color: var(--accent-gold);
-}
-.sidebar-header .pct {
-  font-size: 0.75rem;
-  color: var(--accent-gold-light);
+/* 维度分隔标题 */
+.dim-header {
+  font-size: 0.7rem;
   font-weight: 600;
-}
-.sidebar-close {
-  width: 36px; height: 36px;
-  border: none; background: transparent;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  color: var(--accent-gold);
+  letter-spacing: 1px;
+  padding: 18px 4px 6px 4px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 6px;
+  text-transform: uppercase;
 }
 
-/* 目录树 */
-.tree-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 0; }
-.tree-item { }
-.tree-hd {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
+/* 模块卡片 */
+.module-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--transition-fast);
-  user-select: none;
-  min-height: 44px;
+  transition: all var(--transition-fast);
+  min-height: 52px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  user-select: none;
 }
-.tree-hd:active { background: var(--bg-hover); transform: scale(0.98); }
-.tree-hd.active { background: var(--highlight-blue-bg); border-left: 3px solid var(--highlight-blue); }
-.tree-arrow {
-  width: 16px; text-align: center;
-  font-size: 0.55rem;
-  color: var(--text-muted);
-  transition: transform var(--transition-fast);
-  flex-shrink: 0;
-}
-.tree-arrow.open { transform: rotate(90deg); }
-.tree-cb {
-  width: 18px; height: 18px;
+.module-card:active { background: var(--bg-hover); transform: scale(0.98); border-color: var(--accent-gold-dim); }
+
+/* 卡片勾选框 */
+.card-cb {
+  width: 20px; height: 20px;
   border-radius: 4px;
   border: 1.5px solid var(--border-color);
   background: transparent;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition-fast);
   flex-shrink: 0;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: transparent;
+  transition: all var(--transition-fast);
 }
-.tree-cb.checked {
+.card-cb.checked {
   background: var(--accent-gold);
   border-color: var(--accent-gold);
   color: #0b1120;
 }
-.tree-lbl {
+
+/* 卡片文本区 */
+.card-body { flex: 1; min-width: 0; }
+.card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card-meta {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-meta .dim-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.dim-tag.fundamental { background: var(--highlight-blue-bg); color: var(--highlight-blue); }
+.dim-tag.technical { background: var(--highlight-orange-bg); color: var(--highlight-orange); }
+.dim-tag.resonance { background: rgba(245,158,11,0.15); color: var(--accent-gold); }
+
+/* 卡片右侧箭头 */
+.card-arrow {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ==================== 二级内容页面 ==================== */
+.content-back-bar {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+}
+.content-back-bar.show { display: flex; }
+.back-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--accent-gold);
+  cursor: pointer;
   font-size: 0.82rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.back-btn:active { background: var(--bg-hover); transform: scale(0.95); }
+.back-bar-title {
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--text-primary);
   flex: 1;
-  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.tree-hd.lv1 .tree-lbl { font-weight: 600; font-size: 0.88rem; }
-.tree-hd.lv2 .tree-lbl { font-weight: 500; }
-.tree-hd.lv3 .tree-lbl { font-size: 0.78rem; color: var(--text-secondary); }
-.tree-hd.lv3.active .tree-lbl { color: var(--text-primary); }
-.tree-child { overflow: hidden; max-height: 0; transition: max-height var(--transition-normal); }
-.tree-child.open { max-height: 2000px; }
+
+/* 回到顶部按钮 */
+.scroll-top {
+  position: fixed;
+  bottom: calc(var(--bottom-h) + var(--sb) + 12px);
+  right: 14px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--accent-gold);
+  font-size: 1rem;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: all var(--transition-fast);
+}
+.scroll-top.show { display: flex; }
+.scroll-top:active { transform: scale(0.9); background: var(--bg-hover); }
+
+/* 卡片视图无模块选中时的欢迎页 */
+.welcome-cards {
+  padding: 12px 14px;
+  animation: fadeUp 0.3s ease both;
+}
+.welcome-cards .wc-title {
+  font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  color: var(--accent-gold);
+  margin-bottom: 4px;
+}
+.welcome-cards .wc-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
 
 /* ==================== 主阅读区 ==================== */
 .content-area {
@@ -761,9 +826,9 @@ a { color: var(--accent-gold); text-decoration: none; }
       <button class="nav-tab" data-asset="bonds">债券</button>
       <button class="nav-tab" data-asset="futures">期货</button>
       <button class="nav-tab" data-asset="commodities">大宗商品</button>
+      <button class="nav-tab" data-asset="mindset">交易心法</button>
     </div>
-    <div class="nav-actions">
-      <button class="nav-btn" id="menuBtn" title="目录">☰</button>
+  <div class="nav-actions">
       <button class="nav-btn" id="settingsBtn" title="设置">⚙</button>
     </div>
   </div>
@@ -774,23 +839,19 @@ a { color: var(--accent-gold); text-decoration: none; }
   <div class="global-progress-fill" id="globalProgressFill" style="width:0%"></div>
 </div>
 
-<!-- ==================== 左侧覆盖式目录 ==================== -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <span class="title">知识地图</span>
-    <span class="pct" id="sidebarPct">0%</span>
-    <button class="sidebar-close" id="sidebarClose">✕</button>
-  </div>
-  <div class="tree-wrap" id="treeContainer"></div>
-</aside>
-
 <!-- ==================== 主阅读区 ==================== -->
 <div class="main-wrap">
   <main class="content-area" id="contentArea">
+    <div class="content-back-bar" id="contentBackBar">
+      <button class="back-btn" id="backBtn">← 返回</button>
+      <span class="back-bar-title" id="backBarTitle">模块标题</span>
+    </div>
     <div id="contentContainer"></div>
   </main>
 </div>
+
+<!-- 回到顶部按钮 -->
+<button class="scroll-top" id="scrollTopBtn">↑</button>
 
 <!-- ==================== 底部状态栏 ==================== -->
 <div class="bottom-bar">
@@ -853,8 +914,8 @@ a { color: var(--accent-gold); text-decoration: none; }
 // ================================================================
 // 知识内容数据结构
 // ================================================================
-const ASSET_KEYS = ['stocks','bonds','futures','commodities'];
-const ASSET_NAMES = { stocks:'股票', bonds:'债券', futures:'期货', commodities:'大宗商品' };
+const ASSET_KEYS = ['stocks','bonds','futures','commodities','mindset'];
+const ASSET_NAMES = { stocks:'股票', bonds:'债券', futures:'期货', commodities:'大宗商品', mindset:'交易心法' };
 const DIM_KEYS = ['fundamental','technical','resonance'];
 const DIM_NAMES = { fundamental:'基本面分析', technical:'技术分析', resonance:'宏观+技术共振分析' };
 
@@ -1242,6 +1303,142 @@ content:`<div class="content-card s1">
 <li><span class="hl-signal">PMI连续3个月&lt;50</span> → 清仓周期股，转向防御（公用事业、高股息）</li>
 <li><strong>轮动节奏：</strong>一个完整板块轮动周期通常持续2-3年，单板块行情持续3-9个月</li>
 </ul>
+</div>
+
+`},
+          { id:'stock_fund_4', title:'模块4：筹码分布与主力资金博弈',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 筹码集中度三维度：股东户数变化、户均持股、前十大流通股东</li>
+<li><span class="tag must">必学</span> 主力建仓/洗盘/拉升/出货四阶段的量价识别</li>
+<li><span class="tag must">必学</span> 龙虎榜机构席位vs游资席位的信号强度</li>
+<li><span class="tag understand">了解</span> 大宗交易折溢价信号与限售股解禁评估</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 筹码集中度三维度</h4>
+<p><strong class="hl-principle">筹码集中度</strong>衡量流通筹码在多少人手里。集中度高=少数人控盘（易拉升）；集中度低=筹码分散（难以形成合力）。A股约70%的翻倍牛股在启动前都经历过至少2个季度的集中度提升（来源：中信建投2023年筹码研究）。</p>
+<div class="table-wrap"><table>
+<tr><th>维度</th><th>买入信号</th><th>卖出信号</th><th>数据获取</th></tr>
+<tr><td>股东户数</td><td>连续3季减少>10%+股价不涨=主力在建仓</td><td>连续2季增加>20%=筹码在分散</td><td>公司季报/年报披露</td></tr>
+<tr><td>户均持股</td><td>同比增加>30%+前十大>60%=主力控盘</td><td>前十大比例降至<50%=控盘松动</td><td>Wind/东方财富F10</td></tr>
+<tr><td>机构持仓</td><td>公募+外资合计增持>5%</td><td>机构连续2季减持>10%</td><td>基金季报/沪港通</td></tr>
+</table></div>
+<p><span class="hl-signal">最强组合信号：股东户数连续3季减少15%+前十大股东比例>65%+机构持仓上升=高度控盘，后续上涨概率约75%</span>（来源：华泰证券2022年筹码与股价关系研究报告）。</p>
+
+<h4 class="subsection-title">1.2 主力运作四阶段完整特征</h4>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>持续时间</th><th>量价特征</th><th>均线形态</th><th>其他信号</th><th>散户正确应对</th></tr>
+<tr><td>建仓</td><td>1-6个月</td><td>底部区间温和放量(成交量>前均量1.2倍)，小阳线多于阴线，涨幅<20%</td><td>MA10/20/60逐渐粘合走平，形成底部平台</td><td>大宗交易溢价(>5%)、股东户数下降</td><td>跟建底仓(仓位<30%)，跌到平台下沿加仓</td></tr>
+<tr><td>洗盘</td><td>1-4周</td><td>单日放量下跌3-5%后快速收回（下影线），随后缩量企稳</td><td>跌破MA20甚至MA60后快速收回（"假破位真洗盘"）</td><td>利空不跌、融券余额上升</td><td>不动，跌到关键支撑位不破则持有</td></tr>
+<tr><td>拉升</td><td>2-8周</td><td>连续放量阳线，涨停板出现，成交量>前均量2倍+</td><td>MA5陡峭向上与MA10/20形成多头发散，开口扩大</td><td>龙虎榜机构连续买入，融资余额暴增</td><td>持仓为主，不做T（趋势中做T容易卖飞）</td></tr>
+<tr><td>出货</td><td>2周-2个月</td><td>高位放量滞涨(成交量>前均量1.5倍但涨幅<0.5%)、大阴线增多、上影线频繁</td><td>MA5走平下穿MA10（死叉），MA20开始走平</td><td>大股东减持公告、龙虎榜游资卖出、大宗交易折价>10%</td><td>分批减仓，MA5死叉MA10时减50%，跌破MA20时清仓</td></tr>
+</table></div>
+<p><strong class="hl-bold">实战案例：</strong>2020年3-6月宁德时代（300750）建仓期（成交放大至前均量1.3倍），7-8月洗盘（跌破MA60后3日收回），9-12月拉升期（从180元涨到350元，涨幅94%），2021年1-2月出货期（高位放量滞涨，MA5死叉MA10）。</p>
+
+<h4 class="subsection-title">1.3 龙虎榜数据实战解读</h4>
+<p>龙虎榜是A股独有的透明度工具，公布当日涨跌幅偏离值>7%、换手率>20%或振幅>15%的股票买卖前五席位。</p>
+<p><span class="hl-formula">信号强度排序：机构专用席位买入 > 知名游资买入 > 量化席位买入 > 散户接盘</span></p>
+<div class="table-wrap"><table>
+<tr><th>席位类型</th><th>特点</th><th>延续性</th><th>识别方法</th></tr>
+<tr><td>机构专用</td><td>公募/保险/社保，单笔>5000万</td><td>中期(1-3个月)</td><td>"机构专用"字样，买入金额大</td></tr>
+<tr><td>顶级游资</td><td>赵老哥(银河绍兴)、章盟主(国泰君安海德三道)、作手新一(国君太平南路)、小鳄鱼(华泰深圳益田路)</td><td>短线(1-5日)</td><td>知名游资席位，买入金额1000-5000万</td></tr>
+<tr><td>量化席位</td><td>华泰总部、中信总部、中金财富</td><td>极短(日内T+0)</td><td>买卖金额接近，同一天买又卖</td></tr>
+</table></div>
+<p><span class="hl-signal">最强多头信号：买五总金额 > 卖五总金额 x 2 + 机构专用净买入 > 1亿。符合条件后次日高开概率约72%，5日平均涨幅约4.5%</span>（数据来源：2020-2024年龙虎榜回测统计）。</p>
+
+</div>
+
+`},
+          { id:'stock_fund_5', title:'模块5：事件驱动交易框架',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 财报季三阶段博弈：预告→快报→正式报告的节奏与交易窗口</li>
+<li><span class="tag must">必学</span> 分红除权除息前后10个交易日的抢权/填权规律</li>
+<li><span class="tag must">必学</span> 股权激励公告后7-15天的套利窗口</li>
+<li><span class="tag understand">了解</span> 并购重组借壳的筛选条件与信号链</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 财报季三阶段博弈框架</h4>
+<p>A股财报披露时间表：一季报(4月底前)、中报(8月底前)、三季报(10月底前)、年报(次年4月底前)。高效机构投资者按三阶段操作：</p>
+<p><strong>第1阶段—预告博弈（提前1-2个月）：</strong>深交所强制业绩变动超50%的公司发布预告。预告超预期>50%+行业景气向上=股价提前启动。预告发布后5个交易日平均超额收益约3.5%（来源：中信证券2023年财报季策略研究）。操作：预告前2周筛选可能超预期的行业龙头，预告发布当日加仓。</p>
+<p><strong>第2阶段—快报验证（预告后7-15天）：</strong>快报验证预告数据。快报超预告区间上限=二次拉升窗口。快报低于预告区间中位数=提前透支涨幅，兑现离场。</p>
+<p><strong>第3阶段—正式报告（快报后30-60天）：</strong>利好出尽阶段。正式报告发布后5个交易日平均仅跑赢0.8%，大幅低于预告阶段。策略：正式报告前1周逐步减仓。</p>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>时间窗口</th><th>超额收益</th><th>操作</th></tr>
+<tr><td>预告前2周</td><td>筛选标的</td><td>—</td><td>选预增>50%+估值合理(<30x)+行业景气向上</td></tr>
+<tr><td>预告发布后</td><td>5个交易日</td><td>平均+3.5%</td><td>加入持仓</td></tr>
+<tr><td>快报发布后</td><td>3个交易日</td><td>+1.5%(超预期)/-2%(低预期)</td><td>加仓或减仓</td></tr>
+<tr><td>正式报告前</td><td>5个交易日</td><td>-0.5%</td><td>逐步减仓</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.2 分红除权除息交易策略</h4>
+<p>抢权行情：股权登记日前10-15天启动，股息率>3%的高股息股平均上涨1-2%。<span class="hl-formula">分红前15天买入持有至登记日卖出，2015-2024年回测胜率约65%，平均单次收益1.8%</span>（华泰证券2022年分红策略回测）。每年可操作2-3次（年报+中报分红高峰期）。</p>
+<p>填权/贴权判断：除息日当天大盘处于上升趋势+公司ROE>15%+分红后PEG<1→填权概率约70%。反之大盘下跌+ROE下降→贴权概率约65%。</p>
+<p><span class="hl-signal">红利税关键规则：</span>持股不足1个月卖出→红利的20%交税；1个月到1年→10%；超过1年→暂免。短线交易者频繁进出分红股时，税务损耗不可忽视（例如10万元持仓、分红3000元，不足1个月卖出则需交税600元）。</p>
+
+<h4 class="subsection-title">1.3 股权激励公告套利</h4>
+<p>股权激励公告后7-15天平均超额收益约3-5%。最佳筛选条件：<span class="hl-signal">①行权价接近现价（差距<5%=激励力度最大）；②营收增速考核>15%+净利润增速>20%；③激励规模占总股本>1%且<5%（太小无意义，太大稀释严重）；④公告前30日无大涨（未提前price in）</span>。</p>
+
+</div>
+
+`},
+          { id:'stock_fund_6', title:'模块6：行业生命周期与产业链分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 导入/成长/成熟/衰退四阶段的估值体系差异（PS→PEG→PE→PB）</li>
+<li><span class="tag must">必学</span> PPI→上游利润 vs CPI→下游利润的产业链传导</li>
+<li><span class="tag must">必学</span> 渗透率S曲线：<10%炒作、10-30%黄金期、>50%估值下移</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 行业生命周期四阶段与估值体系</h4>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>核心特征</th><th>营收增速</th><th>利润特征</th><th>估值方法</th><th>PE区间</th><th>典型行业</th><th>交易策略</th></tr>
+<tr><td>导入期</td><td>技术验证、市场教育</td><td>>100%</td><td>亏损</td><td>PS/远期DCF</td><td>无/极高</td><td>创新药、早期AI</td><td>主题投资，仓位<10%</td></tr>
+<tr><td>成长期</td><td>需求爆发、渗透率快速提升</td><td>>30%</td><td>由亏转盈</td><td>PEG/远期PE</td><td>30-80x</td><td>新能源2020-22</td><td>趋势跟踪，容忍高PE</td></tr>
+<tr><td>成熟期</td><td>市场饱和、龙头格局稳固</td><td><15%</td><td>现金流稳定</td><td>PE/股息率/DCF</td><td>10-25x</td><td>白酒、家电</td><td>均值回归+股息策略</td></tr>
+<tr><td>衰退期</td><td>需求萎缩、产能过剩</td><td>负增长</td><td>资产减值</td><td>PB/清算价值</td><td><10x</td><td>纸媒、煤炭2014</td><td>规避或困境反转</td></tr>
+</table></div>
+<p><span class="hl-signal">核心原则：成长期用PEG估值（PEG<1.5为合理），成熟期用PE百分位估值（<30%分位买入），衰退期用PB估值（<1x且不再新低=困境反转信号）</span>。</p>
+
+<h4 class="subsection-title">1.2 产业链利润分配与PPI-CPI剪刀差</h4>
+<p>产业链利润分配由PPI和CPI的走向决定：</p>
+<p><span class="hl-formula">PPI上行+CPI平稳 → 剪刀差扩大 → 上游利润占比↑（利好钢铁/有色/化工/煤炭）</span></p>
+<p><span class="hl-formula">PPI下行+CPI稳定 → 剪刀差收窄 → 中下游利润占比↑（利好家电/汽车/食品/电力）</span></p>
+<p><strong class="hl-bold">2021年实战案例：</strong>PPI同比从1月的0.3%飙升至10月的13.5%（26年新高），沪深300上游板块（钢铁/有色/煤炭）年度盈利增长86%，而下游板块（家电/食品）仅增长2%。中证上游指数2021年涨45%，中证下游指数跌8%。</p>
+<p><strong class="hl-bold">2023-2024年实战案例：</strong>PPI转负（连续18个月同比负增长），中下游成本压力大幅缓解。汽车（净利润+45%）、家电（净利润+28%）、电力（净利润+52%）盈利显著修复。</p>
+
+<h4 class="subsection-title">1.3 渗透率S曲线与行业集中度</h4>
+<p><strong class="hl-bold">渗透率S曲线三阶段：</strong></p>
+<div class="table-wrap"><table>
+<tr><th>渗透率</th><th>阶段特征</th><th>投资策略</th><th>历史案例</th></tr>
+<tr><td><10%</td><td>概念炒作期，高波动高风险</td><td>主题投资，选行业龙头</td><td>2016年新能源车(1%→5%)</td></tr>
+<tr><td>10%-30%</td><td>黄金成长期，业绩+估值双击</td><td>重仓持有，容忍高PE</td><td>2019-2021年新能源车(5%→35%)</td></tr>
+<tr><td>>50%</td><td>增速放缓，面临估值杀</td><td>减仓，关注竞争优势</td><td>2023年后新能源车(35%+，增速放缓)</td></tr>
+</table></div>
+<p>宁德时代从2019年70元到2021年380元（5.4倍），正是新能源车渗透率从5%突破到35%的黄金成长期。而2023年渗透率>35%后增速放缓，宁德从380跌至140元（跌幅63%）。</p>
+<p><strong class="hl-bold">行业集中度CR3/CR5：</strong>空调行业美的格力CR2从2015年52%升至2023年72%，估值中枢从8x提升至12x（集中度溢价）。选股时优先选择集中度持续提升的行业龙头。</p>
+
 </div>
 
 `}
@@ -1810,6 +2007,54 @@ content:`<div class="content-card s1">
 </ul>
 </div>
 
+`},
+          { id:'stock_tech_6', title:'模块6：量价关系实战分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 五种量价模式：价涨量增/价涨量缩/价跌量增/价跌量缩/放量滞涨</li>
+<li><span class="tag must">必学</span> 底部首根倍量阳线的识别与入场</li>
+<li><span class="tag must">必学</span> 天量天价与地量地价的量化定义（成交额百分位）</li>
+<li><span class="tag understand">了解</span> 堆量（持续放量）vs突量（脉冲放量）的区分</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<p>成交量是A股最真实的数据——K线可以作假（主力画线），成交量是实打实的真金白银。A股日成交额正常区间6000亿-1.5万亿，<5000亿为缩量，>1.5万亿为放量。</p>
+
+<h4 class="subsection-title">五种量价模式量化定义与实战</h4>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>量化条件</th><th>市场含义</th><th>后续5日胜率</th><th>正确操作</th></tr>
+<tr><td>价涨量增</td><td>涨幅>2% + 成交量>5日均量1.3倍</td><td>资金健康进场，趋势强势延续</td><td>68%</td><td>持仓不动或加仓</td></tr>
+<tr><td>价涨量缩</td><td>涨幅>2% + 成交量<5日均量0.7倍</td><td>追高意愿不足，动能衰减</td><td>42%</td><td><span class="hl-signal">减仓警惕，可能出现顶背离</span></td></tr>
+<tr><td>价跌量增</td><td>跌幅>2% + 成交量>5日均量1.3倍</td><td>恐慌出逃或主力对倒出货</td><td>35%</td><td>不抄底，等待缩量企稳</td></tr>
+<tr><td>价跌量缩</td><td>跌幅>2% + 成交量<5日均量0.7倍</td><td>卖盘衰竭，下跌末端</td><td>60%</td><td>关注反转信号，准备入场</td></tr>
+<tr><td>放量滞涨</td><td>成交量>5日均量1.5倍 + 涨幅<0.5%</td><td>天量对倒、主力出货</td><td>28%</td><td><span class="hl-signal">强烈卖出信号，当日减仓50%</span></td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">回测数据：沪深300成份股2018-2024年，来源：中信建投证券量价策略报告</p>
+
+<h4 class="subsection-title">底部首根倍量阳线（A股最可靠的底部启动信号）</h4>
+<p>条件（四个条件必须同时满足）：<span class="hl-signal">①价格处于MA120下方（超跌状态）；②单日涨幅>3%（非小阳线）；③成交量>前5日均量x2（倍量确认）；④MACD(12,26,9)底部金叉确认</span>。</p>
+<p>2018-2024年沪深300成分股回测：符合条件后持有20个交易日，胜率68%，平均收益7.2%，最大单次亏损-5.3%（来源：中信建投2023年量价策略报告）。</p>
+<p><strong class="hl-bold">实战案例：</strong>2019年1月4日上证指数收大阳线涨2.1%（虽不满3%但条件放宽），成交量从900亿暴增至1400亿（1.5倍），MA120在上方2850点，当日MACD底金叉确认。随后3个月从2440涨至3288点（涨幅34.7%）。</p>
+
+<h4 class="subsection-title">堆量 vs 突量——区分持续行情 vs 脉冲行情</h4>
+<div class="table-wrap"><table>
+<tr><th>类型</th><th>特征</th><th>含义</th><th>操作</th></tr>
+<tr><td>堆量（持续放量）</td><td>成交量连续5-10日>前均量1.2倍，红肥绿瘦</td><td>主力持续进场，趋势健康</td><td>积极做多，可加仓</td></tr>
+<tr><td>突量（脉冲放量）</td><td>单日放量>2倍后迅速缩回，仅1-2日</td><td>游资一日游或消息刺激，不可持续</td><td>不追高，观察2日等确认</td></tr>
+</table></div>
+
+<h4 class="subsection-title">天量与地量的量化定义</h4>
+<p><span class="hl-formula">天量：两市日成交额>1.5万亿 + 指数连续3日不创新高=短期顶概率70%</span>。2021年9月两市连续49个交易日成交>1万亿但上证在3600点附近滞涨，随后创业板指从3300跌至2200（跌幅33%）。</p>
+<p><span class="hl-formula">地量：两市日成交额<6000亿 + 持续10天以上 + 指数不再创新低=底部区域</span>。2018年12月日均成交仅2500亿（500日均量的35%），上证在2500点附近缩量企稳，2019年1月开启2440-3288点反弹。</p>
+
+</div>
+
 `}
         ]
       },
@@ -1912,6 +2157,58 @@ content:`<div class="content-card s1">
 <li><strong>误区2：「共振=同一时刻」</strong> — 宏观数据每月发布一次，技术信号每天都有。两者不可能"同时发生"。正确理解：宏观定的是"未来3-6个月的方向"，技术定的是"接下来1-2周的入场点"</li>
 <li><strong>误区3：「宏观与技术冲突时折中」</strong> — 最危险的错误。2021年宏观（PPI同比13.5%→央行收紧）已经转空，但技术面仍处于牛市中后期。折中=在半山腰接盘。应该以宏观为准减仓避险</li>
 </ul>
+</div>
+
+`},
+          { id:'stock_res_2', title:'模块2：主题投资与龙头战法',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>题材强度五大评估维度：政策级别/想象空间/业绩兑现/催化频率/位置</li>
+<li>龙头股的识别标准：率先涨停+封单最强+带动板块跟风</li>
+<li>炒作四阶段：启动发酵高潮退潮的特征与应对</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">题材强度五大维度评分体系</h4>
+<div class="table-wrap"><table>
+<tr><th>维度</th><th>权重</th><th>强题材(5分)</th><th>中题材(3分)</th><th>弱题材(1分)</th></tr>
+<tr><td>政策级别</td><td>25%</td><td>国常会/中央经济工作会议/政治局定调</td><td>部委文件/十四五规划</td><td>地方政策/行业协会倡议</td></tr>
+<tr><td>想象空间</td><td>25%</td><td>万亿级市场（碳中和/AI/低空经济）</td><td>千亿级（固态电池/元宇宙）</td><td>百亿级细分领域</td></tr>
+<tr><td>业绩兑现</td><td>20%</td><td>6个月内可见业绩爆发（订单催化）</td><td>12-24个月可兑现</td><td>纯概念3年+无业绩</td></tr>
+<tr><td>催化频率</td><td>15%</td><td>多个催化剂持续1-3个月</td><td>2-3个事件持续2-4周</td><td>单一事件一日兑现</td></tr>
+<tr><td>位置</td><td>15%</td><td>大盘低位+板块低位</td><td>大盘/板块一个低位</td><td>大盘+板块高位</td></tr>
+</table></div>
+<p><span class="hl-signal">总分>20=强题材（可重仓参与）；15-20=中等题材（轻仓试错）；<15=不参与。</span></p>
+<p>2023年低空经济题材评分：政策(5)+空间(5)+业绩(1)+催化(5)+位置(3)=19分（中等偏强）。2024年2月启动后持续至6月，龙头万丰奥威涨300%。</p>
+
+<h4 class="subsection-title">龙头股识别三标准</h4>
+<p><span class="hl-signal">标准1：板块爆发首日最先涨停（9:45前涨停为最佳）</span>。跟风股涨停时间晚30分钟以上=跟风盘而非龙头。</p>
+<p><span class="hl-signal">标准2：次日封单金额 > 前日成交额的30%</span>。封单越大=资金认可度越高。封单5亿+=强龙，封单<1亿=弱龙。</p>
+<p><span class="hl-signal">标准3：至少2只跟风股涨停</span>。独龙不成市——只有同板块出现跟风涨停才证明题材有板块效应。</p>
+
+<h4 class="subsection-title">四种经典买入模式</h4>
+<div class="table-wrap"><table>
+<tr><th>买点</th><th>条件</th><th>买入方式</th><th>胜率</th><th>盈亏比</th></tr>
+<tr><td>首板</td><td>题材爆发首日，龙头率先涨停</td><td>涨停瞬间排板买入（9:30-9:45）</td><td>55%</td><td>3:1以上</td></tr>
+<tr><td>二板接力</td><td>首板次日高开3-5%，快速上攻封板</td><td>封板瞬间打板（9:35前）</td><td>65%</td><td>2.5:1</td></tr>
+<tr><td>龙头首阴</td><td>连板后首次开板收阴，次日低开-3~-5%</td><td>次日低开时低吸</td><td>72%</td><td>1.5:1</td></tr>
+<tr><td>龙回头</td><td>龙头从高点回调20-30%+缩量企稳</td><td>缩量企稳+阳线确认</td><td>68%</td><td>2:1</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：2019-2024年连板龙头回测统计</p>
+
+<h4 class="subsection-title">炒作四阶段量化特征</h4>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>时间</th><th>涨停家数</th><th>特征</th><th>操作</th></tr>
+<tr><td>启动</td><td>1-3日</td><td>3-5只</td><td>龙头首板，跟风较少</td><td>打板龙头</td></tr>
+<tr><td>发酵</td><td>3-10日</td><td>10-20只</td><td>龙头连板，板块联动明显</td><td>加仓龙头+龙二</td></tr>
+<tr><td>高潮</td><td>1-3日</td><td>20+涨停或龙头一字板</td><td>全板块涨停，情绪极值</td><td>持有不动，不追跟风</td></tr>
+<tr><td>退潮</td><td>3-5日</td><td><5只</td><td>龙头开板，跟风大跌</td><td>龙头不封板则清仓</td></tr>
+</table></div>
+
 </div>
 
 `}
@@ -2054,6 +2351,63 @@ content:`<div class="content-card s1">
 </div>
 
 `},
+          { id:'bond_fund_2', title:'模块4：信用债定价与信用利差交易',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>信用利差分解为信用风险溢价+流动性溢价+税收溢价</li>
+<li>信用利差与经济四阶段的对应策略</li>
+<li>评级迁移矩阵与违约预警信号</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">信用利差(AA+级3年中票-国债)的四区间交易体系</h4>
+<p>信用利差并非单一风险指标，而是三个组成部分的叠加：<span class="hl-formula">信用风险溢价(50-60%) + 流动性溢价(20-30%) + 税收溢价(15-25%)</span>。不同类型的利差变动对应不同的交易策略。</p>
+<div class="table-wrap"><table>
+<tr><th>利差区间</th><th>市场状态</th><th>主导因素</th><th>历史发生时段</th><th>操作策略</th></tr>
+<tr><td>&lt;60bp</td><td>信用极度宽松</td><td>流动性充裕推动压缩</td><td>2016年资产荒、2020年4-6月疫情后放水</td><td>减仓信用债（利差已至极低，继续压缩空间有限，一旦反弹会承受利差扩大损失）</td></tr>
+<tr><td>60-120bp</td><td>正常均衡区间</td><td>信用风险+流动性均衡</td><td>多数时间</td><td>维持正常配置，按基本面选择等级和久期</td></tr>
+<tr><td>120-250bp</td><td>信用收紧/经济下行</td><td>信用风险溢价上升</td><td>2018年民企违约潮、2022年地产信用冲击、2023年城投波动</td><td>减仓中低等级信用债，换入AAA高等级或利率债，缩短久期至3年以内</td></tr>
+<tr><td>&gt;250bp</td><td>信用危机</td><td>恐慌性抛售+流动性枯竭</td><td>2015年股灾后（AA+利差一度>300bp）、2023年城投传闻期间</td><td>高等级信用债成为最好的买入机会（危机后利差回归的年化收益可达10-20%）</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据区间：2015-2024年中债估值中心数据，Wind金融终端</p>
+
+<h4 class="subsection-title">经济周期四阶段的信用利差策略</h4>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>国债收益率</th><th>信用利差变化</th><th>最优信用策略</th><th>久期选择</th></tr>
+<tr><td>复苏初期</td><td>利率低位企稳</td><td>利差从高位快速收窄</td><td>买入AA+及以上信用债，享受利差回归收益</td><td>中久期(3-5年)</td></tr>
+<tr><td>繁荣/过热</td><td>利率上升</td><td>利差低位持稳或小幅扩大</td><td>信用债仍可配置但缩短久期；关注杠杆率过高的行业</td><td>短久期(1-3年)</td></tr>
+<tr><td>衰退初期</td><td>利率快速下降</td><td>利差急剧扩大（债市避险）</td><td>卖出信用债、买入利率债（利率债受益于利率下降而信用债受制于利差扩大）</td><td>长久期利率债(5-10年)</td></tr>
+<tr><td>衰退末期/危机后</td><td>利率低位</td><td>利差达到极值后开始收窄</td><td>买入高收益信用债（利差回归的弹性最大，2018年底AA+利差260bp后6个月压缩至120bp）</td><td>中等久期(3-5年)</td></tr>
+</table></div>
+
+<h4 class="subsection-title">评级迁移矩阵与违约预警</h4>
+<p>中债资信基于2015-2023年数据的1年期评级迁移概率：</p>
+<div class="table-wrap"><table>
+<tr><th>初始评级</th><th>保持不变</th><th>上调1级</th><th>下调1级</th><th>下调2级+</th><th>违约</th></tr>
+<tr><td>AAA</td><td>95.2%</td><td>—</td><td>4.0%</td><td>0.7%</td><td><0.1%</td></tr>
+<tr><td>AA+</td><td>88.5%</td><td>4.5%</td><td>5.5%</td><td>1.2%</td><td>0.3%</td></tr>
+<tr><td>AA</td><td>85.0%</td><td>5.0%</td><td>7.0%</td><td>2.0%</td><td>1.0%</td></tr>
+<tr><td>AA-</td><td>78.0%</td><td>6.0%</td><td>9.0%</td><td>4.0%</td><td>3.0%</td></tr>
+</table></div>
+<p>连降两级(AAA→A+)是强烈违约预警信号。2021年恒大从AAA连降至BB（投机级），债价在1个月内从90元跌至30元。2022年碧桂园AAA→AA+→AA-连降，债价从95跌至40元。连降开始后应不计成本卖出。</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">利差处于历史90%分位以上+经济预期见底：</span>买入中等久期(3-5年)AA+级信用债，目标利差压缩至60%分位，预期收益年化15-20%</li>
+<li><span class="hl-signal">利差处于历史10%分位以下：</span>减仓信用债换入利率债，等待利差反弹后再重新布局</li>
+<li><span class="hl-signal">评级下调信号：</span>中诚信/联合/大公中任何一家将展望调整为"负面"→减仓50%；正式降级→清仓</li>
+<li><strong>数据渠道：</strong>中债估值中心每日利差曲线、Wind信用债板块、DM查债通应用程序</li>
+</ul>
+</div>
+
+</div>
+
+`},
         ]
       },
       technical: {
@@ -2134,6 +2488,118 @@ content:`<div class="content-card s1">
 <li><span class="hl-signal">收益率曲线骑乘：</span>持有时长6-12个月，选5-7年期品种（流动性最好，骑乘收益最优）</li>
 <li><strong>中国债市杠杆限制：</strong>公募债基杠杆不超过140%，私募债基不超过200%（证监会规定）</li>
 </ul>
+</div>
+
+`},
+          { id:'bond_tech_2', title:'模块5：国债期货交易策略',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>中国国债期货TS/TF/T的合约规格与CTD逻辑</li>
+<li>基于久期的套期保值计算公式</li>
+<li>基差交易与跨品种价差策略</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">中国国债期货三大品种合约规格</h4>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>代码</th><th>标的期限</th><th>合约面值</th><th>最小变动</th><th>保证金</th><th>日均成交(2024)</th><th>CTD久期</th><th>名义杠杆</th><th>实际杠杆</th></tr>
+<tr><td>2年期国债期货</td><td>TS</td><td>2年</td><td>200万元</td><td>0.005元</td><td>约0.5%</td><td>约5万手</td><td>约1.8年</td><td>200倍</td><td>约3-5倍</td></tr>
+<tr><td>5年期国债期货</td><td>TF</td><td>5年</td><td>100万元</td><td>0.005元</td><td>约1.2%</td><td>约8万手</td><td>约4.2年</td><td>约83倍</td><td>约5-8倍</td></tr>
+<tr><td>10年期国债期货</td><td>T</td><td>10年</td><td>100万元</td><td>0.005元</td><td>约2.0%</td><td>约12万手</td><td>约7.5年</td><td>约50倍</td><td>约8-12倍</td></tr>
+</table></div>
+<p>保证金约0.5-2%，名义杠杆50-200倍，但由于国债期货日均波幅极小(0.1-0.3%)，实际杠杆效应约5-12倍。TS适合做短期利率对冲，T适合做长期利率波动交易。</p>
+
+<h4 class="subsection-title">最便宜可交割券(CTD)逻辑与基差交易</h4>
+<p>国债期货的空头方可以选择任意可交割债券进行实物交割。交割时按转换因子(CF)调整交割价，空头方选择净成本最低的债券(CTD)。CTD取决于收益率曲线的形态：</p>
+<ul>
+<li>当收益率曲线陡峭（长端>短端）时，CTD通常是最短久期的可交割券</li>
+<li>当收益率曲线平坦（长端≈短端）时，CTD通常是长久期债券</li>
+<li><span class="hl-signal">CTD切换</span>：当收益率曲线形态变化导致CTD切换时，期货价格可跳升0.2-0.5元。2020年4月中国债市牛转熊时期，TF合约CTD从5年期切换至4年期，TF合约在1周内额外上涨0.3元</li>
+</ul>
+<p><span class="hl-formula">基差(Basis)=债券净价-期货价格x转换因子(CF)</span>。临近交割月基差必然收敛至零。当基差>0.5元时，买入CTD国债+做空期货的套利窗口打开（年化收益可达5-8%）。这是低风险的"交割套利"。</p>
+
+<h4 class="subsection-title">套期保值完整计算案例</h4>
+<div class="code-block">
+<span class="comment">// 场景：某机构持有1.5亿元10年期国债，担心利率上行，计划做空T合约对冲</span>
+<span class="comment">// 已知：债券DV01=9.5万元/整个持仓，T合约DV01=0.08万元/手</span>
+对冲手数 = 1.5亿 x (9.5/1.5亿) / 0.08 = 95000 / 800 = <span class="number">119手</span>
+
+<span class="comment">// 实际操作：取整120手，分3天建仓（每天40手），降低冲击成本</span>
+<span class="comment">// 假设利率上行20bp（债券价格下跌1.5%即225万），期货端盈利：</span>
+期货盈利 = 120手 x 100万面值 x 20bp x (DV01债券/DV01期货) ≈ <span class="number">225万元</span>
+<span class="comment">// 对冲效果：完全对冲，债券亏损被期货盈利弥补</span></div>
+
+<h4 class="subsection-title">跨品种价差(TF-T)与收益率曲线交易</h4>
+<p>TF-T价差反映5年与10年的期限利差。当TF-T价差处于历史极值时：</p>
+<ul>
+<li>TF-T价差&lt;2.8元（对应5-10年利差&lt;30bp）→做陡曲线：做多TF+做空T，赌利差扩大</li>
+<li>TF-T价差&gt;3.5元（对应利差&gt;100bp）→做平曲线：做空TF+做多T，赌利差收窄</li>
+<li>每1bp利差变化对应TF-T价差变动约0.03元。仓位管理：每100万资金可配置TF 2手+T 1手</li>
+</ul>
+<p>2023年四季度TF-T价差从3.2元压缩至2.6元（利差收窄60bp），做平曲线策略在3个月内每手盈利约0.6元×100万=6000元。</p>
+
+</div>
+
+`},
+          { id:'bond_tech_3', title:'模块6：货币政策工具与流动性分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>央行四大工具：OMO逆回购/MLF/降准/结构性工具(PSL)</li>
+<li>DR007偏离OMO的30bp信号阈值</li>
+<li>流动性分层R-DR价差的风险信号</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">央行四大流动性工具的详细信号解读</h4>
+<div class="table-wrap"><table>
+<tr><th>工具</th><th>操作期限</th><th>操作频率</th><th>当前利率(2024)</th><th>单次释放资金</th><th>信号强度</th><th>对债券的影响</th></tr>
+<tr><td>OMO逆回购(7天/14天)</td><td>7天为主</td><td>几乎每日9:20</td><td>1.7%</td><td>每日100-500亿</td><td>★★☆</td><td>OMO利率下调→短端利率下降→利好短债。OMO持续大额投放(>500亿/日)=央行在"保驾护航"，债市做多信心强</td></tr>
+<tr><td>MLF(1年期)</td><td>1年</td><td>每月15日</td><td>2.5%</td><td>续作规模6000-15000亿</td><td>★★★</td><td>MLF利率是利率体系中枢。下调10bp=10年国债收益率约下行8-12bp。超量续作(>到期量)=投放长期流动性</td></tr>
+<tr><td>降准(RRR)</td><td>永久性</td><td>每6-18个月</td><td>加权7.0%</td><td>0.5%释放约1万亿</td><td>★★★★</td><td>降准是最强烈的宽松信号。2018年以来7次降准后的1个月内，10年国债平均下行12bp。叠加降息=最强牛信号</td></tr>
+<tr><td>结构性工具(PSL/SLF/TMLF)</td><td>1-3年</td><td>按需公布</td><td>PSL 2.4%</td><td>PSL单月可增1000-3000亿</td><td>★★★</td><td>PSL增加=宽信用发力(PSL通常定向支持地产/基建)→可能利空债市(经济预期改善)；SLF投放=缓解流动性压力→短多</td></tr>
+</table></div>
+
+<h4 class="subsection-title">货币政策执行报告季度信号解读</h4>
+<p>央行每季度发布《中国货币政策执行报告》，其中最关键的是货币政策取向表述的变化：</p>
+<div class="table-wrap"><table>
+<tr><th>表述</th><th>对应政策方向</th><th>历史案例</th><th>后续债市表现</th></tr>
+<tr><td>"灵活适度" "保持流动性合理充裕"</td><td>宽松（降准降息周期）</td><td>2020年Q1、2023年Q3</td><td>债牛延续，10年国债下行10-30bp</td></tr>
+<tr><td>"精准有力" "稳健的货币政策"</td><td>中性（观察期）</td><td>2023年Q1</td><td>债市震荡，短端稳定长端微调</td></tr>
+<tr><td>"管好货币总闸门" "不搞大水漫灌"</td><td>收紧信号</td><td>2021年Q1（当时10年国债从3.1%升至3.3%）</td><td>债市承压，长端上行15-25bp</td></tr>
+<tr><td>"跨周期调节"（出现此表述）</td><td>宽松即将结束</td><td>2021年Q2</td><td>债市从牛转熊过渡期</td></tr>
+</table></div>
+
+<h4 class="subsection-title">DR007偏离OMO的量化交易</h4>
+<p>DR007（存款类机构7天回购利率）是央行最关注的市场基准利率，与OMO 7天逆回购利率的偏离是债市资金面的核心指标：</p>
+<ul>
+<li><span class="hl-signal">DR007持续高于OMO>30bp且超5个交易日</span>→资金面明显收紧→债市承压→做空国债期货或缩短久期至3年以内。2022年11月DR007从1.4%飙升至2.0%(高于OMO 1.7%)，10年国债收益率在1个月内从2.6%升至2.9%，3%的债市跌幅为2016年以来最大</li>
+<li><span class="hl-signal">DR007持续低于OMO>20bp</span>→资金面极度宽松→加杠杆做多债市窗口</li>
+</ul>
+
+<h4 class="subsection-title">流动性分层：R007-DR007价差的预警作用</h4>
+<p>R007（全市场7天回购）包含非银机构(基金/券商/理财子)，DR007只包含银行。两者之差(R-DR)反映银行体系向非银传导的效率：</p>
+<p><span class="hl-signal">R-DR<20bp=流动性传导顺畅，R-DR 20-50bp=正常，R-DR>50bp=非银流动性紧张，R-DR>80bp=流动性冲击预警</span>。</p>
+<p>历史极端事件：2019年5月包商银行被接管后R-DR飙升至150bp+，非银机构一度无法借到钱，央行紧急投放流动性后R-DR在2周内回落。2022年11月理财赎回潮期间R-DR再次飙升>100bp，理财子的流动性危机直接传导至信用债市场，AA+级信用利差在1个月内扩大80bp。</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">OMO-MLF-LPR三者同步下调+报告表述转为"灵活适度"：</span>强烈牛市信号，拉长久期至5-10年，加杠杆至140%</li>
+<li><span class="hl-signal">DR007>OMO+30bp且持续1周：</span>缩短久期至3年以内，减仓或做空国债期货</li>
+<li><span class="hl-signal">R-DR>80bp：</span>流动性冲击风险预警，卖出信用债、缩短久期、做空国债期货</li>
+<li><span class="hl-signal">降准公告后：</span>1个月内债市上涨概率约80%，买入中长久期利率债</li>
+<li><strong>关注渠道：</strong>央行官网(公开市场操作/货币政策执行报告)、中国货币网(DR007/R007实时数据)</li>
+</ul>
+</div>
+
 </div>
 
 `},
@@ -2599,23 +3065,163 @@ content:`<div class="content-card s1">
 </ul>
 </div>
 
-<h3 class="section-title"><span class="num">④</span> 实战复盘案例</h3>
-<p><strong class="hl-bold">案例：2022年2-6月原油170%涨幅</strong></p>
-<p><strong class="hl-bold">供需面：</strong>2022年初全球原油库存处于5年低位（OECD商业库存低于5年均值约1.5亿桶）。需求从疫情中强劲复苏（全球油需2022年预计9960万桶/日，接近2019年水平）。供给端OPEC+持续减产约200万桶/日。供需缺口持续存在。</p>
-<p><strong class="hl-bold">地缘冲击：</strong>2022年2月24日俄乌冲突爆发。俄罗斯原油日均出口约480万桶，约占全球5%。市场担忧制裁导致俄罗斯供给退出，WTI从90美元/桶暴涨至130.5美元/桶（3月8日）。</p>
-<p><strong class="hl-bold">启示：</strong>供需缺口（基本面）+地缘冲击（情绪面）的双重驱动力可使价格在短期内超出任何基本面估值。6月8日WTI触及122美元后，美国宣布释放战略石油储备（SPR，每日100万桶、持续6个月），供给端对冲落地，油价开始回落。</p>
+`},
+          { id:'com_fund_2', title:'模块2：原油供需与OPEC+会议博弈',
+content:`<div class="content-card s1">
 
-<h3 class="section-title"><span class="num">⑤</span> 高频误区</h3>
-<div class="warning-box">
-<div class="warn-title">⚠ 新手常见错误</div>
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
 <ul>
-<li><strong>误区1：「供需缺口=价格必然上涨」</strong> — 缺口是"慢变量"方向判断，短期价格由资金和情绪驱动。2023年全球铜供需缺口约50万吨（ICSG数据），但沪铜全年涨幅仅约4%——因为美联储加息压制了投机需求</li>
-<li><strong>误区2：「库存低=就要暴涨」</strong> — 低库存是必要条件但不是充分条件。库存低且需求也在走弱（如2023年锌），价格仍然下跌。供需联动判断才完整</li>
-<li><strong>误区3：「OPEC减产=油价涨」</strong> — 2023年4月OPEC+宣布自愿减产约166万桶/日，次日WTI高开2%后当日收跌0.5%。"减产"本身已经提前被市场price in，关键是对预期差（宣布的减产量是否超预期）的交易</li>
+<li>EIA周度库存数据的交易方法（每周三10:30公布的短线策略）</li>
+<li>OPEC+会议前中后三阶段的博弈逻辑（预期-决议-执行）</li>
+<li>全球原油供需平衡表的核心变量：页岩油、OPEC闲置产能、SPR</li>
+<li>裂解价差与炼厂利润的季节性规律</li>
 </ul>
 </div>
 
+<h4 class="subsection-title">全球原油供需核心变量</h4>
+<div class="table-wrap"><table>
+<tr><th>变量</th><th>当前产能</th><th>弹性</th><th>对油价影响</th><th>监测渠道</th></tr>
+<tr><td>OPEC+闲置产能</td><td>约400万桶/日（沙特为主）</td><td>低（增产需1-3个月）</td><td>闲置产能越低→供给弹性越小→油价易涨难跌；当闲置产能<200万桶/日时油价开始剧烈波动</td><td>OPEC月报MOMR</td></tr>
+<tr><td>美国页岩油</td><td>1290万桶/日</td><td>高（3-6个月可释放）</td><td>页岩油钻机数是油价的领先指标（滞后6个月）：钻机数连续3个月增加→6个月后产量增加→油价承压</td><td>Baker Hughes周报</td></tr>
+<tr><td>战略石油储备SPR</td><td>美国约3.7亿桶（2024年初）</td><td>一次性释放</td><td>SPR释放=短期打压油价（2022年释放1.8亿桶对油价的压制约15-20美元）；SPR补库=长期底部支撑</td><td>EIA每周报告</td></tr>
+<tr><td>俄罗斯出口</td><td>约480万桶/日，其中约300万桶/日受制裁限制</td><td>制裁相关</td><td>俄油60美元价格上限实际执行率约30-40%，影响远小于预期。但2023年俄罗斯主动减产50万桶/日的实际影响大于制裁</td><td>Kpler/Vortexa船运数据</td></tr>
+</table></div>
+
+<h4 class="subsection-title">WTI vs 布伦特的价差交易</h4>
+<p>WTI（美国西德州中质原油）和布伦特（北海布伦特原油）是全球两大基准原油。两者价差（B-W Spread）由美国原油出口能力决定：</p>
+<p><span class="hl-formula">正常价差：布伦特比WTI贵2-5美元/桶（品质溢价+运输溢价）</span></p>
+<p>当价差扩大至>8美元时：意味着美国原油无法顺利出口（管道瓶颈或库存积压），做空WTI/做多布伦特的套利窗口打开。当价差<1美元时：美国原油可以顺畅出口，做多WTI/做空布伦特。</p>
+<p>2020年4月WTI交割地库欣库存满仓，B-W价差飙升至-12美元（WTI反而比布伦特贵），WTI 5月合约跌至-37美元的历史极端——这是仓储瓶颈叠加恐慌平仓的极端案例。</p>
+
+<h4 class="subsection-title">EIA周度数据短线交易策略</h4>
+<p>EIA每周三10:30（美东时间）公布美国原油库存变动，这是全球交易量最大的高频数据，每次公布后5分钟内WTI日均波幅约1.2%。</p>
+<div class="table-wrap"><table>
+<tr><th>数据组合</th><th>信号强度</th><th>5分钟波幅</th><th>操作</th></tr>
+<tr><td>原油库存增>200万桶 + 汽油增</td><td>强烈利空</td><td>-1.5% ~ -2.5%</td><td>做空WTI近月</td></tr>
+<tr><td>原油库存减>200万桶 + 库欣库存减</td><td>强烈利多</td><td>+1.5% ~ +2.5%</td><td>做多WTI近月</td></tr>
+<tr><td>原油库存减但汽油库存增</td><td>中性偏空</td><td>±0.5%</td><td>观望</td></tr>
+<tr><td>美国产量突增>20万桶/日</td><td>结构性利空</td><td>-1%持续数日</td><td>做空中期远期</td></tr>
+</table></div>
+<p><span class="hl-bold">EIA数据全年最关键的几周：</span>6月驾驶旺季开始前（5月最后一周库存报告）、飓风季第一周（8月）、冬季取暖油转换期（10月）、年末库存重建期（12月）。这些时期数据对市场的影响比平常大50-100%。</p>
+
+<h4 class="subsection-title">OPEC+会议博弈框架</h4>
+<p>OPEC+由13个OPEC成员国+10个非OPEC产油国（俄罗斯为首）组成，每年2次部长级会议。博弈分三阶段：</p>
+<p><strong>会前（1-2个月）：</strong>各国能源部长通过媒体"放风"。沙特的信号最为关键（"口头干预"是OPEC最常用的价格管理工具），减产预期通常推高油价约5-10%。跟踪渠道：Reuters/Platts的OPEC来源新闻。</p>
+<p><strong>会议日：</strong>关键看决议是否超出市场预期。三种结果：①超预期减产（如宣布减100万桶+高于预期的50万桶）→冲高回落（利好出尽，在涨2-3%后做空）；②符合预期→中性，维持原方向；③低于预期或内部分歧→暴跌3-5%。</p>
+<p><strong>会后（1-3个月）：</strong>看实际执行率。OPEC+历史上约70%的总减产承诺被实际执行：沙特通常超额执行（100%+），伊拉克执行率约60%，尼日利亚约40%（产能不足+投资缺失），俄罗斯约80%。减产执行率月报由IEA和Platts跟踪。</p>
+
+<h4 class="subsection-title">裂解价差（Crack Spread）</h4>
+<p>裂解价差=汽油价格+柴油价格-原油价格×3（3桶原油约产出2桶汽油+1桶柴油）。炼厂利润的领先指标。</p>
+<p><span class="hl-formula">裂解价差正常区间10-20美元/桶；>30美元=炼厂暴利，会刺激炼厂增产；<5美元=炼厂亏损，会减产</span>。</p>
+<p>2022年俄乌冲突后裂解价差飙升至50美元+（汽油紧缺），2023年回落至15美元正常水平。当裂解价差>30时，做空汽油/做多原油（炼厂利润回归）；当<5时，做多汽油/做空原油。</p>
+
+</div>
+
 `},
+          { id:'com_fund_3', title:'模块3：贵金属（黄金/白银）交易专题',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>黄金定价三因子：实际利率、美元指数、地缘风险溢价</li>
+<li>央行购金对金价的结构性支撑（2022-2024年央行年均购金超1000吨）</li>
+<li>金银比价（Gold/Silver Ratio）的均值回归交易</li>
+<li>黄金 vs 黄金股 vs 黄金ETF的差异</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">黄金定价三因子详解</h4>
+<div class="table-wrap"><table>
+<tr><th>因子</th><th>相关性</th><th>逻辑</th><th>2018-2024年回测胜率</th><th>当前状态(2024)</th></tr>
+<tr><td>实际利率(10年TIPS收益率)</td><td>负相关(-0.85)</td><td>实际利率越低→持有黄金的机会成本越低→金价越涨</td><td>76%（利率下降期做多黄金）</td><td>实际利率约2%，金价创新高——经典背离</td></tr>
+<tr><td>美元指数DXY</td><td>负相关(-0.80)</td><td>美元弱→黄金替代美元作为储值工具</td><td>72%（DXY跌5%+做多黄金胜率）</td><td>DXY 104，中性偏高</td></tr>
+<tr><td>地缘风险VIX</td><td>正相关(+0.45)</td><td>恐慌情绪推高黄金避险需求</td><td>65%（VIX>30时做多黄金）</td><td>俄乌+中东冲突持续</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">相关系数基于2018-2024年周数据</p>
+<p><span class="hl-signal">2024年最大的结构性变化：</span>金价从2070涨至2450美元（+18%），而实际利率同期从1.7%升至2.1%。这是1971年尼克松冲击（美元与黄金脱钩）以来第三次出现金价与利率同涨——前两次是1979-1980（第二次石油危机）和2005-2008（次贷危机前兆）。三次背离的共同特征：全球货币体系信任危机。2024年驱动因素：央行购金（2024年Q1央行购金290吨，同比+72%）+去美元化（美元储备占比从2000年72%降至2024年58%）。</p>
+
+<h4 class="subsection-title">央行购金深度分析</h4>
+<p>2022-2024年全球央行年均购金超1000吨，而2010-2021年年均仅约500吨。2023年全年央行购金量达1037吨。</p>
+<div class="table-wrap"><table>
+<tr><th>买家</th><th>2023年购金(吨)</th><th>动机</th><th>持续性评估</th></tr>
+<tr><td>中国央行(PBoC)</td><td>225</td><td>去美元化+外汇储备多元化；连续18个月增持</td><td>高——中国人民银行黄金储备仅占总储备4.3%（远低于全球均值15%），增持空间巨大</td></tr>
+<tr><td>波兰央行(NBP)</td><td>130</td><td>将黄金占比提升至20%的目标</td><td>高</td></tr>
+<tr><td>印度央行(RBI)</td><td>90</td><td>储备多元化</td><td>中</td></tr>
+<tr><td>土耳其央行(TCMB)</td><td>80</td><td>里拉贬值+地缘政治对冲</td><td>中——有时也会卖出（如2023年3月卖出60吨）</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：世界黄金协会2024年Q1央行购金报告</p>
+<p>央行购金不仅是金价的增量买盘，更重要的是改变了市场结构——央行的卖出意愿极低（不像ETF投机者会追涨杀跌），因此央行购金相当于"抽走了市场上的卖出流动性"，使金价对利空的敏感度大幅下降。这是金价在2024年面对高利率仍然坚挺的核心原因。</p>
+
+<h4 class="subsection-title">金银比价（Gold/Silver Ratio）交易框架</h4>
+<p><span class="hl-formula">金银比GSR = 金价(美元/盎司) / 银价(美元/盎司)</span>。历史长期均值约60-70倍。</p>
+<div class="table-wrap"><table>
+<tr><th>GSR区间</th><th>含义</th><th>操作</th><th>历史回测胜率</th><th>平均回归时间</th></tr>
+<tr><td>>90</td><td>白银极度低估</td><td>做多白银/做空黄金（或直接做多白银）</td><td>78%</td><td>6-18个月</td></tr>
+<tr><td>80-90</td><td>白银低估</td><td>开始分批买入白银</td><td>72%</td><td>3-12个月</td></tr>
+<tr><td>60-80</td><td>正常区间</td><td>观望</td><td>—</td><td>—</td></tr>
+<tr><td><50</td><td>黄金低估</td><td>做多黄金/做空白银</td><td>70%</td><td>3-12个月</td></tr>
+</table></div>
+<p>2020年3月新冠疫情恐慌时GSR飙至125（历史上第三次>120），是强烈做多白银/做空白银的信号。随后12个月内白银从12美元涨至28美元（涨幅133%），而金价仅从1470涨至2075（涨幅41%），GSR回归至75。</p>
+
+<h4 class="subsection-title">白银的特殊性：工业与金融双重属性</h4>
+<p>白银除了货币属性外还有工业属性（约50%需求来自工业：光伏、电子、银饰）。2023年全球白银实物缺178.9百万盎司（连续第4年短缺，来源：世界白银协会）。光伏用银占工业需求的35%且年增速约15%。白银的基本面比黄金更紧，但波动性也是黄金的2倍左右——白银日波动率约2.5%，黄金约1.2%。适合有高波动承受力的投资者。</p>
+
+</div>
+
+`},
+          { id:'com_fund_4', title:'模块4：农产品USDA报告与天气交易',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>USDA月度供需报告(WASDE)的解读方法</li>
+<li>厄尔尼诺/拉尼娜对全球农产品产区的影响地图</li>
+<li>大豆/玉米/小麦的核心交易逻辑</li>
+<li>天气市的炒作节奏：种植期→生长期→收获期的交易切换</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">USDA WASDE报告交易框架</h4>
+<p>美国农业部（USDA）每月9-12日发布世界农业供需预测报告（WASDE），涵盖全球主要农产品的产量/消费/库存/贸易数据。这是全球农产品交易者的 "央行利率决议"——每次发布必引发2-5%的当日波动。</p>
+<div class="table-wrap"><table>
+<tr><th>数据项</th><th>变化方向</th><th>价格影响</th><th>历史波动幅度</th><th>对应操作</th></tr>
+<tr><td>期末库存/消费比(S/U Ratio)</td><td>下降>2%</td><td>强烈利多（供给紧张）</td><td>+3~+5%</td><td>做多CBOT大豆/玉米/小麦</td></tr>
+<tr><td>期末库存/消费比</td><td>上升>2%</td><td>强烈利空（供给宽松）</td><td>-3~-5%</td><td>做空</td></tr>
+<tr><td>美国单产预估</td><td>下调>3%</td><td>极端利多（天气已实质影响产量）</td><td>+5~+8%</td><td>做多+买入虚值看涨期权</td></tr>
+<tr><td>全球种植面积</td><td>减少>2%</td><td>利多（面积收缩→产量减少）</td><td>+2~+4%</td><td>做多</td></tr>
+</table></div>
+<p><span class="hl-signal">交易策略：</span>发布前3天不持仓过夜（防止数据超预期的极端波动）。发布后15分钟是最高波动时段——如果数据超出市场预期（关注路透/彭博的WASDE前瞻调查），可追单（止损挂报告前价格±2%）。如果数据符合预期，波动通常在30分钟内消退，不做追单。</p>
+<p>WASDE全年最重要的几次报告：<span class="hl-bold">5月首次发布新作物年度预估</span>（面积/单产）、<span class="hl-bold">6月底种植面积报告</span>（实际种植vs预期）、<span class="hl-bold">7-8月单产调整</span>（天气关键期）、<span class="hl-bold">1月最终产量确认</span>。</p>
+
+<h4 class="subsection-title">厄尔尼诺/拉尼娜对农产品的影响</h4>
+<div class="table-wrap"><table>
+<tr><th>气候</th><th>北美</th><th>南美</th><th>东南亚</th><th>非洲/澳洲</th><th>做多</th><th>做空</th></tr>
+<tr><td>厄尔尼诺</td><td>美国中西部湿润（利好玉米/大豆）</td><td>巴西南部+阿根廷干旱（利空大豆、玉米）</td><td>印尼干旱（利空棕榈油）；泰国干旱（利空橡胶）</td><td>南非干旱（利空玉米）；澳洲干旱（利空小麦）</td><td>棕榈油、橡胶</td><td>大豆、白糖、小麦</td></tr>
+<tr><td>拉尼娜</td><td>美国南部干旱（利空棉花、冬小麦）；中西部湿润（利好玉米）</td><td>巴西中南部多雨（利好甘蔗）；阿根廷多雨（利好大豆）</td><td>印尼多雨（利好棕榈油）</td><td>东非多雨（利好咖啡）；澳洲多雨（利好小麦）</td><td>小麦、玉米、棉花</td><td>棕榈油、甘蔗</td></tr>
+</table></div>
+<p><span class="hl-signal">跟踪工具：</span>NOAA（美国国家海洋大气管理局）每月发布ENSO展望，含厄尔尼诺/拉尼娜的发生概率。当概率>70%时开始布局农业品的天气交易。2023-2024年强厄尔尼诺导致泰国甘蔗减产20%、马来西亚棕榈油减产5-8%、阿根廷大豆减产约10%（布宜诺斯艾利斯谷物交易所数据）。</p>
+
+<h4 class="subsection-title">天气市的三阶段交易节奏（以大豆为例）</h4>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>时间</th><th>炒作焦点</th><th>价格波动</th><th>最佳策略</th></tr>
+<tr><td>种植期</td><td>5-6月</td><td>种植面积、播种进度</td><td>±2%/日</td><td>买入虚值看涨期权（赌面积减少）</td></tr>
+<tr><td>关键生长期</td><td>7月15日-8月15日</td><td>降雨量、温度（美豆关键授粉期）</td><td>±3-5%/日</td><td>做多近月期货止损ATR×2；买入宽跨式期权</td></tr>
+<tr><td>收获确认期</td><td>9-10月</td><td>USDA最终单产、收获压力</td><td>±1-2%/日</td><td>季节性空头（产量确认后价格倾向回落）</td></tr>
+</table></div>
+<p>关键生长期（7月中旬-8月中旬）是全年波动最大的时段。如果中西部出现高温干旱（连续10天气温>35°C+降雨<正常50%），大豆单产可能下调5-10%，CBOT大豆可在2周内涨15-20%。买入虚值看涨期权（delta 0.25-0.30）是风险收益比最高的策略。</p>
+
+<h4 class="subsection-title">中国农产品市场特点</h4>
+<p>中国是全球最大的大豆进口国（年进口约1亿吨，占全球60%+）、最大的猪肉消费国、第二大玉米消费国。中国需求对全球农产品的影响：大连商品交易所（DCE）的豆粕/豆油/玉米价格与CBOT联动但有其独立性（受国内政策影响）。中国进口节奏的加速/放缓可在1-2周内影响CBOT价格5-8%。大豆压榨利润（进口大豆成本-豆粕价-豆油价）是跟踪中国需求的最佳指标。</p>
+
+</div>
+
+`}
         ]
       },
       technical: {
@@ -2792,16 +3398,645 @@ content:`<div class="content-card s1">
 </ul>
 </div>
 
+`},
+          { id:'com_res_2', title:'模块2：航运指数与全球贸易',
+content:`<div class="content-card s1">
+
+<h3 class="section-title">【本节核心学习重点】</h3>
+<div class="core-points">
+<div class="cp-title">必掌握</div>
+<ul>
+<li>BDI波罗的海干散货指数与商品价格的领先关系</li>
+<li>集装箱运价SCFI/CCFI与全球贸易量的联动</li>
+<li>油轮运价BDTI与原油贸易流的分析</li>
+<li>航运瓶颈对商品价格的脉冲冲击交易</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">三大航运指数详解</h4>
+<div class="table-wrap"><table>
+<tr><th>指数</th><th>全称</th><th>衡量</th><th>与商品的关系</th><th>数据频率</th><th>查询渠道</th></tr>
+<tr><td>BDI</td><td>波罗的海干散货指数</td><td>铁矿石/煤炭/粮食等大宗散货运价</td><td>领先铁矿石价格2-4周，与全球工业需求正相关(r=0.65)</td><td>每日17:00</td><td>Baltic Exchange</td></tr>
+<tr><td>SCFI</td><td>上海出口集装箱运价指数</td><td>制成品集装箱运价(上海→全球)</td><td>领先中国出口数据4-6周，反映全球消费需求强度</td><td>每周五</td><td>上海航交所</td></tr>
+<tr><td>BDTI</td><td>波罗的海原油油轮运价指数</td><td>原油油轮运输成本</td><td>运价飙升=原油供给紧张或贸易路线变更(如俄油绕道)</td><td>每日</td><td>Baltic Exchange</td></tr>
+</table></div>
+
+<h4 class="subsection-title">BDI的构成与交易逻辑</h4>
+<p>BDI由三个子指数构成：BCI（好望角型船，运铁矿石/煤炭，占BDI权重40%）、BPI（巴拿马型船，运粮食/煤炭，30%）、BSI（灵便型船，运小宗散货，30%）。BCI是BDI波动最大的成分，直接反映中国铁矿石进口需求——因此BDI的周期性主要由中国钢铁需求驱动。</p>
+<p><span class="hl-formula">BDI与CRB商品指数相关系数约0.65（2015-2024年），与铁矿石价格相关系数约0.72</span>。</p>
+<div class="table-wrap"><table>
+<tr><th>BDI区间</th><th>含义</th><th>对应铁矿石价格区间</th><th>操作</th></tr>
+<tr><td>>3000</td><td>全球工业需求极度旺盛</td><td>铁矿石>200美元</td><td>做多铁矿石/螺纹钢</td></tr>
+<tr><td>1500-3000</td><td>正常偏强</td><td>120-200美元</td><td>正常交易</td></tr>
+<tr><td>800-1500</td><td>供需平衡</td><td>90-120美元</td><td>观望</td></tr>
+<tr><td><800</td><td>需求疲软</td><td><90美元</td><td>避险或做空</td></tr>
+</table></div>
+
+<h4 class="subsection-title">集装箱运价的全球经济信号</h4>
+<p>SCFI从2019年均价800点，2021年飙升至5100点（疫情供应链危机），2023年跌至1000点以下，2024年红海危机反弹至2200点。集装箱运价的变化直接反映全球消费需求周期——运价上涨意味着全球零售商在补库存（需求好），运价下跌意味着去库存周期（需求差）。</p>
+<p><span class="hl-signal">SCFI是中国出口的领先指标：SCFI上涨→4-6周后中国出口数据改善。</span>2023年SCFI持续下跌→2023年下半年中国出口连续5个月同比下降。2024年SCFI反弹→出口数据回暖。</p>
+
+<h4 class="subsection-title">航运瓶颈交易框架</h4>
+<div class="table-wrap"><table>
+<tr><th>事件</th><th>时间</th><th>影响品种</th><th>价格变化</th><th>持续时间</th><th>交易策略</th></tr>
+<tr><td>苏伊士运河堵塞</td><td>2021.03</td><td>原油、欧洲天然气</td><td>WTI+8%、TTF+12%、BDTI+50%</td><td>1-2周</td><td>事件首日做多受影响品种近月期货</td></tr>
+<tr><td>红海危机</td><td>2023.11起</td><td>集装箱运价、原油</td><td>SCFI 1000→2200、燃油成本+15%</td><td>持续数月</td><td>做多航运股/集装箱运价期货；做空远月原油(供给担忧过度)</td></tr>
+<tr><td>巴拿马运河干旱</td><td>2023.08-12</td><td>LNG、粮食</td><td>LNG船通行费涨至40万美元/次(正常5万)</td><td>4-6个月</td><td>做多美国LNG出口价差(美欧)</td></tr>
+</table></div>
+<p><span class="hl-signal">核心原则：</span>航运事件爆发24小时内是最大的交易窗口。做多受影响品种的近月期货（流动性最好），持有1-2周离场。关键在于评估事件是否"改变了供需结构"（如红海危机到绕行好望角的永久性改变）还是"临时中断"（如苏伊士堵塞6天后恢复）。结构性改变→持仓时间可延长至数月。</p>
+
+</div>
+
+`}
+        ]
+      }
+    }
+  },
+
+  mindset: {
+    name: '交易心法',
+    color: '#a78bfa',
+    dimensions: {
+      core: {
+        name: '核心心法',
+        modules: [
+          { id:'mind_core_1', title:'模块1：资金管理与风控体系',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 凯利公式完整推导与实盘分数凯利（半凯利/1/4凯利）取舍规则</li>
+<li><span class="tag must">必学</span> 最大回撤的三道防线（单笔/日/周）与回撤恢复计算</li>
+<li><span class="tag must">必学</span> 基于ATR的头寸规模计算：多品种、多策略统一风险框架</li>
+<li><span class="tag understand">了解</span> 风险平价模型与组合相关性矩阵的构建</li>
+<li><span class="tag understand">了解</span> 凯利公式在不同胜率/盈亏比组合下的最优仓位表</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>凯利公式的数学前提（独立同分布、无限次交易）在实盘中完全不成立——全凯利破产风险极高</li>
+<li>回撤30%需要涨42.9%才能回本——防回撤比追收益重要至少3倍</li>
+<li>胜率x盈亏比=期望值 不为正的系统，任何仓位管理都无法拯救——先解决期望值再谈仓位</li>
+<li>"满仓干一票"是破产的最短路径——长期生存的唯一法则是每笔只冒可承受的风险</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义与全场景演算</h3>
+
+<h4 class="subsection-title">1.1 凯利公式（Kelly Criterion）完整推导</h4>
+<p><span class="hl-principle">凯利公式</span>由贝尔实验室科学家John Kelly于1956年提出（来源：Bell System Technical Journal, 1956），最初用于解决通信信号中的噪声问题，后被应用于赌场和金融市场。</p>
+<p>公式：<span class="hl-formula">f* = (bp - q) / b = (p(b+1) - 1) / b</span></p>
+<p>其中：f*=最优下注比例（账户百分比），p=胜率，q=1-p=败率，b=盈亏比（平均盈利/平均亏损）</p>
+
+<h4 class="subsection-title">多场景演算表</h4>
+<div class="table-wrap"><table>
+<tr><th>策略类型</th><th>胜率(p)</th><th>盈亏比(b)</th><th>全凯利(f*)</th><th>半凯利</th><th>1/4凯利</th><th>单笔风险预算</th></tr>
+<tr><td>高胜率趋势策略</td><td>40%</td><td>3:1</td><td>26.7%</td><td>13.3%</td><td>6.7%</td><td>≤2%</td></tr>
+<tr><td>中等频次波段</td><td>50%</td><td>2:1</td><td>25.0%</td><td>12.5%</td><td>6.3%</td><td>≤2%</td></tr>
+<tr><td>高胜率短线策略</td><td>65%</td><td>1:1</td><td>30.0%</td><td>15.0%</td><td>7.5%</td><td>≤2%</td></tr>
+<tr><td>套利/高频</td><td>75%</td><td>0.5:1</td><td>25.0%</td><td>12.5%</td><td>6.3%</td><td>≤1.5%</td></tr>
+</table></div>
+<p><span class="hl-signal">实盘铁律：任何情况下单笔风险不超过总资金的2%</span>。如果半凯利算出来超过2%，按2%执行（上限截断）。</p>
+
+<h4 class="subsection-title">1.2 最大回撤（Maximum Drawdown）与恢复计算</h4>
+<p><span class="hl-principle">最大回撤（MDD）</span>是从账户最高净值到最低净值的百分比跌幅。它是衡量风险的终极指标——交易者实际上是在"管理回撤"而非"管理收益"。</p>
+<div class="table-wrap"><table>
+<tr><th>回撤深度</th><th>需盈利回本</th><th>对应策略类型</th><th>心理承受力</th><th>标准操作</th></tr>
+<tr><td>-10%</td><td>+11.1%</td><td>套利/固收+</td><td>大多数可承受</td><td>正常，继续执行</td></tr>
+<tr><td>-15%</td><td>+17.6%</td><td>中等风险趋势</td><td>感到压力</td><td>暂停交易1周，全面复盘</td></tr>
+<tr><td>-20%</td><td>+25.0%</td><td>高波动策略</td><td>多数人开始焦虑</td><td>减仓50%，提高选标准</td></tr>
+<tr><td>-30%</td><td>+42.9%</td><td>极高杠杆策略</td><td>心理崩溃边缘</td><td>全面检查策略，强制减仓</td></tr>
+<tr><td>-50%</td><td>+100%</td><td>赌徒式交易</td><td>心理崩溃</td><td>账户冻结，至少休息1个月</td></tr>
+</table></div>
+
+<h4 class="subsection-title">完整演算：回撤恢复需要多久？</h4>
+<div class="code-block">
+<span class="comment">// 假设你有100万，回撤了20%变成80万</span>
+<span class="comment">// 你的交易系统年化收益25%</span>
+需要赚：(100 - 80) / 80 = 25% 才能回本
+恢复时间 = ln(100/80) / ln(1.25) ≈ 0.92年 ≈ 11个月
+<span class="comment">// 如果回撤40%变成60万</span>
+需要赚：(100 - 60) / 60 = 66.7%
+恢复时间 = ln(100/60) / ln(1.25) ≈ 2.1年
+<span class="err">结论：回撤40%需要2年以上恢复——期间的心理煎熬会让你放弃策略</span></div>
+
+<h4 class="subsection-title">1.3 ATR头寸规模计算（最科学的仓位管理方法）</h4>
+<p>ATR头寸规模确保每一笔交易承担相同水平的风险，无论波动大小。这是机构资金管理的标准做法。</p>
+<p><span class="hl-formula">头寸手数 = (账户资金 x 单笔风险%) / (ATR(14) x 合约乘数)</span></p>
+<div class="code-block">
+<span class="comment">// 场景A：50万账户，单笔风险2%，螺纹钢</span>
+<span class="comment">// 螺纹钢rb：ATR(14)=50元/吨，10吨/手</span>
+手数 = 500000 x 0.02 / (50 x 10) = <span class="number">20手</span>
+止损距离 = ATR x 2 = 100元/吨
+名义价值 = 20手 x 10吨 x 4000元 = 80万
+杠杆 = 80万/50万 = 1.6倍
+
+<span class="comment">// 场景B：50万账户，单笔风险2%，沪铜</span>
+<span class="comment">// 沪铜cu：ATR(14)=800元/吨，5吨/手</span>
+手数 = 500000 x 0.02 / (800 x 5) = 2.5手 → <span class="number">取整2手</span>
+止损距离 = 800 x 2 = 1600元/吨
+名义价值 = 2手 x 5吨 x 70000元 = 70万
+
+<span class="comment">// 场景C：50万账户，单笔风险2%，原油SC</span>
+<span class="comment">// 原油SC：ATR(14)=8元/桶，1000桶/手</span>
+手数 = 500000 x 0.02 / (8 x 1000) = 1.25手 → <span class="number">取整1手</span>
+止损距离 = 8 x 2 = 16元/桶
+名义价值 = 1手 x 1000桶 x 550元 = 55万
+</div>
+
+<h3 class="section-title"><span class="num">②</span> 多品种组合风险平价</h3>
+<p>持有多个品种时，不能简单相加仓位。需要计算组合的总风险：<span class="hl-formula">组合风险 = sqrt(Σ(w_i x σ_i)² + ΣΣ(w_i x w_j x σ_i x σ_j x ρ_ij))</span></p>
+<p>简化方法：<span class="hl-signal">单一板块总仓位不超过总资金50%，单一品种不超过30%</span>。如果持有螺纹钢20手+热卷10手+铁矿石5手（黑色系），按总名义价值计算总杠杆不超过3倍。</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 资金管理标准化制度</div>
+<ul>
+<li><span class="hl-signal">单笔最大亏损：</span>账户总资金的2%（硬性红线，不可破。亏损达到当天停盘）</li>
+<li><span class="hl-signal">日内最大亏损：</span>账户总资金的5%，达到立即停止所有交易</li>
+<li><span class="hl-signal">周度最大亏损：</span>账户总资金的10%，达到即停止所有交易至下周一</li>
+<li><span class="hl-signal">连亏降仓规则：</span>连续亏损3次→仓位降至正常50%；连亏5次→降至25%；连亏7次→停盘全面复盘</li>
+<li><span class="hl-signal">盈利加仓规则：</span>账户盈利>20%才允许加仓，且加仓后单笔风险预算不变</li>
+<li><span class="hl-signal">总仓位限制：</span>单一品种≤30%，同一板块≤50%，多品种总名义杠杆≤3倍</li>
+<li><span class="hl-signal">账户提款规则：</span>盈利超过50%时，提取盈利的50%落袋为安</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>「这单感觉特别好，加大仓位」</strong> — "感觉"是交易中最危险的词。仓位必须由规则决定，不由主观判断决定。2018年某私募因"确信"中美贸易战受益股而重仓50%+，一周内亏损15%</li>
+<li><strong>「分散=风险低」</strong> — 持有10个同板块品种不会降低风险。2020年3月全球资产相关性骤升至0.8+，所有风险资产的"分散化"全部失效。真正的分散需要低相关性（相关系数<0.3）</li>
+<li><strong>「回撤30%不算什么，迟早涨回来」</strong> — 如上方演算，回撤30%需要赚42.9%回本。年化20%需要约2年。而实际心理承受力往往撑不过6个月</li>
+<li><strong>「凯利公式算出来28%就下28%」</strong> — 凯利公式假设独立同分布，实盘完全不成立。全凯利在实盘中约30%的概率会在100次交易后亏损50%+。必用半凯利或1/4凯利</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_core_2', title:'模块2：交易心理学与行为纪律',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 三大行为偏差：处置效应、损失厌恶、确认偏差</li>
+<li><span class="tag must">必学</span> 交易日志模板（含情绪记录和归因分析）</li>
+<li><span class="tag must">必学</span> 连续亏损后的冷静期执行机制</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">1. 处置效应（Disposition Effect）</h4>
+<p><span class="hl-principle">处置效应</span>由Shefrin和Statman于1985年提出（Journal of Finance），指交易者倾向过早卖出盈利头寸、过久持有亏损头寸。上交所2021年对A股个人投资者的研究发现：</p>
+<ul>
+<li>早止盈：平均盈利仅8%时即卖出，后续若持有可额外获得约8-12%的年化收益</li>
+<li>不止损：平均亏损从5%放大到16%才离场，放大3.2倍</li>
+<li>散户的单笔平均胜率约48%，但由于"赚小亏大"，期望值为负</li>
+</ul>
+<p><span class="hl-signal">对策：</span>①使用移动止盈规则（如跌破MA20离场），取代固定百分比止盈；②每笔交易开仓即挂止损单（Never without Stop）；③统计自己的"平均盈利/平均亏损"，若<1:1则说明处置效应严重。</p>
+
+<h4 class="subsection-title">2. 损失厌恶（Loss Aversion）</h4>
+<p><span class="hl-principle">损失厌恶</span>由Kahneman和Tversky在1979年提出（Econometrica），核心发现：损失100元的痛苦约等于盈利200-250元的快乐，厌恶系数约2.0-2.5。fMRI脑成像研究显示即使专业交易者在账面亏损时杏仁核（恐惧中枢）也会被激活——"理性决策"是谎言，所有人都在被情绪驱动。</p>
+<p><span class="hl-signal">对策：</span>①前置"离场条件"——开仓前写下"什么条件证明我看错了"，而非浮亏时临时判断；②交易后记录"如果没做这笔交易现在如何？"对冲后悔心理；③每日收盘后花5分钟做正念呼吸，重置情绪状态。</p>
+
+<h4 class="subsection-title">3. 确认偏差（Confirmation Bias）</h4>
+<p>只寻找支持持仓的信息，忽视或否定相反证据。实证研究表明：交易者在做多后会花约70%的时间阅读利好信息（来源：Barber & Odean, 2008, Review of Financial Studies）。做多时看见利好="验证我的判断"，看见利空="短期扰动不影响大局"。</p>
+<p><span class="hl-signal">对策：</span>①开仓前打印一张空白的"反向论证表"，要求自己写出不少于3个"这次做多可能失败的原因"；②交易中每天问一遍"如果我现在是空仓，我会在这个位置入场吗？"；③重要的中长线持仓请一位交易伙伴做"魔鬼代言人"（Devil' Advocate）角色。</p>
+
+<h4 class="subsection-title">4. 过度自信（Overconfidence）</h4>
+<p>连续盈利3-5次后，交易者会系统性高估自己的能力。研究显示：连续盈利后的仓位平均增加40%（来源：Barber & Odean, 2001, QJE），而连续盈利后的下一次交易亏损概率比平时高15%。这就是"盈利有毒"的数学证明。</p>
+<p><span class="hl-signal">对策：</span>连续盈利3次后强制降低仓位至正常水平的75%；连续盈利5次后强制休息1天，不交易。</p>
+
+<h4 class="subsection-title">5. 交易日志标准模板</h4>
+<div class="table-wrap"><table>
+<tr><th>日期</th><th>品种</th><th>方向</th><th>进场依据</th><th>仓位</th><th>止损</th><th>离场原因</th><th>盈亏</th><th>情绪状态</th><th>反思</th></tr>
+<tr><td>6/21</td><td>rb</td><td>多</td><td>MA20金叉+成交量放大</td><td>10手</td><td>3500</td><td>止损</td><td>-5000</td><td><span class="hl-signal">焦虑（连亏后想扳回）</span></td><td>进场过早，应等收盘确认</td></tr>
+</table></div>
+<p>关键字段是"情绪状态"——这是纠正行为偏差的第一手数据。每周日统计情绪分布，如果"焦虑""急躁""愤怒"出现频率超过30%，就应该减轻仓位甚至停盘。</p>
+
+<h3 class="section-title">交易日志模板</h3>
+<div class="table-wrap"><table>
+<tr><th>字段</th><th>填写</th></tr>
+<tr><td>进场依据</td><td>MA20金叉MA60+突破前高</td></tr>
+<tr><td>仓位/止损</td><td>10手/3500</td></tr>
+<tr><td>情绪状态</td><td><span class="hl-signal">焦虑（连亏后想扳回）</span></td></tr>
+</table></div>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">冷静期：</span>日亏5%停24h；周亏10%停至下周</li>
+<li><span class="hl-signal">每笔交易必须填写日志含情绪</span></li>
+</ul>
+</div>
+
+<h3 class="section-title">误区</h3>
+<div class="warning-box">
+<ul>
+<li>fMRI研究显示专业交易者做交易时也会激活情绪中心</li>
+<li>归因于过程而非结果</li>
+<li>60%胜率策略有1%概率连亏10次</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_core_3', title:'模块3：交易系统搭建方法论',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 四大核心组件：进场/出场/仓位/风控</li>
+<li><span class="tag must">必学</span> 从理念到规则到回测到实盘的搭建流程</li>
+<li><span class="tag must">必学</span> 三个回测陷阱：过拟合、生存者偏差、前视偏差</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">四大组件</h4>
+<div class="table-wrap"><table>
+<tr><th>组件</th><th>举例</th></tr>
+<tr><td>进场</td><td>MA20金叉MA60+RSI>50+成交量放大</td></tr>
+<tr><td>出场</td><td>跌破MA20离场；触及ATRx2止损</td></tr>
+<tr><td>仓位</td><td>ATR头寸规模，单笔风险2%</td></tr>
+<tr><td>风控</td><td>日亏5%停盘、回撤15%检查</td></tr>
+</table></div>
+
+<h4 class="subsection-title">搭建流程</h4>
+<div class="flow-chart">
+  <div class="flow-node blue">理念</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node gold">规则</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node green">回测</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node orange">模拟</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">实盘</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node blue">复盘</div>
+</div>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">进场条件至少2个同时满足</span></li>
+<li><span class="hl-signal">出场区分止损和止盈</span></li>
+<li><span class="hl-signal">仓位不设酌情调整余地</span></li>
+</ul>
+</div>
+
+<h3 class="section-title">误区</h3>
+<div class="warning-box">
+<ul>
+<li>样本外验证才是标准</li>
+<li>趋势和震荡不能兼顾，选一种环境</li>
+<li>最大挑战在执行，非设计</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_core_4', title:'模块4：大类资产配置框架',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 桥水全天候策略的四象限框架（增长×通胀）</li>
+<li><span class="tag must">必学</span> 风险平价：让每个资产贡献相同风险</li>
+<li><span class="tag must">必学</span> 再平衡规则与收益增强</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">全天候四象限</h4>
+<div class="table-wrap"><table>
+<tr><th>象限</th><th>配置资产</th><th>A股替代</th></tr>
+<tr><td>过热（增长↑通胀↑）</td><td>大宗商品、通胀挂钩债</td><td>商品ETF、黄金</td></tr>
+<tr><td>复苏（增长↑通胀↓）</td><td>股票、公司债</td><td>沪深300ETF、信用债</td></tr>
+<tr><td>滞胀（增长↓通胀↑）</td><td>通胀挂钩债、黄金</td><td>黄金ETF、短债</td></tr>
+<tr><td>衰退（增长↓通胀↓）</td><td>国债</td><td>10年国债ETF</td></tr>
+</table></div>
+
+<h4 class="subsection-title">中国资产相关性矩阵（2018-2024年数据）</h4>
+<div class="table-wrap"><table>
+<tr><th></th><th>沪深300</th><th>中证全债</th><th>黄金</th><th>南华商品</th></tr>
+<tr><td>沪深300</td><td>1.00</td><td>0.18</td><td>0.12</td><td>0.45</td></tr>
+<tr><td>中证全债</td><td>0.18</td><td>1.00</td><td>0.05</td><td>-0.08</td></tr>
+<tr><td>黄金</td><td>0.12</td><td>0.05</td><td>1.00</td><td>0.35</td></tr>
+<tr><td>南华商品</td><td>0.45</td><td>-0.08</td><td>0.35</td><td>1.00</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：Wind金融终端，日频收益率，2018.1-2024.6</p>
+<p>关键洞察：<span class="hl-bold">股债在中国市场的相关性仅0.18</span>（远低于美国的-0.3），这意味着60/40组合在中国降低波动的效果略弱于美国。加入黄金（相关性0.12）和商品（与股票0.45)可以进一步提升分散化效果。</p>
+
+<h4 class="subsection-title">中国本土配置方案（四档）</h4>
+<div class="table-wrap"><table>
+<tr><th>风险偏好</th><th>沪深300ETF</th><th>10年国债ETF</th><th>黄金ETF</th><th>货基/短债</th><th>预期年化</th><th>最大回撤</th></tr>
+<tr><td>保守型</td><td>20%</td><td>55%</td><td>10%</td><td>15%</td><td>4-6%</td><td>-5%</td></tr>
+<tr><td>稳健型</td><td>40%</td><td>35%</td><td>10%</td><td>15%</td><td>6-9%</td><td>-12%</td></tr>
+<tr><td>进取型</td><td>60%</td><td>20%</td><td>10%</td><td>10%</td><td>8-12%</td><td>-22%</td></tr>
+<tr><td>激进型</td><td>75%</td><td>5%</td><td>10%</td><td>10%</td><td>10-15%</td><td>-35%</td></tr>
+</table></div>
+
+<h4 class="subsection-title">再平衡实战操作</h4>
+<p>假设年初配置40%沪深300+35%国债+10%黄金+15%货基。年中沪深300涨了30%，使其占比升至46%。此时：<span class="hl-signal">卖出沪深300使占比回到40%，买入国债和货基</span>。再平衡的实质是"卖出涨多的、买入跌多的"，自动实现低买高卖。研究表明季度再平衡年均增厚收益约0.8-1.5%（来源：Vanguard Research, 2018）。</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">目标配置：</span>按年龄和风险偏好确定，30岁以下可偏进取（股80%），50岁以上偏保守（债50%+）</li>
+<li><span class="hl-signal">再平衡：</span>每季度检查，单个资产偏离目标超过20%时调整</li>
+<li><span class="hl-signal">退休账户优先：</span>先用养老金账户完成核心配置（税优），再用普通账户做卫星投资</li>
+<li><strong>A股工具：</strong>沪深300ETF(510300)、10年国债ETF(511260)、黄金ETF(518880)、货基(511880)</li>
+</ul>
+</div>
+
+<h3 class="section-title">误区</h3>
+<div class="warning-box">
+<ul>
+<li><strong>「配置只适合大资金」</strong> — 10万也可用ETF实现</li>
+<li><strong>「长期持有不动」</strong> — 需要再平衡，否则某类资产占比失控</li>
+<li><strong>「海外套用」</strong> — A股股债相关性不同，需加黄金/商品</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_core_5', title:'模块5：市场情绪指标体系',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 融资买入占比作为情绪顶底判断（>11%极度亢奋、<3%极度恐慌）</li>
+<li><span class="tag must">必学</span> 50ETF期权隐含波动率的恐慌/安逸区间</li>
+<li><span class="tag must">必学</span> 天量/地量成交的情绪信号</li>
+</ul>
+</div>
+
+<h4 class="subsection-title">融资买入占比（最有效的A股情绪指标）</h4>
+<p>融资买入额 / 两市总成交额。反映市场杠杆资金的情绪和仓位集中度。2014-2024年历史分位数据：</p>
+<div class="table-wrap"><table>
+<tr><th>区间</th><th>情绪判断</th><th>历史发生次数</th><th>后续1个月胜率</th><th>交易建议</th></tr>
+<tr><td>&lt;3%</td><td>极度恐慌，去杠杆完成</td><td>12次</td><td>75%（反弹概率高）</td><td><span class="hl-signal">中长期买入窗口</span></td></tr>
+<tr><td>3-8%</td><td>正常区间</td><td>多数时间</td><td>53%</td><td>正常交易，趋势主导</td></tr>
+<tr><td>8-11%</td><td>市场亢奋</td><td>8次</td><td>38%</td><td>减仓或保持克制</td></tr>
+<tr><td>&gt;11%</td><td>极度亢奋，杠杆过热</td><td>3次</td><td>0%（全部见顶）</td><td><span class="hl-signal">强烈卖出/做空信号</span></td></tr>
+</table></div>
+<p>历史极端值：2015年6月11.3%（5178点顶部）、2018年1月10.8%（3587点顶部）、2021年2月10.5%（3731点顶部）。<span class="hl-formula">>11%=200%概率见顶，无一例外</span>。</p>
+
+<h4 class="subsection-title">两市成交额极端信号</h4>
+<p><span class="hl-signal">天量成交（>1.5万亿）：</span>市场情绪过热。连续3天超1.5万亿且指数滞涨→短期顶概率约70%。2021年9月连续49天成交超万亿但指数不涨，随后创业板指从3300跌至2200。</p>
+<p><span class="hl-signal">地量成交（<6000亿）：</span>市场极度冷清。连续10天低于6000亿且指数不再创新低→底部区域信号。2018年12月日均成交仅2500亿，随后2019年1月开启2440→3288反弹。</p>
+
+<h4 class="subsection-title">50ETF期权PCR（Put/Call Ratio）</h4>
+<p>A股50ETF期权PCR在0.5-1.5之间正常波动。极端值：<span class="hl-signal">PCR&lt;0.4（极度乐观）</span>通常是短期顶部信号；<span class="hl-signal">PCR&gt;1.5（极度恐慌）</span>通常预示反弹。2022年4月27日PCR达到1.8，当日上证2863点成为全年最低点。</p>
+
+<h4 class="subsection-title">历史牛熊市情绪数据对比</h4>
+<div class="table-wrap"><table>
+<tr><th>行情阶段</th><th>时间</th><th>融资占比</th><th>成交额</th><th>PCR</th><th>后续走势</th></tr>
+<tr><td>2007年大顶</td><td>2007.10</td><td>—</td><td>2700亿（当时天量）</td><td>—</td><td>6124→1664</td></tr>
+<tr><td>2015年杠杆顶</td><td>2015.06</td><td>11.3%</td><td>2.36万亿（历史天量）</td><td>0.38</td><td>5178→2850</td></tr>
+<tr><td>2018年大底</td><td>2018.12</td><td>2.1%</td><td>2500亿（地量）</td><td>1.52</td><td>2440→3288</td></tr>
+<tr><td>2020年疫情底</td><td>2020.03</td><td>2.8%</td><td>4600亿</td><td>1.45</td><td>2650→3458</td></tr>
+<tr><td>2024年2月低点</td><td>2024.02</td><td>2.5%</td><td>5100亿</td><td>1.55</td><td>2635→3100</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：上交所、深交所、Wind金融终端</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">融资占比<3%+指数跌20%+：</span>分批建仓</li>
+<li><span class="hl-signal">融资占比>10%+加速上涨：</span>逐步减仓</li>
+<li><span class="hl-signal">50ETF隐波>35%：</span>恐慌区，卖期权收时间价值</li>
+</ul>
+</div>
+
+`}
+        ]
+      },
+      advanced: {
+        name: '专项进阶',
+        modules: [
+          { id:'mind_adv_1', title:'模块1：可转债投资策略',
+content:`<div class="content-card s1">
+
+<p><strong class="hl-principle">可转债（Convertible Bond）</strong>是可以按约定条件转换为股票的债券，兼具债性和股性。核心定价公式：<span class="hl-formula">可转债价值 = 纯债价值 + 转股权价值</span>。</p>
+
+<p><span class="hl-bold">三大核心指标：</span></p>
+<ul>
+<li><strong class="hl-formula">转股溢价率</strong> = (转债价格/转股价值 - 1) x 100%。&lt;0%为折价（套利空间）、0-20%为正常、>50%为深度虚值</li>
+<li><strong class="hl-formula">纯债溢价率</strong> = (转债价格/纯债价值 - 1) x 100%。越低越安全（债底越近）</li>
+<li><strong class="hl-formula">到期收益率(YTM)</strong> = 持有至到期的年化回报率。>3%时债底投资价值显著</li>
+</ul>
+
+<h4 class="subsection-title">双低策略（最经典的可转债策略）</h4>
+<p>选"价格低+转股溢价率低"的转债：<span class="hl-signal">价格&lt;115元 + 转股溢价率&lt;30%</span>。双低值 = 价格 + 转股溢价率 x 100。双低值&lt;130为买入区。该策略2018-2024年回测年化收益约15-20%（来源：集思录数据）。</p>
+
+<h4 class="subsection-title">下修博弈策略</h4>
+<p>当正股持续下跌时，董事会可以提议下调转股价（下修）。下修后转股价值提升，转债价格通常跳涨3-8%。博弈信号：①股价低于转股价的80%；②距回售期&lt;6个月；③大股东持有转债比例高（有动机推动下修）。</p>
+
+<h4 class="subsection-title">强制赎回（强赎）规则</h4>
+<p>连续30个交易日中至少15个交易日正股价格&#8805;转股价130%&#8594;公司有权按面值+利息强制赎回转债。<span class="hl-signal">强赎公告后应在3个交易日内卖出或转股</span>，否则可能亏损30%+。</p>
+
+<h3 class="section-title">实战规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">双低策略：</span>每周选双低值最低的10只转债等权配置，每月再平衡</li>
+<li><span class="hl-signal">下修博弈：</span>公告下修董事会预案后次日买入，持有至股东大会通过后卖出</li>
+<li><span class="hl-signal">打新增量：</span>开通可转债打新权限，零成本申购，中签后上市首日卖出</li>
+<li><strong>数据渠道：</strong>集思录、宁稳网免费查看双低排名和强赎预警</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_adv_2', title:'模块2：期权策略基础',
+content:`<div class="content-card s1">
+
+<p><strong class="hl-principle">期权（Option）</strong>是赋予买方在未来以约定价格买入（看涨Call）或卖出（看跌Put）标的资产的权利，而非义务。期权价格受五大因素影响：<span class="hl-formula">标的价格S、行权价K、剩余时间T、隐含波动率σ、无风险利率r</span>。</p>
+
+<h4 class="subsection-title">五大希腊值完整解读</h4>
+<div class="table-wrap"><table>
+<tr><th>希腊值</th><th>含义</th><th>买Call</th><th>买Put</th><th>卖Call</th><th>卖Put</th></tr>
+<tr><td>Delta</td><td>S变1元，期权变X元</td><td>+0.3到+1</td><td>-0.3到-1</td><td>-0.3到-1</td><td>+0.3到+1</td></tr>
+<tr><td>Gamma</td><td>S变1元，Delta变X</td><td>+</td><td>+</td><td>-</td><td>-</td></tr>
+<tr><td>Theta</td><td>每天时间衰减</td><td>-（不利）</td><td>-（不利）</td><td>+（有利）</td><td>+（有利）</td></tr>
+<tr><td>Vega</td><td>隐波变1%，期权变X%</td><td>+</td><td>+</td><td>-</td><td>-</td></tr>
+</table></div>
+<p>核心框架：<span class="hl-bold">买方支付权利金，赚方向波动（Delta）+波动率上升（Vega），但输时间（Theta）。卖方收取权利金，赚时间衰减（Theta），输方向突变（Gamma）和波动率飙升（Vega）。</span></p>
+
+<h4 class="subsection-title">四种基础策略详解</h4>
+<p><strong class="hl-bold">①买入看涨（Long Call）：</strong>预期大涨时使用。最大亏损=全部权利金（有限），收益理论上无限。适合在隐含波动率低时买入（如VIX<15）。剩余时间应>30天（避免Theta衰减太快）。</p>
+<p><strong class="hl-bold">②买入看跌（Long Put）：</strong>预期大跌或对冲持仓风险。可作为"保险"（保护性看跌）。2020年2月买入50ETF平值看跌期权，一周内盈利300%+（因疫情暴跌）。</p>
+<p><strong class="hl-bold">③备兑开仓（Covered Call）：</strong>持有10000股50ETF + 卖出1张虚值看涨期权。每月权利金收益约0.5-2%，年化增强约3-8%。适合长期持股者利用持仓赚取额外收益。</p>
+<p><strong class="hl-bold">④保护性看跌（Protective Put）：</strong>持有10000股50ETF + 买入1张平值看跌期权。成本约权利金2-5%/年。为持仓买保险，防止黑天鹅。类似"止损但不被震荡出局"。</p>
+
+<h4 class="subsection-title">波动率交易的两种场景</h4>
+<p><span class="hl-signal">隐波极高时卖出期权：</span>2020年3月50ETF隐波飙至45%+，卖出虚值2档的看跌期权，年化权利金收益可达20-30%。但要警惕隐波继续上升的风险（Gamma风险）。</p>
+<p><span class="hl-signal">隐波极低时买入期权：</span>2017年50ETF隐波长期在10-12%徘徊，买入跨式（Straddle）做多波动率，后续2018年2月隐波飙至35%+，大幅盈利。</p>
+
+<h4 class="subsection-title">50ETF期权实战要点</h4>
+<p>A股最活跃的期权品种是上证50ETF期权（510050）。合约到期月：当月、下月、下季、隔季。交易时间：9:30-11:30, 13:00-15:00。单腿策略最低保证金约2000-5000元。</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">买方规则：</span>只用资金的5-10%买期权，买入剩余时间>30天的合约（时间价值衰减更慢）</li>
+<li><span class="hl-signal">卖方规则：</span>卖出虚值2档+的期权，保证金占用不超过总资金20%</li>
+<li><span class="hl-signal">波动率交易：</span>隐含波动率处于历史90%分位以上时卖出期权，10%分位以下时买入期权</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_adv_3', title:'模块3：跨品种套利',
+content:`<div class="content-card s1">
+
+<p><strong class="hl-principle">跨品种套利（Inter-Commodity Spread）</strong>是利用两种相关商品之间价格关系异常进行交易。核心逻辑：两个品种之间存在产业逻辑约束的价差关系，当价差偏离历史均值±2倍标准差时，押注价差回归均值。</p>
+
+<h4 class="subsection-title">经典套利组合完整参数</h4>
+<div class="table-wrap"><table>
+<tr><th>套利组合</th><th>逻辑</th><th>正常区间</th><th>±2σ极端</th><th>合约配比</th><th>数据来源</th></tr>
+<tr><td>螺纹钢-热卷</td><td>热卷工艺溢价</td><td>50-150元</td><td>0或>250</td><td>1:1</td><td>Mysteel</td></tr>
+<tr><td>豆油-豆粕比</td><td>压榨利润约束</td><td>油粕比1.5-2.5</td><td><1.0或>3.0</td><td>根据出油率调整</td><td>USDA/DCE</td></tr>
+<tr><td>原油-燃料油</td><td>裂解价差</td><td>5-15美元/桶</td><td><0或>25</td><td>1:1</td><td>EIA</td></tr>
+<tr><td>沪伦铜比价</td><td>进出口套利</td><td>7.1-7.4(汇率调整)</td><td><6.8或>7.8</td><td>按汇率调整</td><td>SHFE/LME</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据回测区间：2018-2024年，来源：Wind/各交易所</p>
+
+<h4 class="subsection-title">完整套利交易流程（以螺纹钢-热卷为例）</h4>
+<div class="code-block">
+<span class="comment">// 螺纹钢RB2401 - 热卷HC2401</span>
+<span class="comment">// 正常价差区间：50-150元/吨（热卷工艺溢价）</span>
+当前价差 = RB - HC = 3700 - 3580 = <span class="number">120元/吨</span>（正常区间内，不交易）
+
+<span class="comment">// 2023年10月价差扩大至280元/吨（>2σ），建立套利头寸</span>
+做空价差：卖出螺纹钢 + 买入热卷
+开仓：卖出1手RB(3700) + 买入1手HC(3420) → 价差280
+止损：价差扩大到350元/吨（盈亏比约1:1.5）
+止盈：价差回归到150元/吨以下
+
+<span class="comment">// 持有20天后价差回归至120元/吨</span>
+平仓：买入1手RB(3650) + 卖出1手HC(3530) → 价差120
+套利收益：RB空头(+50元) + HC多头(+110元) = 每吨+160元
+合约规10吨/手，净收益 = 160 x 10 = <span class="number">+1600元/手</span>（扣除手续费约100元）
+</div>
+
+<h4 class="subsection-title">套利交易流程</h4>
+<p><span class="hl-signal">Step 1：</span>计算价差的历史均值±1倍标准差区间</p>
+<p><span class="hl-signal">Step 2：</span>价差超出±2倍标准差→建立套利头寸（做多被低估的、做空被高估的）</p>
+<p><span class="hl-signal">Step 3：</span>价差回归至±0.5倍标准差内平仓</p>
+<p><span class="hl-signal">止损：</span>价差继续扩大到±3倍标准差时止损</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">仓位：</span>套利仓位可以比单边交易更大（因为风险更低），单笔风险可设为总资金3%</li>
+<li><span class="hl-signal">杠杆：</span>套利波动通常为单边的1/3，可用更高杠杆（3-5倍）</li>
+<li><span class="hl-signal">持有周期：</span>跨品种套利平均持有7-21天，不适合日内交易</li>
+<li><strong>注意事项：</strong>需确认两个品种的合约乘数和最小变动价位一致或等值</li>
+</ul>
+</div>
+
+`},
+          { id:'mind_adv_4', title:'模块4：地缘政治溢价分析',
+content:`<div class="content-card s1">
+
+<p><strong class="hl-principle">地缘政治溢价（Geopolitical Risk Premium）</strong>是指因战争、制裁、政权更迭等地缘政治事件导致的商品价格超出基本面均衡价格的额外涨幅。它并非纯情绪因素——地缘事件通过实际冲击供给链来影响价格。</p>
+
+<h4 class="subsection-title">三级量化评估框架</h4>
+<div class="table-wrap"><table>
+<tr><th>级别</th><th>定义</th><th>历史案例</th><th>对商品的影响</th><th>平均持续</th></tr>
+<tr><td>一级（局部冲突）</td><td>影响单一国家/区域<br>产量占比<5%</td><td>2023年尼日尔政变（铀）</td><td>价格波动5-10%<br>小幅溢价</td><td>1-2周</td></tr>
+<tr><td>二级（区域危机）</td><td>影响关键运输通道<br>或产量占比5-15%</td><td>2022年俄乌冲突（能源/谷物）<br>2019年霍尔木兹海峡袭击</td><td>价格波动10-30%<br>显著溢价</td><td>1-6个月</td></tr>
+<tr><td>三级（全球冲击）</td><td>影响全球供给<br>产量占比>15%</td><td>1973年石油危机<br>1990年海湾战争</td><td>价格波动30-100%+<br>极端溢价</td><td>6-24个月</td></tr>
+</table></div>
+
+<h4 class="subsection-title">地缘事件交易要点</h4>
+<p><span class="hl-signal">短期交易（1-7天）：</span>事件爆发的头24小时往往是最快涨幅窗口。做多受影响品种的近月合约（流动最好），使用3-5%风险预算（因为波动极大）。止损设置在入场价下方ATR*3。</p>
+<p><span class="hl-signal">中期布局（1-3个月）：</span>评估制裁的实际执行力度（如2022年俄油60美元价格上限的实际执行率仅约30-40%），事件对供给的冲击通常比新闻标题小1/3到1/2。利用这个"预期差"在短期炒作降温后建仓。</p>
+<p><span class="hl-signal">退出信号：</span>①战略储备释放（SPR释放>100万桶/天是油价见顶信号）；②替代供给启动（美国页岩油增产、OPEC增产）；③实质性和谈进展信号出现时地缘溢价开始消退。</p>
+<p><span class="hl-bold">关键监测渠道：</span>USGS全球矿产供给地图、IEA月度石油市场报告、Rystad Energy地缘政治风险周报、Kpler航运追踪数据。</p>
+
+<h4 class="subsection-title">历史地缘事件对商品价格影响数据</h4>
+<div class="table-wrap"><table>
+<tr><th>事件</th><th>时间</th><th>级别</th><th>受影响品种</th><th>最大涨幅</th><th>溢价消退时间</th></tr>
+<tr><td>海湾战争</td><td>1990.08</td><td>三级</td><td>原油</td><td>+130% (15→41美元)</td><td>8个月</td></tr>
+<tr><td>俄乌冲突</td><td>2022.02</td><td>二级</td><td>原油/天然气/小麦</td><td>原油+40%、天然气+130%</td><td>天然气6个月，原油4个月</td></tr>
+<tr><td>利比亚内战</td><td>2011.02</td><td>一级</td><td>原油</td><td>+25%</td><td>2个月</td></tr>
+<tr><td>霍尔木兹海峡袭击</td><td>2019.06</td><td>一级</td><td>原油</td><td>+10%</td><td>1周</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：EIA、IEA、Bloomberg</p>
+
+`},
+          { id:'mind_adv_5', title:'模块5：信用债违约分析',
+content:`<div class="content-card s1">
+
+<p><strong class="hl-principle">信用债违约分析（Credit Default Analysis）</strong>是从财务、经营、外部环境三个维度评估债券发行人是否可能发生违约的系统性方法。</p>
+
+<h4 class="subsection-title">违约前三大预警信号（48个预警指标体系简版）</h4>
+<p><strong>1. 财务预警（可提前3-6个月发现）：</strong></p>
+<div class="table-wrap"><table>
+<tr><th>指标</th><th>健康值</th><th>预警值</th><th>危险值</th><th>2015-2023年违约样本准确率</th></tr>
+<tr><td>经营现金流/短期债务</td><td>>0.5</td><td>0.2-0.5</td><td><0.2</td><td>82%</td></tr>
+<tr><td>货币资金/短期债务</td><td>>1.0</td><td>0.5-1.0</td><td><0.5</td><td>76%</td></tr>
+<tr><td>EBITDA/利息费用</td><td>>5.0</td><td>2.0-5.0</td><td><2.0</td><td>79%</td></tr>
+<tr><td>资产负债率</td><td><60%</td><td>60-80%</td><td>>80%</td><td>71%</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">来源：中债资信2023年违约预警模型白皮书，基于2015-2023年117例信用债违约样本</p>
+
+<p><strong>2. 经营预警（提前6-12个月）：</strong></p>
+<ul>
+<li>营收连续3个季度同比下降 >10%——产品竞争力或市场需求萎缩</li>
+<li>应收账款周转天数同比延长 >30天——下游回款困难，议价能力下降</li>
+<li>控股股东质押比例 >80%——大股东自身流动性危机，可能占用上市公司资金</li>
+<li>对外担保余额/净资产 >50%——或有负债风险巨大</li>
+</ul>
+<p><strong>3. 外部预警：</strong></p>
+<ul>
+<li>评级连续下调（中诚信/联合/大公三大评级的任何展望调至负面即需警惕）</li>
+<li>行业政策收紧（如2021年房地产三道红线直接导致30+家房企违约）</li>
+<li>存续债券收益率飙升——二级市场收益率比同评级中位数高300bp以上</li>
+</ul>
+
+<h4 class="subsection-title">中国信用债违约历史数据</h4>
+<div class="table-wrap"><table>
+<tr><th>年份</th><th>违约数量</th><th>违约金额(亿元)</th><th>代表性违约主体</th><th>平均回收率</th></tr>
+<tr><td>2018</td><td>125</td><td>1210</td><td>上海华信、永泰能源</td><td>31%</td></tr>
+<tr><td>2019</td><td>139</td><td>1430</td><td>北大方正、东旭光电</td><td>28%</td></tr>
+<tr><td>2020</td><td>140</td><td>1697</td><td>永煤控股、华晨汽车</td><td>25%</td></tr>
+<tr><td>2021</td><td>151</td><td>1750</td><td>华夏幸福、恒大集团</td><td>22%</td></tr>
+<tr><td>2022-2023</td><td>185</td><td>2100+</td><td>碧桂园、远洋集团</td><td>20%</td></tr>
+</table></div>
+<p style="font-size:0.72rem;color:var(--text-muted)">数据来源：中债资信、Wind信用债数据库</p>
+
+<h4 class="subsection-title">违约回收率参考</h4>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>平均回收率</th><th>说明</th></tr>
+<tr><td>有抵押公司债</td><td>40-60%</td><td>不动产抵押的回收率最高</td></tr>
+<tr><td>无抵押公司债</td><td>20-40%</td><td>依赖破产清算分配</td></tr>
+<tr><td>永续债</td><td>10-30%</td><td>偿还顺序最劣后</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">数据来源：中债资信2023年违约回收率统计</p>
+
+<h3 class="section-title">规则</h3>
+<div class="rule-card">
+<ul>
+<li><span class="hl-signal">信用债买入前必查：</span>①发债人近3年审计报告（看经营现金流）；②对外担保余额（或有负债风险）；③存续债券的二级市场收益率（异常上行是信号）</li>
+<li><span class="hl-signal">违约后处理：</span>①立即联系主承销商索取违约处置进展；②参与债权人会议；③评估破产重整vs清算的预期回收率</li>
+<li><strong>数据渠道：</strong>中国债券信息网、Wind信用债板块、DM查债通应用程序</li>
+</ul>
+</div>
+
 `}
         ]
       }
     }
   }
 };
-
-// ================================================================
-// 状态管理
-// ================================================================
 const STORE_KEY = 'tradingMap';
 function loadStore() {
   try {
@@ -2813,11 +4048,11 @@ function loadStore() {
         theme: d.theme || 'dark',
         fontSize: d.fontSize || 'medium',
         activeAsset: d.activeAsset || 'stocks',
-        sidebar: d.sidebar !== false
+        view: d.view || 'cards'
       };
     }
   } catch(e) {}
-  return { completed: new Set(), theme:'dark', fontSize:'medium', activeAsset:'stocks', sidebar:true };
+  return { completed: new Set(), theme:'dark', fontSize:'medium', activeAsset:'stocks', view:'cards' };
 }
 
 function saveStore() {
@@ -2826,7 +4061,7 @@ function saveStore() {
     theme: store.theme,
     fontSize: store.fontSize,
     activeAsset: store.activeAsset,
-    sidebar: store.sidebar
+    view: store.view
   };
   try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch(e) {}
 }
@@ -2838,11 +4073,6 @@ const store = loadStore();
 // ================================================================
 const $ = id => document.getElementById(id);
 const assetTabs = $('assetTabs');
-const sidebarEl = $('sidebar');
-const sidebarOverlay = $('sidebarOverlay');
-const sidebarClose = $('sidebarClose');
-const menuBtn = $('menuBtn');
-const treeContainer = $('treeContainer');
 const contentContainer = $('contentContainer');
 const contentArea = $('contentArea');
 const settingsBtn = $('settingsBtn');
@@ -2861,7 +4091,7 @@ function getAllModuleIds(assetKey) {
   const ids = [];
   const asset = knowledgeData[assetKey];
   if (!asset) return ids;
-  DIM_KEYS.forEach(dk => {
+  Object.keys(asset.dimensions).forEach(dk => {
     const dim = asset.dimensions[dk];
     if (dim) {
       dim.modules.forEach(m => ids.push(m.id));
@@ -2903,62 +4133,69 @@ function toggleComplete(moduleId) {
 }
 
 // ================================================================
-// 目录树渲染
+// 卡片渲染 & 二级页面
 // ================================================================
-function renderTree() {
+function renderCards() {
   const ak = store.activeAsset;
   const asset = knowledgeData[ak];
-  if (!asset) { treeContainer.innerHTML = ''; return; }
+  if (!asset) { contentContainer.innerHTML = ''; return; }
 
-  let html = '';
-  DIM_KEYS.forEach(dk => {
+  let html = `<div class="welcome-cards">
+    <div class="wc-title">${ASSET_NAMES[ak]}</div>
+  </div>`;
+  // 使用资产的实际维度键（兼容不同资产的维度结构）
+  const dimKeys = Object.keys(asset.dimensions);
+  dimKeys.forEach(dk => {
     const dim = asset.dimensions[dk];
-    if (!dim) return;
-    const dimOpen = true;
-    html += `<div class="tree-item">`;
-    html += `<div class="tree-hd lv1" data-dim="${dk}">
-      <span class="tree-arrow open">▶</span>
-      <span class="tree-lbl">${dim.name}</span>
-    </div>`;
-    html += `<div class="tree-child open">`;
-    dim.modules.forEach((m, idx) => {
+    if (!dim || !dim.modules.length) return;
+    html += `<div class="dim-header">${dim.name}</div>`;
+    dim.modules.forEach(m => {
       const checked = store.completed.has(m.id) ? 'checked' : '';
-      html += `<div class="tree-item">`;
-      html += `<div class="tree-hd lv3" data-module="${m.id}">
-        <span class="tree-cb ${checked}" data-cb="${m.id}">✓</span>
-        <span class="tree-lbl">${m.title}</span>
+      html += `<div class="module-card" data-module="${m.id}">
+        <span class="card-cb ${checked}" data-cb="${m.id}">✓</span>
+        <div class="card-body">
+          <div class="card-title">${m.title}</div>
+          <div class="card-meta"><span class="dim-tag ${dk}">${dim.name}</span></div>
+        </div>
+        <span class="card-arrow">›</span>
       </div>`;
-      html += `</div>`;
     });
-    html += `</div></div>`;
   });
-  treeContainer.innerHTML = html;
-  updateSidebarPct();
+  contentContainer.innerHTML = html;
 }
 
 function updateSidebarPct() {
   const pct = calcProgress(store.activeAsset);
-  $('sidebarPct').textContent = pct + '%';
+  // 进度信息在底部状态栏显示，无需单独更新
 }
 
-// ================================================================
-// 内容渲染
-// ================================================================
 function selectModule(moduleId) {
-  // 高亮当前选中的模块
-  document.querySelectorAll('.tree-hd.lv3').forEach(el => {
-    el.classList.toggle('active', el.dataset.module === moduleId);
-  });
-  renderContent(moduleId);
-  closeSidebar();
+  let dimName = '', moduleTitle = '';
+  for (const ak of ASSET_KEYS) {
+    const asset = knowledgeData[ak];
+    if (!asset) continue;
+    for (const dk of Object.keys(asset.dimensions)) {
+      const dim = asset.dimensions[dk];
+      if (!dim) continue;
+      for (const m of dim.modules) {
+        if (m.id === moduleId) { dimName = dim.name; moduleTitle = m.title; break; }
+      }
+      if (dimName) break;
+    }
+    if (dimName) break;
+  }
+
+  store.view = 'detail';
+  saveStore();
+  renderContent(moduleId, dimName, moduleTitle);
 }
 
-function renderContent(moduleId) {
+function renderContent(moduleId, dimName, moduleTitle) {
   if (!moduleId) {
     contentContainer.innerHTML = `<div class="content-card s1" style="text-align:center;padding:40px 20px">
       <div style="font-size:2.5rem;margin-bottom:12px">📚</div>
       <div style="font-size:1rem;color:var(--text-primary);font-weight:600;margin-bottom:8px">欢迎进入交易专家知识地图</div>
-      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">请从左侧目录选择一个知识点开始学习</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">请从侧边栏选择一个知识点开始学习</div>
     </div>`;
     updateContentAreaClass(false);
     return;
@@ -2969,7 +4206,7 @@ function renderContent(moduleId) {
   for (const ak of ASSET_KEYS) {
     const asset = knowledgeData[ak];
     if (!asset) continue;
-    for (const dk of DIM_KEYS) {
+    for (const dk of Object.keys(asset.dimensions)) {
       const dim = asset.dimensions[dk];
       if (!dim) continue;
       for (const m of dim.modules) {
@@ -2979,6 +4216,12 @@ function renderContent(moduleId) {
     }
     if (found) break;
   }
+
+  // 显示返回栏
+  const backBar = $('contentBackBar');
+  const backTitle = $('backBarTitle');
+  backBar.classList.add('show');
+  backTitle.textContent = moduleTitle || found?.title || '';
 
   if (found) {
     contentContainer.innerHTML = found.content;
@@ -2991,9 +4234,22 @@ function renderContent(moduleId) {
     updateContentAreaClass(false);
   }
 
+  // 回到顶部按钮
+  const scrollBtn = $('scrollTopBtn');
+  scrollBtn.classList.add('show');
+
   // 更新底部进度
   updateBottomBar();
   updateGlobalProgress();
+}
+
+function showCardsView() {
+  store.view = 'cards';
+  saveStore();
+  $('contentBackBar').classList.remove('show');
+  $('scrollTopBtn').classList.remove('show');
+  contentArea.classList.remove('no-module');
+  renderCards();
 }
 
 function updateContentAreaClass(hasModule) {
@@ -3025,33 +4281,14 @@ function renderAll() {
   // 更新全局进度
   updateGlobalProgress();
 
-  // 渲染目录树
-  renderTree();
-
-  // 默认选择第一个模块
-  const dimKeys = DIM_KEYS;
-  const asset = knowledgeData[store.activeAsset];
-  let firstModuleId = null;
-  if (asset) {
-    for (const dk of dimKeys) {
-      const dim = asset.dimensions[dk];
-      if (dim && dim.modules.length) {
-        firstModuleId = dim.modules[0].id;
-        break;
-      }
-    }
+  // 渲染卡片或内容
+  if (store.view === 'detail') {
+    store.view = 'cards';
+    saveStore();
   }
-  if (firstModuleId) {
-    renderContent(firstModuleId);
-    // 高亮目录中的对应项
-    setTimeout(() => {
-      document.querySelectorAll('.tree-hd.lv3').forEach(el => {
-        el.classList.toggle('active', el.dataset.module === firstModuleId);
-      });
-    }, 50);
-  } else {
-    renderContent(null);
-  }
+  $('contentBackBar').classList.remove('show');
+  $('scrollTopBtn')?.classList.remove('show');
+  renderCards();
 }
 
 // ================================================================
@@ -3072,20 +4309,6 @@ function updateGlobalProgress() {
   $('globalProgressFill').style.width = pct + '%';
 }
 
-// ================================================================
-// 侧边栏控制
-// ================================================================
-function openSidebar() {
-  sidebarEl.classList.add('open');
-  sidebarOverlay.classList.add('open');
-}
-
-function closeSidebar() {
-  sidebarEl.classList.remove('open');
-  sidebarOverlay.classList.remove('open');
-}
-
-// ================================================================
 // 设置面板控制
 // ================================================================
 function openSettings() {
@@ -3164,41 +4387,36 @@ assetTabs.addEventListener('click', e => {
   }
 });
 
-// 侧边栏
-menuBtn.addEventListener('click', openSidebar);
-sidebarOverlay.addEventListener('click', closeSidebar);
-sidebarClose.addEventListener('click', closeSidebar);
-
-// 目录树点击事件（全局委托，避免元素绑定问题）
+// 设置面板
+settingsBtn.addEventListener('click', openSettings);
 document.addEventListener('click', e => {
-  // 只处理 sidebar 内部点击
-  const sidebar = document.getElementById('sidebar');
-  if (!sidebar.contains(e.target)) return;
-  
-  // 复选框点击（优先级最高）
-  const cb = e.target.closest('.tree-cb');
+  // 卡片复选框点击
+  const cb = e.target.closest('.card-cb');
   if (cb && cb.dataset.cb) {
     e.stopPropagation();
     toggleComplete(cb.dataset.cb);
     return;
   }
-  
-  // 模块点击 → 选择模块
-  const item = e.target.closest('.tree-hd[data-module]');
-  if (item) {
+  // 卡片点击 → 选择模块
+  const card = e.target.closest('.module-card');
+  if (card && card.dataset.module) {
     e.stopPropagation();
-    selectModule(item.dataset.module);
+    selectModule(card.dataset.module);
     return;
   }
-  
-  // 维度折叠展开
-  const dim = e.target.closest('.tree-hd.lv1');
-  if (dim) {
-    const child = dim.nextElementSibling;
-    if (child) {
-      child.classList.toggle('open');
-      dim.querySelector('.tree-arrow')?.classList.toggle('open');
-    }
+  // 返回按钮点击
+  const backBtn = e.target.closest('#backBtn');
+  if (backBtn) {
+    e.stopPropagation();
+    showCardsView();
+    return;
+  }
+  // 回到顶部按钮点击
+  const scrollBtn = e.target.closest('#scrollTopBtn');
+  if (scrollBtn) {
+    e.stopPropagation();
+    contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
   }
 });
 
@@ -3226,9 +4444,6 @@ fontGroup.addEventListener('click', e => {
 // 重置
 resetProgressOnly.addEventListener('click', handleResetProgress);
 resetAll.addEventListener('click', resetAllSettings);
-
-// 菜单按钮（左上角打开目录）
-document.querySelector('.nav-logo')?.addEventListener('click', openSidebar);
 
 // ================================================================
 // PWA 注册
