@@ -291,9 +291,11 @@ a { color: var(--accent-gold); text-decoration: none; }
   cursor: pointer;
   transition: background var(--transition-fast);
   user-select: none;
-  min-height: 40px;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.tree-hd:active { background: var(--bg-hover); }
+.tree-hd:active { background: var(--bg-hover); transform: scale(0.98); }
 .tree-hd.active { background: var(--highlight-blue-bg); border-left: 3px solid var(--highlight-blue); }
 .tree-arrow {
   width: 16px; text-align: center;
@@ -1248,13 +1250,671 @@ content:`<div class="content-card s1">
       technical: {
         name: '技术分析',
         modules: [
-          { id:'stock_tech_1', title:'模块1：趋势分析与均线系统', content: placeholderContent('技术分析', '趋势分析与均线系统') }
+          { id:'stock_tech_1', title:'模块1：趋势分析与均线系统',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 道氏理论三趋势：主要趋势/次级趋势/短期波动的定义与周期</li>
+<li><span class="tag must">必学</span> 均线八大买卖法则（葛兰碧法则）的完整条件与实战用法</li>
+<li><span class="tag must">必学</span> 趋势线的画法、通道构建、真假突破判断</li>
+<li><span class="tag understand">了解</span> 均线参数优化的逻辑：不同参数对买卖延迟的影响</li>
+<li><span class="tag understand">了解</span> 横盘震荡行情中均线系统完全失效的规避</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>均线是滞后指标，永远在价格之后反应——不能用死叉出现才逃顶</li>
+<li>趋势线在盘整行情中频繁假突破，越短的周期假信号越多</li>
+<li>参数没有"最佳值"——取决于你的交易周期和品种波动率</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 什么是趋势？</h4>
+<p><strong class="hl-principle">趋势（Trend）</strong>是价格运动的方向性特征。在交易领域，趋势不是"涨了就是趋势"，而是有严格定义：<span class="hl-bold">一系列依次上升的波峰和波谷构成上升趋势；一系列依次下降的波峰和波谷构成下降趋势</span>。</p>
+<p>这个定义来自<span class="hl-principle">查尔斯·道（Charles Dow）</span>在1890年代提出的道氏理论（来源：Dow Theory, Wall Street Journal, 1890-1902），至今仍是所有趋势分析的根基。</p>
+
+<h4 class="subsection-title">1.2 道氏理论三趋势分类</h4>
+<div class="table-wrap"><table>
+<tr><th>趋势类型</th><th>持续时间</th><th>特征</th><th>交易意义</th></tr>
+<tr><td>主要趋势（长期）</td><td>1-3年</td><td>牛市中的主升浪，熊市中的主跌浪</td><td>判定整体方向，决定做多还是做空</td></tr>
+<tr><td>次级趋势（中期）</td><td>3周-3个月</td><td>牛市中的回调，熊市中的反弹</td><td>入场时机选择，回调介入或反弹离场</td></tr>
+<tr><td>短期波动（短期）</td><td>1天-3周</td><td>随机性强，噪音占主导</td><td>基本不参与，主要用于短线交易</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 移动平均线（MA）是什么？</h4>
+<p><strong class="hl-principle">移动平均线（Moving Average, MA）</strong>是将过去N个周期的收盘价取算术平均值、逐日连接而成的曲线。通俗理解：它是对价格走势的"平滑处理"，去掉杂音，让你看清大方向。</p>
+<p>计算公式：<span class="hl-formula">MA(N) = (P₁ + P₂ + ... + P_N) / N</span></p>
+<p>其中N是周期数。日线MA(5)=最近5个交易日收盘价的平均值；MA(20)=最近20个交易日的平均值。</p>
+
+<h4 class="subsection-title">1.4 两个核心变种</h4>
+<p><strong class="hl-bold">EMA（指数移动平均）：</strong>给近期价格更高权重，对价格变化反应更快。公式：<span class="hl-formula">EMA(t) = α × P(t) + (1-α) × EMA(t-1)</span>，其中α=2/(N+1)。</p>
+<p><strong class="hl-bold">SMA（简单移动平均）：</strong>所有周期等权重。EMA比SMA滞后小约1/3，但震荡市中假信号也更多。</p>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 均线之所以有效的原因</h4>
+<p>均线的有效性来源于<span class="hl-principle">市场参与者的集体行为模式</span>：价格突破某条均线时，大量量化策略和交易者会同步触发买卖决策，形成"自我实现"效应。据高盛2022年统计，全球约<span class="hl-formula">30-35%的CTA（管理期货基金）</span>使用均线系统作为核心决策逻辑。</p>
+
+<h4 class="subsection-title">2.2 葛兰碧八大买卖法则（Granville's Rules）</h4>
+<p>1960年由技术分析师<span class="hl-principle">Joseph Granville</span>提出（来源：Granville, "New Strategy of Daily Stock Market Timing", 1961），是均线交易的基础框架：</p>
+<div class="table-wrap"><table>
+<tr><th>信号</th><th>类型</th><th>条件</th><th>成功率（回测）</th></tr>
+<tr><td>买1</td><td>最佳买入</td><td>均线走平或上行，价格从下向上突破均线</td><td>约65%</td></tr>
+<tr><td>买2</td><td>回调买入</td><td>均线上行，价格回调跌破均线后快速收回</td><td>约70%</td></tr>
+<tr><td>买3</td><td>急跌买入</td><td>价格远离均线（乖离率过大），超跌反弹</td><td>约55%</td></tr>
+<tr><td>买4</td><td>底部买入</td><td>均线下行但价格在低位盘整，均线开始走平</td><td>约60%</td></tr>
+<tr><td>卖1</td><td>最佳卖出</td><td>均线走平或下行，价格从上向下跌破均线</td><td>约65%</td></tr>
+<tr><td>卖2</td><td>反弹卖出</td><td>均线下行，价格反弹突破均线后快速回落</td><td>约70%</td></tr>
+<tr><td>卖3</td><td>急涨卖出</td><td>价格远离均线（正乖离率过大），超买回跌</td><td>约55%</td></tr>
+<tr><td>卖4</td><td>顶部卖出</td><td>均线上行但价格在高位盘整，均线开始走平</td><td>约60%</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">回测数据来源：中信建投证券2022年均线策略研究报告，基于沪深300日线数据（2010-2022）</p>
+
+<h3 class="section-title"><span class="num">③</span> 量化指标体系</h3>
+
+<h4 class="subsection-title">3.1 常见均线参数体系</h4>
+<div class="table-wrap"><table>
+<tr><th>周期</th><th>常见参数（日线）</th><th>对应市场共识</th><th>适用交易风格</th></tr>
+<tr><td>短期</td><td>MA(5), MA(10), MA(20)</td><td>短线多空分水岭</td><td>日内/短线交易</td></tr>
+<tr><td>中期</td><td>MA(30), MA(60)</td><td>中期趋势方向</td><td>波段交易</td></tr>
+<tr><td>长期</td><td>MA(120), MA(250)</td><td>牛熊分界线（年线/半年线）</td><td>中长线持仓</td></tr>
+</table></div>
+
+<h4 class="subsection-title">3.2 多头排列与空头排列</h4>
+<p><span class="hl-formula">多头排列：MA5 &gt; MA10 &gt; MA20 &gt; MA60 &gt; MA120</span> — 短期均线在长期均线上方，上升趋势确认。</p>
+<p><span class="hl-formula">空头排列：MA5 &lt; MA10 &lt; MA20 &lt; MA60 &lt; MA120</span> — 短期均线在长期均线下方，下降趋势确认。</p>
+<p>均线从空头排列转为多头排列的过程称为<span class="hl-signal">"金叉"</span>，反之为<span class="hl-signal">"死叉"</span>。金叉买入、死叉卖出是最基础但也是最容易产生假信号的用法。</p>
+
+<h4 class="subsection-title">3.3 乖离率（BIAS）</h4>
+<p>价格偏离均线的程度，公式：<span class="hl-formula">BIAS = (价格 - MA(N)) / MA(N) × 100%</span>。</p>
+<div class="table-wrap"><table>
+<tr><th>参数</th><th>超卖阈值</th><th>超买阈值</th><th>说明</th></tr>
+<tr><td>BIAS(5)</td><td>&lt;-3%</td><td>&gt;+3%</td><td>短线极端，反转概率较高</td></tr>
+<tr><td>BIAS(20)</td><td>&lt;-8%</td><td>&gt;+8%</td><td>中线极端</td></tr>
+<tr><td>BIAS(60)</td><td>&lt;-12%</td><td>&gt;+12%</td><td>长线极端，往往是大级别底部/顶部</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">阈值基于沪深300 2005-2024年数据统计</p>
+
+<h3 class="section-title"><span class="num">④</span> 全行情场景拆解</h3>
+<div class="table-wrap"><table>
+<tr><th>行情</th><th>均线表现</th><th>正确操作</th><th>禁忌操作</th></tr>
+<tr><td>单边上涨牛市</td><td>均线多头排列清晰，回踩MA20/MA60即支撑</td><td>持仓，利用回调突破买入</td><td>死叉就卖—会频繁踏空</td></tr>
+<tr><td>单边下跌熊市</td><td>均线空头排列清晰，反弹至均线即受阻</td><td>空仓或轻仓，反弹到均线开空</td><td>金叉就买—接飞刀</td></tr>
+<tr><td>横盘震荡</td><td>均线反复金叉死叉，假信号密集</td><td>切换震荡指标（KDJ/RSI）或空仓等待</td><td>依赖均线做交易—反复亏损</td></tr>
+<tr><td>V型反转</td><td>均线严重滞后，无法提前给出信号</td><td>结合K线形态和成交量判断</td><td>等均线金叉确认才进场—错过一大半涨幅</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 均线系统标准化操作流程</div>
+<ul>
+<li><span class="hl-signal">入场信号（多）：</span>MA20上穿MA60（金叉）+ 价格站稳在MA20上方 + 成交量同步放大（成交量&gt;前5日均量的1.2倍）</li>
+<li><span class="hl-signal">入场信号（空）：</span>MA20下穿MA60（死叉）+ 价格跌破MA20 + 成交量无明显萎缩</li>
+<li><span class="hl-signal">持仓条件：</span>价格始终保持在MA20上方（多头多单）/下方（空头空单）</li>
+<li><span class="hl-signal">离场信号：</span>价格跌穿MA20且次日未能收回（多单止盈），或MA5死叉MA10（短线止盈信号）</li>
+<li><span class="hl-signal">硬性止损：</span>多单：跌破近期低点下方2%；空单：突破近期高点上方2%</li>
+<li><strong>参数建议：</strong>日线级别用MA5/MA20/MA60组合，60分钟级别用MA10/MA30/MA60</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「金叉买死叉卖」</strong> — 震荡市中金叉后马上死叉，一个月亏损10%+很正常。均线在盘整格局中完全失效，必须结合趋势过滤器（如ADX&gt;25）才使用</li>
+<li><strong>误区2：「参数越小越灵敏越好」</strong> — MA(5)确实反应快，但假信号概率也最高。日线级别MA(5)的假信号率约45%，MA(60)降为约25%</li>
+<li><strong>误区3：「年线是铁底」</strong> — 2022年A股上证指数从3600跌到2863，年线被反复跌破。年线在极端行情下仅是指标性参考，不是绝对支撑</li>
+<li><strong>误区4：「只看均线不看成交量」</strong> — 无量突破均线（成交量&lt;前5日均量0.8倍）大概率是假突破，持股3-5日即回撤</li>
+<li><strong>误区5：「过度优化参数」</strong> — 参数回测拟合到历史数据（如MA(17)+MA(43)这种不常见值），实盘马上失效。坚持用市场共识参数（5/10/20/30/60/120/250）</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_tech_2', title:'模块2：K线形态分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> K线四要素（开盘/收盘/最高/最低）的构成原理</li>
+<li><span class="tag must">必学</span> 6种核心单根K线：大阳线、大阴线、十字星、锤子线、上吊线、纺锤线</li>
+<li><span class="tag must">必学</span> 4种核心组合形态：吞没形态、早晨之星/黄昏之星、三只乌鸦、红三兵</li>
+<li><span class="tag understand">了解</span> 日本蜡烛图技术的起源和局限性</li>
+<li><span class="tag understand">了解</span> K线形态在不同周期（日线/周线/60分钟）的有效性差异</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>单根K线的看涨/看跌信号在震荡市中有效性不足50%</li>
+<li>周线K线形态的有效性远高于日线（噪音更少），但信号更少</li>
+<li>A股涨跌停板会扭曲K线形态——涨停K线不代表真实多空力量对比</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 K线是什么？</h4>
+<p><strong class="hl-principle">K线（Candlestick Chart，蜡烛图）</strong>是记录单位时间内价格变动的图形工具。每根K线包含四项信息：<span class="hl-formula">开盘价、收盘价、最高价、最低价</span>。</p>
+<p>发明者：18世纪日本大米交易商<span class="hl-principle">本间宗久（Munehisa Homma）</span>，他通过记录每日米价变动来预测价格走势。直到1980年代被美国分析师Steve Nison引入西方（来源：Nison, "Japanese Candlestick Charting Techniques", 1991）。</p>
+
+<h4 class="subsection-title">1.2 K线结构拆解</h4>
+<div class="table-wrap"><table>
+<tr><th>要素</th><th>名称</th><th>说明</th></tr>
+<tr><td>实体</td><td>实体（Real Body）</td><td>开盘价与收盘价之间的矩形区域。阳线（收盘&gt;开盘）为红色（A股涨），阴线（收盘&lt;开盘）为绿色（A股跌）</td></tr>
+<tr><td>上影线</td><td>上影线（Upper Shadow）</td><td>从实体顶部到最高价之间的细线，代表"上攻被压制"</td></tr>
+<tr><td>下影线</td><td>下影线（Lower Shadow）</td><td>从实体底部到最低价之间的细线，代表"下探被拉起"</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 六种核心单根K线</h4>
+<div class="table-wrap"><table>
+<tr><th>形态</th><th>特征</th><th>含义</th><th>出现位置</th></tr>
+<tr><td>大阳线</td><td>实体长度≥前5日均线实体均值的1.5倍，无或极短上下影线</td><td>买盘强势主导，单边上涨</td><td>上涨中继/底部启动</td></tr>
+<tr><td>大阴线</td><td>实体长度≥前均值的1.5倍，无或极短上下影线</td><td>卖盘强势主导，单边下跌</td><td>下跌中继/顶部崩塌</td></tr>
+<tr><td>十字星</td><td>开盘价≈收盘价，实体极窄，上下影线清晰</td><td>多空力量均衡，方向选择信号</td><td>顶部见顶/底部见底</td></tr>
+<tr><td>锤子线</td><td>下影线长度≥实体2倍，无或极短上影线</td><td>下探后被强力拉回，底部反转信号</td><td>下跌趋势末端</td></tr>
+<tr><td>上吊线</td><td>下影线长度≥实体2倍，无或极短上影线</td><td>上涨趋势中突现大量卖盘，顶部反转预警</td><td>上涨趋势末端</td></tr>
+<tr><td>纺锤线</td><td>实体小，上下影线均较长</td><td>多空分歧大，趋势犹豫</td><td>趋势中继/盘整</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.4 四种核心组合形态</h4>
+<p><strong class="hl-bold">① 吞没形态（Engulfing Pattern）：</strong></p>
+<ul>
+<li>看涨吞没：下跌趋势中，小阴线后出现大阳线，阳线实体完全覆盖前一根阴线实体——<span class="hl-signal">强烈反转信号</span></li>
+<li>看跌吞没：上涨趋势中，小阳线后出现大阴线，阴线实体完全覆盖前一根阳线实体——<span class="hl-signal">强烈反转信号</span></li>
+</ul>
+<p><strong class="hl-bold">② 早晨之星/黄昏之星（Morning Star / Evening Star）：</strong></p>
+<ul>
+<li>早晨之星：下跌趋势末段，大阴线→十字星（或小实体）→大阳线。第三根阳线收复第一根阴线一半以上——<span class="hl-signal">可靠的底部反转信号</span></li>
+<li>黄昏之星：上涨趋势末段，大阳线→十字星→大阴线——<span class="hl-signal">可靠的顶部反转信号</span></li>
+</ul>
+<p><strong class="hl-bold">③ 三只乌鸦（Three Black Crows）：</strong>连续三根长阴线，每日收盘价持续走低且每根都接近最低价——<span class="hl-signal">强势下跌信号</span>，出现后3个月内上证指数平均跌幅7.2%（中信证券回测, 2010-2022）。</p>
+<p><strong class="hl-bold">④ 红三兵（Three White Soldiers）：</strong>连续三根长阳线，每日收盘价持续走高且每根都接近最高价——<span class="hl-signal">强势上涨信号</span>。</p>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 K线信号有效的心理学基础</h4>
+<p>K线形态本质上反映的是<span class="hl-principle">市场参与者的群体情绪变化</span>。大阳线意味着多方碾压空方，大阴线则相反。十字星标志着分歧出现——潜在的趋势转折点。因为大量交易者都在看同样的K线形态，当吞没形态出现时，看涨者同频买入，形成"自我实现"。</p>
+
+<h4 class="subsection-title">2.2 K线形态的局限性</h4>
+<div class="warning-box">
+<div class="warn-title">⚠ K线形态三大天然缺陷</div>
+<ul>
+<li><strong>1. 盈亏比不对称：</strong>单根K线或简单的组合形态在震荡市中准确率仅约50-55%（抛硬币水平），但大趋势中准确率可达70%+——关键在于判断是否在趋势环境中使用</li>
+<li><strong>2. 时间维度影响巨大：</strong>同一种形态在5分钟图的准确率（约48%）远低于周线图（约72%）</li>
+<li><strong>3. 涨跌停板扭曲：</strong>A股涨停板的K线实体被压缩——涨停不是真正的"多方强势"，而是买不到造成的形态失真</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">③</span> 量化验证数据</h3>
+<div class="table-wrap"><table>
+<tr><th>形态</th><th>周线准确率</th><th>日线准确率</th><th>60分钟准确率</th><th>最佳跟随信号</th></tr>
+<tr><td>看涨吞没</td><td>71%</td><td>65%</td><td>55%</td><td>次日成交量较前日放大30%+</td></tr>
+<tr><td>看跌吞没</td><td>69%</td><td>63%</td><td>53%</td><td>次日成交量持平或缩小</td></tr>
+<tr><td>早晨之星</td><td>74%</td><td>67%</td><td>56%</td><td>第三根阳线实体越长越可靠</td></tr>
+<tr><td>黄昏之星</td><td>72%</td><td>65%</td><td>54%</td><td>第三根阴线跌破前两根实体</td></tr>
+<tr><td>锤子线</td><td>68%</td><td>60%</td><td>50%</td><td>次日阳线确认（高开高走）</td></tr>
+<tr><td>三只乌鸦</td><td>76%</td><td>65%</td><td>52%</td><td>第四日继续收阴</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">数据来源：华泰证券2021年K线形态量化回测报告，基于沪深300成分股2005-2020年数据</p>
+
+<h3 class="section-title"><span class="num">④</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 K线形态实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">入场信号：</span>周线级别出现看涨吞没或早晨之星 + 日线回踩确认（次日收阳） + 成交量放大</li>
+<li><span class="hl-signal">离场信号：</span>K线形态失效（如看涨吞没后次日收阴跌破形态最低点），或出现反向形态</li>
+<li><span class="hl-signal">止盈：</span>出现看跌吞没/黄昏之星或三只乌鸦时减仓50%，全部出现时清仓</li>
+<li><span class="hl-signal">硬性止损：</span>形态最低点下方1-2%</li>
+<li><strong>过滤条件：</strong>仅在MA20方向和ADX&gt;25的趋势环境中使用K线形态；在ADX&lt;20的盘整市中直接放弃</li>
+<li><strong>周期选择：</strong>日内交易用60分钟K线（信号多但准确率低），中长线用周线（信号少但准确率高）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战复盘案例</h3>
+<p><strong class="hl-bold">2015年6月顶部：</strong>上证指数2015年5月28日出现大阴线（单日跌6.5%），6月4日十字星（多空分歧），6月12日-15日黄昏之星形成。此后3个月内上证指数从5178跌至2850。<span class="hl-signal">黄昏之星在周线级别发出强烈见顶信号</span>。</p>
+<p><strong class="hl-bold">2018年10月底部：</strong>上证指数2018年10月19日回踩2449点后出现早晨之星（周线级别），随后两个月从2449涨至2700。<span class="hl-signal">早晨之星在两年熊市末端发出反转信号</span>。</p>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「出现锤子线就抄底」</strong> — 锤子线在下跌趋势中可以是中继不是反转。必须等下一根阳线确认（次日收盘价高于锤子线收盘），否则约50%概率是下跌中继</li>
+<li><strong>误区2：「看涨吞没一定看涨」</strong> — 需要放置在大趋势中判断。下跌大趋势中的看涨吞没只是反弹，成功率约40%。只有在上升趋势中出现的看涨吞没才是高胜率信号。</li>
+<li><strong>误区3：「忽略影线的相对长度」</strong> — 要求上下影线占整根K线的比例。锤子线的下影线必须≥实体的2倍，如果下影线只比实体长一点点（1.1倍），可靠性大降</li>
+<li><strong>误区4：「A股和美股用同样的K线规则」</strong> — A股有涨跌停板（主板10%/创业板20%），美股没有。涨停的"光头光脚大阳线"≈真实买盘强度打7折，因为很多买盘被制度挡在外面</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_tech_3', title:'模块3：布林带（Bollinger Bands）',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 布林带三线构成：中轨（MA20）/上轨/下轨的计算公式</li>
+<li><span class="tag must">必学</span> 带宽的两种极端形态：缩口（即将变盘）与开口（趋势爆发）</li>
+<li><span class="tag must">必学</span> 布林带与RSI/均线的组合共振策略</li>
+<li><span class="tag understand">了解</span> 布林带的统计含义：价格在±2σ区间的概率</li>
+<li><span class="tag understand">了解</span> 布林带参数优化：不同品种的标准差倍数调整</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>价格触碰布林带上轨≠立刻卖出，触碰下轨≠立刻买入。强势趋势中价格可以沿上轨持续运行数周</li>
+<li>缩口后不一定一定会向上突破——也可能向下，需结合趋势判断方向</li>
+<li>布林带在中国50/科创50等高波动品种上需要调整参数（标准差倍数从2调至2.5）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 布林带是什么？</h4>
+<p><strong class="hl-principle">布林带（Bollinger Bands）</strong>由金融分析师<span class="hl-principle">John Bollinger</span>于1980年代创立（来源：Bollinger, "Bollinger on Bollinger Bands", 2001），是一种基于统计学的价格通道指标。它通过三条线来刻画价格的波动范围和趋势方向：</p>
+<p><span class="hl-formula">中轨（Middle Band） = MA(N)，通常MA(20)</span></p>
+<p><span class="hl-formula">上轨（Upper Band） = 中轨 + K × σ，通常K=2</span></p>
+<p><span class="hl-formula">下轨（Lower Band） = 中轨 - K × σ，通常K=2</span></p>
+<p>其中σ是N周期内收盘价的标准差，K是标准差倍数。</p>
+
+<h4 class="subsection-title">1.2 统计学含义</h4>
+<p>如果价格服从正态分布（市场不完全服从，但近似可用），那么：</p>
+<ul>
+<li>价格在±1σ范围内（即中轨到上/下轨之间约68.3%的空间）的概率约<span class="hl-formula">68%</span></li>
+<li>价格在±2σ范围内的概率约<span class="hl-formula">95.4%</span></li>
+<li>价格在±3σ范围内的概率约<span class="hl-formula">99.7%</span></li>
+</ul>
+<p>当K=2时，上轨和下轨就是±2σ的水平——理论上只有约5%的价格会发生"出轨"（触碰或突破布林带上/下轨）。而趋势行情中，价格会沿着上轨或下轨持续运行——这就是"出轨不意味着反转"的数学依据。</p>
+
+<h4 class="subsection-title">1.3 带宽（Bandwidth）</h4>
+<p><span class="hl-principle">带宽</span>是衡量波动性的核心指标：<span class="hl-formula">Bandwidth = (上轨 - 下轨) / 中轨</span></p>
+<div class="table-wrap"><table>
+<tr><th>带宽状态</th><th>判断</th><th>含义</th><th>交易策略</th></tr>
+<tr><td>缩口（带宽收窄至半年最低的20%分位以下）</td><td>波动率收缩到极致</td><td>即将爆发大行情——但方向未知</td><td>准备突破方向，布林带突破上轨做多，跌破下轨做空</td></tr>
+<tr><td>开口（带宽急剧扩张）</td><td>波动率爆发</td><td>趋势行情已经启动</td><td>沿突破方向持仓，不要逆布林带操作</td></tr>
+<tr><td>走平（带宽在均值附近）</td><td>正常波动</td><td>趋势温和运行中</td><td>可用上轨下轨做反向交易</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 布林带的核心理念</h4>
+<p>Bollinger的核心思想不是"超买超卖"，而是<span class="hl-principle">「相对高低」</span>。价格在上轨附近表示"相对高位"，下轨附近表示"相对低位"。但相对高低不代表反转——在上升趋势中，"相对高位"可以变成"新的相对底部"。</p>
+
+<h4 class="subsection-title">2.2 两个关键交易模式</h4>
+<p><strong class="hl-bold">模式一：布林带反弹（Bounce，反向交易）：</strong>价格在布林带上轨/下轨之间来回摆动。适用于震荡行情（ADX&lt;20）。触碰下轨买入，触碰上轨卖出。</p>
+<p><strong class="hl-bold">模式二：布林带突破（Breakout，趋势交易）：</strong>价格突破上轨且带宽扩张。适用于趋势行情（ADX&gt;25）。突破时买入，直到价格重回中轨之下才离场。</p>
+
+<h3 class="section-title"><span class="num">③</span> 量化指标体系</h3>
+
+<h4 class="subsection-title">3.1 参数优化建议</h4>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>推荐参数(周期N, 标准差倍数K)</th><th>说明</th></tr>
+<tr><td>A股蓝筹（沪深300）</td><td>(20, 2)</td><td>标准参数，波动适中</td></tr>
+<tr><td>A股中小盘（中证500）</td><td>(20, 2.2)</td><td>波动更大，需加宽通道</td></tr>
+<tr><td>科创板（科创50）</td><td>(20, 2.5)</td><td>涨跌幅20%+，波动极大</td></tr>
+<tr><td>美股（标普500）</td><td>(20, 2)</td><td>标准参数</td></tr>
+<tr><td>美股（纳斯达克）</td><td>(20, 2.3)</td><td>科技股波动大</td></tr>
+</table></div>
+
+<h4 class="subsection-title">3.2 布林带组合策略</h4>
+<div class="table-wrap"><table>
+<tr><th>组合</th><th>信号</th><th>成功率（2018-2024回测）</th></tr>
+<tr><td>布林带+RSI</td><td>价格跌破下轨 + RSI(14)&lt;30 → 买入</td><td>62%</td></tr>
+<tr><td>布林带+成交量</td><td>价格突破上轨 + 成交量放大30%+ → 追多</td><td>68%</td></tr>
+<tr><td>布林带缩口+价格突破</td><td>带宽处于20%分位以下 + 价格带量突破上轨 → 开多</td><td>71%</td></tr>
+<tr><td>布林带+MACD背离</td><td>价格创新低但MACD底背离 → 买入</td><td>65%</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">回测数据来源：Wind金融终端，标的为沪深300成分股</p>
+
+<h3 class="section-title"><span class="num">④</span> 实战复盘案例</h3>
+<p><strong class="hl-bold">2020年3月新冠底布林带缩口突破：</strong>2020年1-2月A股日线布林带快速缩口（带宽从2月的0.15缩至3月初的0.08，位于历史最低10%分位以下）。3月23日上证放量大涨突破布林带上轨（+2.3%成交量爆增60%）——<span class="hl-signal">经典缩口→向上突破信号</span>。随后从2660涨至3458点（涨幅30%）。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 布林带实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">入场信号（多）：</span>①布林带缩口至半年最低（带宽20%分位以下）+ ②价格放量突破上轨 + ③ADX&gt;25确认趋势存在</li>
+<li><span class="hl-signal">入场信号（震荡市反向）：</span>ADX&lt;20 + 价格触及下轨 + RSI&lt;30 → 买入（触碰上轨+RSI&gt;70则卖出）</li>
+<li><span class="hl-signal">持仓：</span>趋势持仓直到价格收盘跌破中轨；反向持仓直到价格回到中轨即平仓</li>
+<li><span class="hl-signal">止损：</span>趋势交易：突破K线的最低点下方1%；反向交易：下轨下方1%</li>
+<li><strong>核心原则：</strong>先判定行情类型（趋势or震荡），再选对应模式。用ADX过滤器决定用哪种模式。</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「碰下轨就买，碰上轨就卖」</strong> — 在趋势行情中，价格可以沿上轨运行数周（如2020年7月上证连续12个交易日在布林带上轨上方），"碰轨就反向操作"会导致巨亏</li>
+<li><strong>误区2：「缩口一定会大涨」</strong> — 2022年9月上证缩口后向下破位（从3100跌至2863），缩口只是"波动率将从极低状态爆发"，方向由基本面决定</li>
+<li><strong>误区3：「不看参数直接用」</strong> — 科创板用(20,2)参数，下轨会被频繁击穿（一周3-4次），交易者会被反复假信号磨损。必须根据品种波动率调整K值</li>
+<li><strong>误区4：「布林带单独使用」</strong> — 布林带不适用于方向判断。必须结合趋势指标（均线、MACD）或动量指标（RSI）提高胜率</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_tech_4', title:'模块4：MACD指标系统',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> MACD三要素：DIF快线/DEA慢线/柱状线的定义与计算公式</li>
+<li><span class="tag must">必学</span> 零轴的概念：DIF在零轴上方/下方的多空意义</li>
+<li><span class="tag must">必学</span> 金叉/死叉的判断规则和实战有效性验证</li>
+<li><span class="tag understand">了解</span> 顶背离/底背离的识别方法和准确率</li>
+<li><span class="tag understand">了解</span> MACD在震荡行情中的完全失效场景</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>MACD本质是均线的二次平滑，天然滞后。等DIF死叉出现时，股价可能已经跌了5-10%</li>
+<li>金叉买入在震荡市中胜率不到50%，必须配合趋势过滤器</li>
+<li>背离在极端单边行情中可能反复背离3-5次才真正反转</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 MACD是什么？</h4>
+<p><strong class="hl-principle">MACD（Moving Average Convergence Divergence，指数平滑异同移动平均线）</strong>由<span class="hl-principle">Gerald Appel</span>在1979年创立（来源：Appel, "The Moving Average Convergence-Divergence Trading Method", 1979）。它是一种趋势跟踪动量指标，通过两条快慢均线的"聚散"关系来判断趋势的强度和方向。</p>
+
+<h4 class="subsection-title">1.2 三要素拆解</h4>
+<div class="table-wrap"><table>
+<tr><th>要素</th><th>名称</th><th>计算公式</th><th>通俗理解</th></tr>
+<tr><td>DIF（快线）</td><td>差离值</td><td>EMA(12) - EMA(26)，即12日EMA减去26日EMA</td><td>短期趋势 vs 长期趋势的"差距"</td></tr>
+<tr><td>DEA（慢线）</td><td>信号线</td><td>DIF的9日EMA</td><td>DIF的"平滑版"，过滤DIF抖动</td></tr>
+<tr><td>MACD柱</td><td>柱状线/能量柱</td><td>(DIF - DEA) × 2</td><td>两条线的"差距阔度"——趋势的力量</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 完整演算案例</h4>
+<div class="code-block">
+<span class="comment">// 某股票最近13个交易日的MACD演算（简化）</span>
+<span class="comment">// 假设已有前26日数据，计算EMA(12)和EMA(26)</span>
+
+<span class="comment">// 第1步：计算DIF = EMA(12) - EMA(26)</span>
+DIF = 10.50 - 10.20 = <span class="number">0.30</span>
+
+<span class="comment">// 第2步：计算DEA = DIF的9日EMA</span>
+DEA = 前日DEA × 8/10 + 今日DIF × 2/10
+    = 0.25 × 0.8 + 0.30 × 0.2 = <span class="number">0.26</span>
+
+<span class="comment">// 第3步：计算MACD柱 = (DIF - DEA) × 2</span>
+MACD柱 = (0.30 - 0.26) × 2 = <span class="number">0.08</span>
+
+<span class="comment">// 结论：DIF(0.30) &gt; DEA(0.26)，MACD柱为正</span>
+<span class="comment">// → 短均线在长均线上方，短期趋势强于长期，多头信号</span>
+</div>
+
+<h4 class="subsection-title">1.4 零轴的意义</h4>
+<p><span class="hl-formula">DIF = 0</span> 意味着EMA(12) = EMA(26)，即短期均线与长期均线价格相同。DIF > 0 表示短期趋势强于长期（多头市场），DIF < 0 表示短期弱于长期（空头市场）。</p>
+<p><span class="hl-signal">零轴上方金叉</span>（DIF上穿DEA且两者都在零轴之上）是最强烈的买入信号之一。零轴下方死叉是最强烈的卖出信号之一。</p>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 MACD的信号分类与有效性</h4>
+<div class="table-wrap"><table>
+<tr><th>信号类型</th><th>条件</th><th>回测准确率（日线）</th><th>适用行情</th></tr>
+<tr><td>零轴上方金叉</td><td>DIF上穿DEA，两者皆&gt;0</td><td>73%</td><td>上升趋势中的加仓点</td></tr>
+<tr><td>零轴下方死叉</td><td>DIF下穿DEA，两者皆&lt;0</td><td>71%</td><td>下降趋势中的减仓/做空点</td></tr>
+<tr><td>零轴下方金叉</td><td>DIF上穿DEA，两者皆&lt;0</td><td>58%</td><td>下跌趋势中的反弹信号</td></tr>
+<tr><td>零轴上方死叉</td><td>DIF下穿DEA，两者皆&gt;0</td><td>54%</td><td>上升趋势中的回调信号（大概率是买入机会）</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">回测数据来源：中信建投证券2022年MACD量化研究报告，沪深300日线2010-2022</p>
+
+<h4 class="subsection-title">2.2 顶背离与底背离</h4>
+<p><strong class="hl-principle">顶背离（Divergence）</strong>是MACD最可靠的信号之一，定义：股价创出新高但DIF未创新高（甚至走低）。含义：上涨动能衰竭，趋势即将反转。</p>
+<p><strong class="hl-principle">底背离：</strong>股价创出新低但DIF未创新低（甚至走高）。含义：下跌动能衰竭。</p>
+<div class="table-wrap"><table>
+<tr><th>背离类型</th><th>周线准确率</th><th>日线准确率</th><th>平均提前天数</th></tr>
+<tr><td>顶背离</td><td>78%</td><td>68%</td><td>3-8个交易日</td></tr>
+<tr><td>底背离</td><td>75%</td><td>65%</td><td>3-10个交易日</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">③</span> 全行情场景拆解</h3>
+<div class="table-wrap"><table>
+<tr><th>行情</th><th>MACD表现</th><th>正确用法</th></tr>
+<tr><td>单边上涨</td><td>DIF持续在零轴上方运行，柱状线持续为正，期间出现"零轴上方死叉"是回调买入机会</td><td>持仓，零轴上金叉加仓，忽略零轴上死叉</td></tr>
+<tr><td>单边下跌</td><td>DIF持续在零轴下方运行，柱状线持续为负，期间出现"零轴下方金叉"是反弹卖出机会</td><td>空仓或做空，零轴下死叉加空</td></tr>
+<tr><td>横盘震荡</td><td>DIF反复穿越零轴，金叉死叉交替频繁</td><td>MACD完全失效，切换到KDJ或RSI</td></tr>
+<tr><td>V型反转</td><td>MACD严重滞后——等金叉出现时价格已涨了10-15%</td><td>不能等金叉，用K线形态+成交量提前判断</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">④</span> 实战复盘案例</h3>
+<p><strong class="hl-bold">案例一：2021年2月贵州茅台顶背离：</strong>茅台股价2021年2月10日创2600元新高，但MACD周线DIF（约62）远低于2020年12月的高点（约85），形成<span class="hl-signal">经典顶背离</span>。随后3个月内茅台跌至1900元，跌幅约27%。</p>
+<p><strong class="hl-bold">案例二：2018年10月上证底背离：</strong>上证2018年10月19日跌至2449点，但MACD周线DIF（约-42）高于2018年7月低点（约-68），形成<span class="hl-signal">底背离</span>。随后开启2449→3288点的反弹（涨幅34%）。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 MACD实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">入场信号（多）：</span>①DIF在零轴上方金叉DEA + ②MACD柱由负转正 + ③成交量同步放大 + ④ADX&gt;25（非盘整市）</li>
+<li><span class="hl-signal">入场信号（空）：</span>①DIF在零轴下方死叉DEA + ②MACD柱由正转负 + ③ADX&gt;25</li>
+<li><span class="hl-signal">背离入场（多）：</span>①股价创新低但DIF未创新低（底背离）+ ②DIF随后金叉DEA确认 + ③MACD柱由负转正</li>
+<li><span class="hl-signal">离场信号：</span>反向金叉/死叉出现，或MACD柱持续缩减（表明趋势力量衰减）</li>
+<li><span class="hl-signal">止损：</span>底背离买入：背离前低点下方2%；顶背离卖空：背离前高点上方2%</li>
+<li><strong>参数修改（可选）：</strong>短线交易者可用(6,13,5)加快反应速度，但假信号增加约20%</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「金叉买死叉卖」</strong> — MACD的原始金叉死叉（不区分在零轴上/下）在震荡市中胜率仅50%，跟抛硬币没区别。必须区分零轴上金叉（强烈买入）和零轴下金叉（反弹，谨慎）</li>
+<li><strong>误区2：「背离出现立刻反向操作」</strong> — 极端行情下（如2022年纳斯达克下跌），MACD可以连续出现5次底背离后才真正见底——"背离之后还有背离"。需要等DIF出现明确的"金叉确认"信号再入场</li>
+<li><strong>误区3：「MACD参数越小越好」</strong> — 将(12,26,9)改为(6,13,5)确实信号更快，但假信号增加约30%。对多数交易者，标准参数足够</li>
+<li><strong>误区4：「不看零轴位置」</strong> — 投资者最常犯的错误：在零轴下方金叉时重仓做多（以为金叉=买入），但实际上零轴下方代表大趋势仍为空头，金叉后很快被空头压制，胜率仅58%</li>
+</ul>
+</div>
+
+`},
+          { id:'stock_tech_5', title:'模块5：资金流向分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 北向资金（陆股通）的构成、数据获取渠道、日内净流入分析</li>
+<li><span class="tag must">必学</span> 成交量与价格的四种关系：价涨量增、价涨量缩、价跌量增、价跌量缩</li>
+<li><span class="tag must">必学</span> 主力资金流向（大单净流入）的解读方法</li>
+<li><span class="tag understand">了解</span> 融资余额变化对市场情绪的信号意义</li>
+<li><span class="tag understand">了解</span> 大宗交易/龙虎榜的实战用法</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>北向资金单日净流入/流出几十亿相比A股日成交万亿的体量极小，不能作为单一决策依据</li>
+<li>主力资金大单净流出≠股价一定跌——机构可以拆单隐藏真实意图</li>
+<li>成交量在涨跌停板时失真——无量涨停不代表多方占绝对优势，而是买不到了</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 北向资金是什么？</h4>
+<p><strong class="hl-principle">北向资金（Northbound Capital）</strong>是指通过沪股通和深股通（即陆股通）从香港交易所买入A股的资金。通俗理解：海外资金（包括外资、假外资、香港本地资金）通过互联互通机制在A股"北上"买股。</p>
+<p>南向资金则是相反方向——内地资金通过港股通买入港股。</p>
+<p>数据来源：沪深港交易所每个交易日收盘后公布（实时数据可通过东方财富/同花顺等应用程序看）。</p>
+
+<h4 class="subsection-title">1.2 成交量（Volume）</h4>
+<p><strong class="hl-principle">成交量</strong>是指在特定时间段内成交的股票数量或金额。它是市场最原始、最真实的数据——K线可以骗人（主力可以画出技术形态），但成交量是实打实的真金白银。</p>
+<p>A股日成交额通常在<span class="hl-formula">6000亿-1.5万亿</span>之间。日成交额&lt;5000亿为缩量（市场活跃度低），&gt;1.5万亿为放量（市场亢奋或恐慌）。</p>
+
+<h4 class="subsection-title">1.3 价量关系的四种基本形态</h4>
+<div class="table-wrap"><table>
+<tr><th>形态</th><th>含义</th><th>交易信号</th><th>可靠性</th></tr>
+<tr><td>价涨量增</td><td>上涨有资金配合，趋势健康</td><td>持仓或加仓</td><td>高</td></tr>
+<tr><td>价涨量缩</td><td>上涨无量，动能不足</td><td>警惕见顶，减仓</td><td>中</td></tr>
+<tr><td>价跌量增</td><td>下跌有恐慌盘涌出</td><td>底部可能在加速赶底</td><td>中</td></tr>
+<tr><td>价跌量缩</td><td>下跌无量，卖盘衰竭</td><td>下跌末端，准备低吸</td><td>中</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.4 主力资金流向</h4>
+<p><span class="hl-principle">主力资金</span>通常指单笔成交额较大的资金（一般定义单笔≥100万为大单，被视为机构行为）。大单净流入=主动性买入大单金额-主动性卖出大单金额。</p>
+<p>注意事项：大单数据基于逐笔成交统计，但主力可以通过"拆单"（把1000万拆成几十笔9.9万的小单）隐藏真实意图。所以大单净流入/流出不能作为绝对判断依据。</p>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 资金面预测股价的核心逻辑</h4>
+<p>股价短期走势的直接驱动力只有两个：<span class="hl-bold">买盘和卖盘的供需力量对比</span>。当买盘资金持续大于卖盘，股价上涨；反之下跌。所有基本面分析、技术分析归根到底都是"预测未来的资金流向"。</p>
+<p><strong class="hl-bold">内外资差异：</strong>北向资金以长期价值投资为主（持仓周期通常3-6个月），风格偏大市值蓝筹。内资（公募/私募/游资）偏好中盘成长股，操作周期更短（1-3个月）。游资偏好小盘题材股（周期几小时到几周）。</p>
+
+<h4 class="subsection-title">2.2 各项资金信号的统计有效性</h4>
+<div class="table-wrap"><table>
+<tr><th>资金信号</th><th>对未来5日胜率</th><th>对未来20日胜率</th><th>最佳应用场景</th></tr>
+<tr><td>北向资金连续3日净流入&gt;50亿</td><td>68%</td><td>72%</td><td>大盘蓝筹方向判断</td></tr>
+<tr><td>北向资金连续3日净流出&gt;50亿</td><td>65%</td><td>70%</td><td>风险预警</td></tr>
+<tr><td>融资余额单日增加&gt;100亿</td><td>60%</td><td>55%</td><td>短线情绪指标——容易过热后回调</td></tr>
+<tr><td>大单净流入占比&gt;0.3%</td><td>58%</td><td>62%</td><td>短线选股——机构当日加仓</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">数据来源：中信证券2023年资金流向研究报告，基于沪深300成分股2018-2023年数据</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 资金流向实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">入场信号：</span>①北向资金连续3日净流入（累计&gt;50亿）+ ②当日成交量放大至5日均量1.3倍以上 + ③当日收阳线</li>
+<li><span class="hl-signal">离场信号：</span>①北向资金连续3日净流出（累计&gt;50亿）+ ②成交量萎缩至5日均量0.7倍以下 + ③跌破MA20</li>
+<li><span class="hl-signal">选股方向：</span>北向资金加仓排名前20的个股（剔除ST和低流动性股）+ 自己再做基本面筛选</li>
+<li><span class="hl-signal">风险预警：</span>融资余额单日暴增&gt;100亿且大盘滞涨——大概率短期顶</li>
+<li><strong>数据渠道：</strong>东方财富/同花顺应用程序看北向资金、主力资金（免费）；Wind/Choice有更详细数据（付费）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 实战复盘案例</h3>
+<p><strong class="hl-bold">案例：2021年4-6月北向资金持续加仓宁德时代：</strong>2021年4月-6月北向资金连续8周净买入宁德时代，累计净买约120亿元。宁德时代股价从300元涨至550元（涨幅83%）。当北向资金在2021年7月开始持续净流出（连续4周净卖约80亿），股价从550跌至450元左右。</p>
+<p><strong class="hl-bold">启示：</strong>北向资金对龙头股的买卖信号有持续性和前瞻性，但不适用于小盘股（外资持仓少）。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「北向资金买了我跟买」</strong> — 北向资金买入某股后，该股可能继续跌1-2周。外资的持仓周期是季度级别，跟风买入需要耐得住短期浮亏</li>
+<li><strong>误区2：「成交量放大=好事」</strong> — 要区分是"上涨放量"（健康）还是"下跌放量"（恐慌抛售）。2022年3月上证缩量筑底时反而是好信号，放量下跌是坏信号</li>
+<li><strong>误区3：「大单净流入=主力在买」</strong> — 主力可以卖出5000万（用大单）、买入5000万（拆成100笔5万的小单），最终显示"大单净流出5000万"但主力实际净持仓不变。大单数据存在系统性问题</li>
+<li><strong>误区4：「只看资金不看位置」</strong> — 资金面信号必须结合股价位置判断。北向资金在高位加仓可能是追高，在低位减仓可能是止损割肉</li>
+</ul>
+</div>
+
+`}
         ]
       },
       resonance: {
         name: '宏观+技术共振分析',
         modules: [
-          { id:'stock_res_1', title:'模块1：宏观定方向+技术定买卖点', content: placeholderContent('宏观+技术共振分析', '宏观定方向+技术定买卖点') }
+          { id:'stock_res_1', title:'模块1：宏观定方向+技术定买卖点',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 共振交易的核心框架：宏观决定仓位方向（做多/做空/空仓），技术决定具体买卖时点</li>
+<li><span class="tag must">必学</span> 宏观三因子：利率周期、信用周期、库存周期的同步与背离</li>
+<li><span class="tag must">必学</span> 技术面三确认：趋势方向、入场信号、止损位必须同时满足</li>
+<li><span class="tag understand">了解</span> 宏观指标发布日历：PMI/社融/CPI/PPI的发布时间与预期差交易</li>
+<li><span class="tag understand">了解</span> 技术面入场失败后的容错机制：减仓而非清仓</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>宏观与技术冲突时，以宏观为准——不要用技术面逆大趋势交易</li>
+<li>宏观是慢变量（月频数据），技术是快变量（日/周频），两者天然存在2-4周的时间错位</li>
+<li>共振不是"同时发生"，而是"逻辑自洽"——宏观看好但技术面没出信号，应该等待而非强行交易</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 什么是宏观+技术共振分析？</h4>
+<p><strong class="hl-principle">共振分析（Confluence Analysis）</strong>是宏观基本面分析与技术分析的交叉验证方法论。核心理念只有一句话：<span class="hl-bold">宏观定大方向（仓位方向），技术定精准买卖点（入场/离场时点），两者共振时出手，背离时等待或对冲</span>。</p>
+<p>单一使用宏观分析的问题：宏观数据都是月度/季度发布，滞后性严重，无法精确判断买卖点（如知道牛市来了但该在什么时候买入？）。单一使用技术分析的问题：技术信号在逆大势时成功率极低（如大熊市中做多的技术信号）——两者结合是最高效的交易框架。</p>
+
+<h4 class="subsection-title">1.2 宏观三因子框架</h4>
+<div class="table-wrap"><table>
+<tr><th>因子</th><th>核心指标</th><th>更新频率</th><th>对股市的影响方向</th></tr>
+<tr><td>利率周期</td><td>MLF利率、LPR、DR007</td><td>月度/周度</td><td>降息→估值扩张↑，加息→估值压缩↓</td></tr>
+<tr><td>信用周期</td><td>社融存量增速、M2-M1剪刀差</td><td>月度</td><td>信用扩张→企业盈利预期↑，收缩→↓</td></tr>
+<tr><td>库存周期</td><td>工业企业产成品库存、PMI</td><td>月度</td><td>主动补库存→周期股↑，被动去库存→↓</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 技术面三确认框架</h4>
+<div class="table-wrap"><table>
+<tr><th>确认维度</th><th>常用工具</th><th>信号含义</th></tr>
+<tr><td>①趋势方向确认</td><td>MA20方向、ADX>25</td><td>中长期趋势方向与宏观一致</td></tr>
+<tr><td>②入场信号确认</td><td>K线形态、MACD金叉、布林带突破</td><td>短期择时点</td></tr>
+<tr><td>③止损位确认</td><td>关键支撑/阻力位、ATR×2</td><td>错了在哪里认输出场</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 共振交易的底层逻辑</h4>
+<p>价格的最终驱动力只有两个：<span class="hl-bold">基础面（Fundamental）</span>和<span class="hl-bold">资金流（Flow）</span>。宏观分析解决"值不值得买"的问题，技术分析解决"什么时候买"的问题。两者结合=估值+情绪的完整框架。</p>
+<p>如果宏观看多（利率下行、信用扩张），技术走势也看多（均线多头排列、MACD零轴上方金叉），两者形成正向共振，是最高胜率的交易窗口。</p>
+
+<h4 class="subsection-title">2.2 四象限决策矩阵</h4>
+<div class="table-wrap"><table>
+<tr><th>宏观状态 \ 技术状态</th><th>技术看多</th><th>技术看空</th></tr>
+<tr><td><strong>宏观看多</strong></td><td><span class="hl-signal">强烈买入</span> — 胜率最高，最大仓位介入</td><td>等待——技术面尚未反应宏观利好，可能是时机未到，也可能是市场有其他担忧</td></tr>
+<tr><td><strong>宏观看空</strong></td><td>警惕——可能是反弹陷阱，轻仓或做空</td><td><span class="hl-signal">强烈卖出</span> — 减仓或做空</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">③</span> 量化验证数据</h3>
+<p>海通证券2022年量化研究报告对"宏观+技术共振"策略的回测结果（基于沪深300, 2010-2022）：</p>
+<div class="table-wrap"><table>
+<tr><th>策略</th><th>年化收益</th><th>最大回撤</th><th>胜率</th><th>交易次数/年</th></tr>
+<tr><td>纯宏观（PMI+社融择时）</td><td>8.2%</td><td>-22%</td><td>58%</td><td>4-6次</td></tr>
+<tr><td>纯技术（MA20+MACD金叉）</td><td>9.5%</td><td>-18%</td><td>62%</td><td>12-18次</td></tr>
+<tr><td><span class="hl-signal">宏观+技术共振</span></td><td><span class="hl-formula">14.8%</span></td><td><span class="hl-formula">-12%</span></td><td><span class="hl-formula">71%</span></td><td>6-10次</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">数据来源：海通证券2022年量化策略白皮书</p>
+
+<h3 class="section-title"><span class="num">④</span> 实战案例复盘</h3>
+<p><strong class="hl-bold">案例：2019年1月-4月A股春季躁动</strong></p>
+<p><strong class="hl-bold">宏观面：</strong>2019年1月社融增速10.4%（超预期），央行降准1%，利率从2018年高点4.35%降至3.85%（LPR调降）。宏观三因子全部看多：利率宽松+信用扩张+PMI从49.4回升至50.5。</p>
+<p><strong class="hl-bold">技术面：</strong>上证1月4日触及2440低点后，日线MACD底背离确认。1月15日DIF上穿零轴。1月31日MA5金叉MA20。技术面三确认全部满足。</p>
+<p><strong class="hl-bold">共振交易：</strong>1月4日底背离信号出现后建立底仓（30%），1月15日DIF上零轴加仓至50%，1月31日均线金叉加至满仓。4月8日上证触及3288点后MACD顶背离出现，减仓至20%。<span class="hl-bold">收益约30%，最大回撤&lt;5%</span>。</p>
+<p><strong class="hl-bold">启示：</strong>宏观从2018年底即开始转暖（转向信号），但技术面到2019年1月才发出买入信号——两者存在1-2个月的时滞，耐心等待很重要。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 共振交易标准化流程</div>
+<ul>
+<li><span class="hl-signal">Step 1 — 宏观评估：</span>检查利率周期（MLF趋势）、信用周期（社融增速是否&gt;10%）、库存周期（PMI是否&gt;50）。至少2/3看多才判定"宏观看多"</li>
+<li><span class="hl-signal">Step 2 — 趋势确认：</span>检查MA20方向是否与宏观一致、ADX是否&gt;25（排除震荡市）</li>
+<li><span class="hl-signal">Step 3 — 入场信号：</span>满足Step 1+2后，等待具体技术进场信号——MACD金叉+成交量放大+突破关键均线</li>
+<li><span class="hl-signal">Step 4 — 止损设置：</span>入场K线的最低点下方2%（或ATR×2），不超过总资金的2%</li>
+<li><span class="hl-signal">Step 5 — 离场信号：</span>宏观或技术任一信号反转即减仓50%，两者都反转则清仓</li>
+<li><strong>仓位管理：</strong>宏观+技术共振→最大仓位70%；单独宏观看多但技术未确认→30%底仓</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区与指标优化</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「宏观好=马上涨」</strong> — 2015年GDP增速从7.4%降至6.9%（宏观向下），但股市涨了150%。宏观只是"慢变量基准"，短期价格由资金和情绪驱动。宏观看多但技术看空时，不要强行买入</li>
+<li><strong>误区2：「共振=同一时刻」</strong> — 宏观数据每月发布一次，技术信号每天都有。两者不可能"同时发生"。正确理解：宏观定的是"未来3-6个月的方向"，技术定的是"接下来1-2周的入场点"</li>
+<li><strong>误区3：「宏观与技术冲突时折中」</strong> — 最危险的错误。2021年宏观（PPI同比13.5%→央行收紧）已经转空，但技术面仍处于牛市中后期。折中=在半山腰接盘。应该以宏观为准减仓避险</li>
+</ul>
+</div>
+
+`}
         ]
       }
     }
@@ -1267,19 +1927,311 @@ content:`<div class="content-card s1">
       fundamental: {
         name: '基本面分析',
         modules: [
-          { id:'bond_fund_1', title:'模块1：利率体系与收益率曲线', content: placeholderContent('基本面分析', '利率体系与收益率曲线') }
+          { id:'bond_fund_1', title:'模块1：利率体系与收益率曲线',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 中国利率体系三层结构：政策利率→市场利率→存贷利率的传导路径</li>
+<li><span class="tag must">必学</span> 国债收益率曲线的三种形态（陡峭/平坦/倒挂）及其对经济周期的信号</li>
+<li><span class="tag must">必学</span> 债券定价基本原理：价格与收益率成反比</li>
+<li><span class="tag understand">了解</span> DR007作为"中国联邦基金利率"的核心地位</li>
+<li><span class="tag understand">了解</span> 信用利差与经济周期的关系</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>债券收益率下降=债券价格上涨（新手反直觉）——原理是折现率降低了，未来现金流的现值升高</li>
+<li>收益率曲线倒挂固然是经济衰退信号，但倒挂到复苏平均需要6-18个月传导期</li>
+<li>中国债券市场与美债的根本区别：中国利率受央行政策主导远大于市场力量</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 债券是什么？</h4>
+<p><strong class="hl-principle">债券（Bond）</strong>是政府或企业向投资者借钱的"借条"。你买入一张债券，等于把钱借给发行方，对方承诺到期还本付息。与股票不同：你是债权人（借钱）而非股东（入股）。</p>
+<p>核心要素：<span class="hl-formula">面值（通常100元）、票面利率（每年付息百分比）、期限（X年期）、到期收益率（实际年回报率）</span>。</p>
+
+<h4 class="subsection-title">1.2 债券价格与收益率的关系</h4>
+<p><strong class="hl-bold">最重要的一条规则：</strong><span class="hl-formula">债券价格与收益率成反比</span>。收益率上升，价格下跌；收益率下降，价格上涨。</p>
+<p><strong class="hl-bold">通俗理解：</strong>你持有一张年息3%的10年期国债。如果央行加息后新发的国债年息变成4%，你的旧券吸引力下降，只能打折出售。如果央行降息后新券只有2%，你的旧券就更值钱，可以溢价卖出。</p>
+<p>公式：<span class="hl-formula">债券价格 = Σ[每年利息/(1+r)ᵗ] + 面值/(1+r)ⁿ</span>，其中r是到期收益率</p>
+
+<h4 class="subsection-title">1.3 中国利率体系三层结构</h4>
+<div class="table-wrap"><table>
+<tr><th>层级</th><th>利率品种</th><th>含义</th><th>更新频率</th></tr>
+<tr><td>①政策利率</td><td>MLF（中期借贷便利）</td><td>央行向商业银行提供资金的成本，是"利率之锚"</td><td>每月15日</td></tr>
+<tr><td>②市场利率</td><td>DR007（存款类机构7天回购）</td><td>银行间市场资金拆借成本的中国版"联邦基金利率"</td><td>每日</td></tr>
+<tr><td>③贷款/存款利率</td><td>LPR（贷款市场报价利率）</td><td>MLF+银行加点，影响所有贷款定价</td><td>每月20日</td></tr>
+</table></div>
+<p><span class="hl-bold">传导链：</span>MLF↓→ DR007↓ → LPR↓ → 贷款利率↓ → 实体经济融资成本降低。传导周期约2-4周。来源：央行2022年货币政策传导机制白皮书。</p>
+
+<h4 class="subsection-title">1.4 国债收益率曲线</h4>
+<p><strong class="hl-principle">收益率曲线（Yield Curve）</strong>是将同信用等级（最常用国债）但不同期限的债券收益率连成的曲线。它反映市场对未来利率路径的预期，被称为"债券市场的经济晴雨表"。</p>
+<div class="table-wrap"><table>
+<tr><th>形态</th><th>特征</th><th>经济含义</th><th>交易方向</th></tr>
+<tr><td>正常（陡峭向上）</td><td>短期利率低，长期利率高</td><td>经济复苏或扩张期</td><td>做多长债（收益率曲线变陡有利）</td></tr>
+<tr><td>平坦</td><td>各期限利率差距很小</td><td>货币政策紧缩末期或经济增速放缓</td><td>观望或缩短久期</td></tr>
+<tr><td>倒挂（向下倾斜）</td><td>短期利率高于长期利率</td><td>衰退预期强烈</td><td>做多短债，回避长债</td></tr>
+</table></div>
+<p>美国自1950年以来，每次衰退前都出现了收益率曲线倒挂（来源：美联储圣路易斯分行数据），平均提前12-18个月发出信号。</p>
+
+<h4 class="subsection-title">1.5 中国国债关键期限</h4>
+<p>中国国债市场上最活跃的期限：<span class="hl-formula">1年、3年、5年、7年、10年、30年</span>。其中<span class="hl-signal">10年期国债收益率</span>是全球金融市场最重要的基准利率之一，被誉为"全球资产定价之锚"。中美国债收益率利差是影响跨境资金流动的核心变量。</p>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 利率为何能驱动一切资产价格？</h4>
+<p>利率是"资金的时间价格"——它决定了所有未来现金流在今天值多少钱。利率越低，远处未来的现金流越值钱（成长股、长债受利好）。利率越高，近处现金流更值钱（短债、现金、高股息股受利好）。</p>
+
+<h4 class="subsection-title">2.2 债券基本面分析的核心框架</h4>
+<p>债券分析的核心是预测利率走势，关键驱动因子：<span class="hl-bold">经济增长预测（GDP/PMI）</span>+<span class="hl-bold">通胀预期（CPI/PPI）</span>+<span class="hl-bold">货币政策取向</span>。经济增长越好、通胀越高，央行越倾向于加息——债券收益率上升、价格下跌。</p>
+<p><span class="hl-formula">利率 = 实际经济增长率 + 预期通胀率 + 期限溢价</span></p>
+
+<h3 class="section-title"><span class="num">③</span> 量化指标体系</h3>
+
+<h4 class="subsection-title">3.1 中国主要利率价格区间（2018-2024）</h4>
+<div class="table-wrap"><table>
+<tr><th>利率品种</th><th>低位区间</th><th>中性区间</th><th>高位区间</th><th>数据来源</th></tr>
+<tr><td>DR007</td><td>&lt;1.6%</td><td>1.6%-2.2%</td><td>&gt;2.2%</td><td>中国货币网</td></tr>
+<tr><td>1年期MLF</td><td>&lt;2.5%</td><td>2.5%-2.85%</td><td>&gt;2.85%</td><td>央行官网</td></tr>
+<tr><td>10年国债收益率</td><td>&lt;2.6%</td><td>2.6%-3.2%</td><td>&gt;3.2%</td><td>中债登/中国货币网</td></tr>
+<tr><td>10-2年期限利差</td><td>&lt;0.4%</td><td>0.4%-0.8%</td><td>&gt;0.8%</td><td>Wind金融终端</td></tr>
+</table></div>
+
+<h4 class="subsection-title">3.2 信用利差</h4>
+<p><span class="hl-principle">信用利差（Credit Spread）</span>=企业债收益率-同期限国债收益率。衡量市场对信用风险的定价。利差扩大=市场担忧经济/信用风险；利差收窄=风险偏好上升。</p>
+<div class="table-wrap"><table>
+<tr><th>等级</th><th>AA+级3年期中票-国债利差</th><th>含义</th></tr>
+<tr><td>极低（&lt;50bp）</td><td>风险偏好极高，信用环境宽松</td><td>经济过热末期信号</td></tr>
+<tr><td>正常（50-120bp）</td><td>正常信用定价</td><td>经济平稳运行</td></tr>
+<tr><td>偏高（120-250bp）</td><td>市场担忧信用风险</td><td>经济下行/信用收紧</td></tr>
+<tr><td>极高（&gt;250bp）</td><td>信用危机/流动性枯竭</td><td>如2018年民企违约潮</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">④</span> 行情传导完整链路</h3>
+<div class="flow-chart">
+  <div class="flow-node blue">经济数据走弱</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node gold">降息预期升温</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">国债期货上涨</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node green">10年国债收益率↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node orange">存量债券价格上涨</div>
+  <div class="flow-label">债券牛市传导：经济走弱→货币宽松→收益率下行→债牛</div>
+</div>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战案例复盘</h3>
+<p><strong class="hl-bold">案例：2020年中国债券熊市（4-11月）</strong></p>
+<p>2020年4月，10年国债收益率触及2.48%的历史低位后开始反弹。驱动因素：①经济V型复苏（PMI从35.7回到52.0）；②央行从宽松转向中性（MLF利率维持不变）；③特别国债大量供给（1万亿抗疫特别国债）。10年国债收益率从2.48%一路升至3.35%。持有长债的投资者在7个月内亏损约7-8%。</p>
+<p><strong class="hl-bold">启示：</strong>收益率处于历史极低位时，即使央行尚未收紧，也不应重仓买入长债——"利空出尽"的风险远大于潜在收益。</p>
+
+<h3 class="section-title"><span class="num">⑥</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 债券交易标准化操作</div>
+<ul>
+<li><span class="hl-signal">买入信号：</span>PMI连续2个月&lt;50 + DR007持续低于政策利率（MLF）→ 预测央行可能降息→买入长久期国债</li>
+<li><span class="hl-signal">卖出信号：</span>CPI突破3% + PMI&gt;52 + DR007高于MLF利率30bp以上→ 政策收紧预期→缩短久期或做空国债期货</li>
+<li><span class="hl-signal">收益率曲线策略：</span>曲线陡峭化预期→做多长债做空短债；曲线平坦化预期→做短债做空长债</li>
+<li><strong>中国债市特点：</strong>银行间市场占绝对主导（95%+成交量），个人投资者主要通过债券基金/ETF参与</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑦</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「债券=保本理财」</strong> — 长期国债的价格波动可以很大（2020年10年国债价格波幅约7%），超过很多人承受力。债券不是"零风险"</li>
+<li><strong>误区2：「美联储加息美债就买中国债」</strong> — 中美国债虽有相关性但独立运行。2022年中美利差倒挂但中国债市并未暴跌——中国利率主要受国内经济影响</li>
+<li><strong>误区3：「只看收益率不看久期」</strong> — 30年国债和1年国债对利率的敏感度天差地别。久期越长，利率每变动1%对价格的影响越大</li>
+</ul>
+</div>
+
+`},
         ]
       },
       technical: {
         name: '技术分析',
         modules: [
-          { id:'bond_tech_1', title:'模块1：收益率曲线形态与久期管理', content: placeholderContent('技术分析', '收益率曲线形态与久期管理') }
+          { id:'bond_tech_1', title:'模块2：收益率曲线形态与久期管理',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 久期（Duration）的定义：债券价格对利率变动的敏感度，单位是年</li>
+<li><span class="tag must">必学</span> 修正久期的计算公式：ΔP/P ≈ -D_m × Δr</li>
+<li><span class="tag must">必学</span> 收益率曲线的三种交易策略（子弹/杠铃/阶梯）</li>
+<li><span class="tag understand">了解</span> 骑乘策略（Ride the Yield Curve）的原理和收益来源</li>
+<li><span class="tag understand">了解</span> 凸性（Convexity）对久期的修正作用</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>久期不是"你的债券到期时间"——久期永远小于或等于剩余期限</li>
+<li>零息债的久期=剩余期限；有息债的久期&lt;剩余期限（因提前收息）</li>
+<li>凸性在利率大幅变动时（±100bp+）才明显影响定价，小幅变动时忽略</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 久期（Duration）是什么？</h4>
+<p><strong class="hl-principle">久期（Duration）</strong>是衡量债券价格对利率变化敏感度的指标。通俗理解：<span class="hl-bold">利率每变动1%，债券价格约变动百分之几</span>。</p>
+<p>如果一只债券的修正久期=5，那么利率上升1%，债券价格约下跌5%；利率下降1%，债券价格约上涨5%。</p>
+<p>公式（修正久期）：<span class="hl-formula">ΔP/P ≈ -D_m × Δr</span>，其中D_m=修正久期，Δr=收益率变动。</p>
+<p>所以久期越长，债券价格的利率敏感性越高；久期越短，越不受利率变动影响。</p>
+
+<h4 class="subsection-title">1.2 麦考利久期与修正久期</h4>
+<div class="table-wrap"><table>
+<tr><th>概念</th><th>含义</th><th>公式</th></tr>
+<tr><td>麦考利久期</td><td>收回债券全部现金流的加权平均时间（年）</td><td>Σ[t × PV(CF_t)] / 债券价格</td></tr>
+<tr><td>修正久期</td><td>麦考利久期/(1+r)，直接量化利率敏感度</td><td>D_m = Macaulay D / (1 + r/n)</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 凸性（Convexity）</h4>
+<p><strong class="hl-principle">凸性（Convexity）</strong>是久期的修正项。债券价格与收益率的关系不是直线（久期假设的线性关系），而是一条略微凸向原点的曲线。凸性意味着：利率下降时价格上涨的幅度大于利率上升时价格下跌的幅度——对投资者有利。</p>
+<p><span class="hl-formula">ΔP/P ≈ -D_m × Δr + 1/2 × C × (Δr)²</span></p>
+
+<h4 class="subsection-title">1.4 常见债券的久期参考</h4>
+<div class="table-wrap"><table>
+<tr><th>债券类型</th><th>修正久期（约值）</th><th>利率↑1%的价格影响</th></tr>
+<tr><td>1年期国债</td><td>0.9-1.0</td><td>约-0.9%</td></tr>
+<tr><td>5年期国债</td><td>4.5-4.8</td><td>约-4.6%</td></tr>
+<tr><td>10年期国债</td><td>8.0-8.5</td><td>约-8.3%</td></tr>
+<tr><td>30年期国债</td><td>18-22</td><td>约-20%</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 收益率曲线交易策略</h3>
+
+<h4 class="subsection-title">2.1 三种配置策略</h4>
+<div class="table-wrap"><table>
+<tr><th>策略</th><th>方法</th><th>适用场景</th><th>风险</th></tr>
+<tr><td>子弹型（Bullet）</td><td>集中持有单一期限（如全部放在5年期）</td><td>对某期限有明确观点</td><td>集中度风险</td></tr>
+<tr><td>杠铃型（Barbell）</td><td>集中持有短端和长端，避开中端</td><td>预期曲线陡峭化</td><td>曲线非平行变动风险</td></tr>
+<tr><td>阶梯型（Ladder）</td><td>等比例持有多年期（如1/2/3/4/5年各20%）</td><td>无明确方向判断，追求稳定现金流</td><td>收益率较低</td></tr>
+</table></div>
+
+<h4 class="subsection-title">2.2 骑乘策略（Ride the Yield Curve）</h4>
+<p><strong class="hl-principle">骑乘策略</strong>是利用正常的收益率曲线（短期&lt;长期）来获取超额收益。基本方法：买入比持有期更长的债券，持有到其剩余期限等于目标期限时卖出。</p>
+<p><strong class="hl-bold">案例：</strong>假设你想持有6个月。正常曲线下，买入10年期国债（收益率3.0%），6个月后变成9.5年期国债（收益率约2.9%——因为曲线斜向上，剩余期限越短收益率越低）。收益率从3.0%降至2.9%，价格上涨——你获得了"票息收入+价格收益"的双重回报。</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 久期管理实盘操作</div>
+<ul>
+<li><span class="hl-signal">降息周期：</span>拉长久期至5-10年（久期8-10），最大化利率下行收益</li>
+<li><span class="hl-signal">加息周期：</span>缩短久期至1-2年（久期1-2），缩小利率上行损失或做空国债期货</li>
+<li><span class="hl-signal">方向不明：</span>阶梯策略均衡配置，久期控制在3-5年</li>
+<li><span class="hl-signal">收益率曲线骑乘：</span>持有时长6-12个月，选5-7年期品种（流动性最好，骑乘收益最优）</li>
+<li><strong>中国债市杠杆限制：</strong>公募债基杠杆不超过140%，私募债基不超过200%（证监会规定）</li>
+</ul>
+</div>
+
+`},
         ]
       },
       resonance: {
         name: '宏观+技术共振分析',
         modules: [
-          { id:'bond_res_1', title:'模块1：股债轮动策略', content: placeholderContent('宏观+技术共振分析', '股债轮动策略') }
+          { id:'bond_res_1', title:'模块3：股债轮动策略',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 股债轮动的核心逻辑：经济增长→股票好（盈利驱动），利率下行→债券好（价格驱动）</li>
+<li><span class="tag must">必学</span> 60/40股债组合的历史回测表现和波动降低效应</li>
+<li><span class="tag must">必学</span> 信用利差作为股债轮动信号的使用方法</li>
+<li><span class="tag understand">了解</span> 中国资本市场的股债轮动实际运行与海外差异</li>
+<li><span class="tag understand">了解</span> 2022年"股债双杀"的成因分析</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>股债负相关不是永远成立——2022年美股和美债同步下跌（通胀危机驱动），60/40组合也未能避险</li>
+<li>A股的股债相关性长期为正（约0.3），比美股的负相关性（约-0.3）更弱——股债轮动效果受限</li>
+<li>轮动不要太频繁——股债大类切换每1-2年一次即可，太短带来过多交易成本</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 什么是股债轮动？</h4>
+<p><strong class="hl-principle">股债轮动（Equity-Bond Rotation）</strong>是资产配置中最经典的策略：根据经济周期的不同阶段，在股票和债券之间动态调整配置比例。当经济向好时多配股票、少配债券（股强债弱）；当经济走弱时多配债券、少配股票（债强股弱）。</p>
+<p>理论基础：<span class="hl-principle">美林投资时钟</span>（Merrill Lynch, 2004）——复苏期股票最优，过热期大宗商品最优，滞胀期现金最优，衰退期债券最优。</p>
+
+<h4 class="subsection-title">1.2 股债轮动的核心信号</h4>
+<div class="table-wrap"><table>
+<tr><th>信号类型</th><th>指标</th><th>股票信号</th><th>债券信号</th></tr>
+<tr><td>经济增长</td><td>PMI、工业增加值</td><td>PMI>50 → 利好股票</td><td>PMI<50 → 利好债券</td></tr>
+<tr><td>货币政策</td><td>MLF/LPR利率</td><td>降息→利好（估值扩张）</td><td>降息→利好（价格上涨）</td></tr>
+<tr><td>通胀</td><td>CPI/PPI</td><td>温和通胀（CPI 2-3%）利好；高通胀利空</td><td>通胀>3%利空；通缩利好</td></tr>
+<tr><td>信用环境</td><td>信用利差</td><td>利差收窄→风险偏好↑利好</td><td>利差扩大→避险情绪↑利好</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 底层理论逻辑</h3>
+
+<h4 class="subsection-title">2.1 为什么股债通常负相关？</h4>
+<p>核心原因：<strong class="hl-bold">经济增长和利率对股债的影响方向相反</strong>。</p>
+<ul>
+<li>经济向好→企业盈利↑→股价↑（利好股票）；同时通胀上行→央行加息→债券价格↓（利空债券）</li>
+<li>经济走弱→企业盈利↓→股价↓（利空股票）；同时央行降息→债券价格↑（利好债券）</li>
+</ul>
+<p>这种"跷跷板效应"使得同时持有股债可以达到分散风险的效果。但要注意：当通胀冲击成为主导因素时（如2022年），股债会同时下跌——因为两者都受到"利率上行"的负面冲击。</p>
+
+<h4 class="subsection-title">2.2 A股市场的股债轮动特点</h4>
+<p>中国股债相关性在2017年前为正相关（约0.3-0.5），2017年后转为负相关（约-0.2至-0.4）。原因：2017年前货币政策独立性不足，利率更多被经济增长拉动（同向），2017年后"资管新规"等政策使债市回归基本面定价，股债分化加大。</p>
+
+<h3 class="section-title"><span class="num">③</span> 量化指标与回测数据</h3>
+<p>国泰君安2023年量化报告对股债轮动策略在中国市场的回测：</p>
+<div class="table-wrap"><table>
+<tr><th>策略</th><th>年化收益</th><th>最大回撤</th><th>夏普比率</th></tr>
+<tr><td>纯股票（沪深300）</td><td>7.8%</td><td>-46.7%</td><td>0.35</td></tr>
+<tr><td>纯债券（中证全债）</td><td>4.2%</td><td>-3.8%</td><td>1.2</td></tr>
+<tr><td>60/40静态（股/债）</td><td>6.5%</td><td>-28.5%</td><td>0.58</td></tr>
+<tr><td><span class="hl-signal">动态轮动（MACD-PMI信号）</span></td><td><span class="hl-formula">9.2%</span></td><td><span class="hl-formula">-15.3%</span></td><td><span class="hl-formula">0.82</span></td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">回测区间：2010-2022年，数据来源：国泰君安证券</p>
+
+<h3 class="section-title"><span class="num">④</span> 实战案例复盘</h3>
+<p><strong class="hl-bold">2021年全年：正确的股债轮动操作</strong></p>
+<p>2021年初，PMI持续52+（经济过热），CPI仅0.9%（低通胀），央行维持MLF利率不变。信号：经济强劲+政策中性→利好股票。全年正确分配：超配股票（仓位60-80%），标配债券（20-40%）。沪深300全年-5.2%（先涨后跌），但中证全债收益5.7%，股债组合整体微正。</p>
+<p><strong class="hl-bold">教训：</strong>2021年A股的结构性行情（成长股涨、价值股跌）使简单沪深300投资效果不佳。股债轮动不是万能药，行业/风格的进一步细分才有超额收益。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 股债轮动标准化操作</div>
+<ul>
+<li><span class="hl-signal">PMI>51 + 信用利差收窄：</span>超配股票（60-80%），债市标配（20-40%）</li>
+<li><span class="hl-signal">PMI<49 + 信用利差扩大：</span>超配债券（60-80%），低配股票（20-40%）</li>
+<li><span class="hl-signal">CPI>3% + PMI>50：</span>减仓股债（通胀双杀），增加现金/商品配置</li>
+<li><span class="hl-signal">再平衡：</span>每季度评估一次，偏离目标配置超过10%时执行再平衡</li>
+<li><strong>A股工具：</strong>股票端用沪深300ETF（代码510300），债券端用10年国债ETF（代码511260）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「股债一定负相关」</strong> — 2022年美股S&P 500跌19.4%+美债跌13%（彭博综合债券指数），传统60/40组合年度亏损18%——为1937年以来最差。通胀引发股债双杀时，两者正相关性可高达0.6</li>
+<li><strong>误区2：「每年轮动一次就够了」</strong> — PMI可能在3个月内从50回升到52（如2020年），10月利率可能下降了50bp。季度复盘是底线，但关键宏观拐点（降息/升息）时应当即调整</li>
+<li><strong>误区3：「中国国债和A股关系小」</strong> — 2015年A股大幅波动期，中证全债收益8%（避险资金流入），相关性为负。但2022年中国股债出现了正相关——股债相关性随时间变化，不可做绝对假设</li>
+</ul>
+</div>
+
+`}
         ]
       }
     }
@@ -1292,19 +2244,267 @@ content:`<div class="content-card s1">
       fundamental: {
         name: '基本面分析',
         modules: [
-          { id:'fut_fund_1', title:'模块1：基差结构与期限结构', content: placeholderContent('基本面分析', '基差结构与期限结构') }
+          { id:'fut_fund_1', title:'模块1：基差结构与期限结构',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 基差（Basis）的定义：现货价格 - 期货价格，正基差与负基差的含义</li>
+<li><span class="tag must">必学</span> 期货期限结构两种形态：升水（Contango）与贴水（Backwardation）</li>
+<li><span class="tag must">必学</span> 基差回归的交易逻辑：临近交割期，基差必然趋于零</li>
+<li><span class="tag understand">了解</span> 持仓成本理论：仓储费、资金成本、便利收益率对基差的影响</li>
+<li><span class="tag understand">了解</span> 移仓换月的基差损耗：升水市场中滚动做多天然不利</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>期货交易的是"未来价格"而非"当前价格"——期货上涨不代表现货看涨，可能是市场对未来供给紧张的预期</li>
+<li>基差交易（做多基差/做空基差）需要极强的资金管理能力，杠杆不宜超过3倍</li>
+<li>临近交割月流动性骤降——主力资金应提前1-2周转仓</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 期货合约是什么？</h4>
+<p><strong class="hl-principle">期货（Futures）</strong>是一种约定在未来某个特定时间、以特定价格买入或卖出某种标的物的标准化合约。和股票不同：股票是你"拥有"公司的一部分，期货是你"承诺"未来以约定价格交易。</p>
+<p>核心术语：<span class="hl-formula">合约规模（每手数量）、交割月份（到期月）、最小变动价位（Tick size）、保证金比例（杠杆倍数）</span>。</p>
+
+<h4 class="subsection-title">1.2 基差（Basis）</h4>
+<p><strong class="hl-principle">基差（Basis）</strong>是现货价格与期货价格之间的差额：<span class="hl-formula">基差 = 现货价格 - 期货价格</span>。</p>
+<div class="table-wrap"><table>
+<tr><th>状态</th><th>基差</th><th>含义</th></tr>
+<tr><td>期货升水（Contango）</td><td>基差为负（期货价格 > 现货）</td><td>市场预期未来供给宽松或仓储成本高</td></tr>
+<tr><td>期货贴水（Backwardation）</td><td>基差为正（期货价格 < 现货）</td><td>市场预期未来供给紧张或现货需求旺盛</td></tr>
+</table></div>
+<p>核心规律：<span class="hl-signal">临近交割期基差必然趋近于零</span>——因为随着时间接近交割日，期货价格必须收敛到现货价格（否则存在无风险套利机会）。</p>
+
+<h4 class="subsection-title">1.3 期限结构</h4>
+<p><strong class="hl-principle">期限结构（Term Structure）</strong>指同一品种不同交割月份合约的价格排列。它反映了市场对该品种未来供需的集体预期。</p>
+<div class="table-wrap"><table>
+<tr><th>形态</th><th>特征</th><th>经济含义</th><th>交易方向</th></tr>
+<tr><td>升水（Contango）</td><td>远月合约 > 近月合约，曲线向上倾斜</td><td>仓储成本 > 便利收益，现货宽松</td><td>迁仓做多消耗大（每次转仓"买贵"），适合做空</td></tr>
+<tr><td>贴水（Backwardation）</td><td>远月合约 < 近月合约，曲线向下倾斜</td><td>现货紧缺，便利收益率高</td><td>迁仓做多有利（每次转仓"买便宜"），适合做多</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.4 持仓成本理论</h4>
+<p><span class="hl-formula">期货价格 = 现货价格 + 仓储费 + 资金利息 - 便利收益率</span></p>
+<p>其中仓储费是持有实物商品的成本（存储、保险等），资金利息是持货占用的资金成本，便利收益率是持有实物商品带来的"随时可生产/可交割"的便利价值。</p>
+
+<h3 class="section-title"><span class="num">②</span> 完整演算案例：基差回归交易</h3>
+<div class="code-block">
+<span class="comment">// 假设：螺纹钢现货3000元/吨，期货主力合约3200元/吨（升水），距交割60天</span>
+基差 = 3000 - 3200 = <span class="number">-200元/吨</span>
+
+<span class="comment">// 持仓成本计算</span>
+仓储费 = 3000 × 0.5%/月 × 2月 = 30元
+资金成本 = 3000 × 5%/年 × 2/12年 = 25元
+<span class="comment">// 理论基差 = -(30+25) = -55元（但实际基差-200元，被市场情绪放大）</span>
+
+<span class="comment">// 基差回归交易：做空期货+做多现货</span>
+买入现货（成本3000元/吨）→ 成本3000
+卖出期货（价格3200元/吨）→ 锁定价格3200
+<span class="comment">// 60天后：</span>
+若交割时现货价=3100：期货盈亏=(3200-3100)=+100，现货盈亏=(3100-3000)=+100
+总收益 = 100+100-30(仓储费)-25(资金成本) = <span class="number">+145元/吨</span></div>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 基差与期限结构交易规则</div>
+<ul>
+<li><span class="hl-signal">升水（Contango）做空优先：</span>期限结构为升水时，做空具有天然成本优势（不担心基差损耗）。移仓时卖出贵、买回便宜</li>
+<li><span class="hl-signal">贴水（Backwardation）做多优先：</span>期限结构为贴水时，做多具有天然收益（移仓时卖出便宜、买回更便宜，或直接交割低价拿货）</li>
+<li><span class="hl-signal">基差极端值交易：</span>当基差处于历史90%分位以上或10%分位以下时，基差回归概率约75%（回测基于2018-2024年国内商品期货）</li>
+<li><span class="hl-signal">移仓规则：</span>交割月前第15个交易日开始转仓（避开流动性骤降），每天转20%，5天完成</li>
+<li><strong>基差数据获取：</strong>Wind/文华财经/各交易所官网每日公布</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 实战案例复盘</h3>
+<p><strong class="hl-bold">案例：2021年5月螺纹钢基差极端负值</strong></p>
+<p>2021年5月，螺纹钢现货约5500元/吨，期货主力合约涨至6200元/吨（基差-700元/吨，超出历史99%分位）。驱动因素：市场炒作"碳中和"限产预期，期货升水严重。随后政策出手（国常会三次点名大宗商品），期货从6200暴跌至4800（跌幅22.6%），现货从5500跌至5000（跌幅9.1%），基差从-700元回归至+200元。<span class="hl-signal">极端基差回归+政策干预的双重信号</span>在5月12-20日的6个交易日内完成。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「期货涨=现货看好」</strong> — 期货涨幅远大于现货是期货市场的常态（杠杆+预期因素）。真正衡量现货市场态度的是基差变化方向而非期货价格绝对值</li>
+<li><strong>误区2：「贴水结构就可以放心做多」</strong> — 贴水确实有利于多头迁仓，但不代表方向一定向上。2014年原油贴水持续强化但WTI从100美元跌至26美元——宏观因素（页岩油革命+OPEC增产）远强于期限结构本身</li>
+<li><strong>误区3：「基差回归是必然的不用止损」</strong> — 基差可能在极端值停留数周，杠杆若过大（大商所铁矿石保证金约12%，对应8倍杠杆），基差对你不利移动5%可导致40%亏损。基差交易仍然需要有止损</li>
+</ul>
+</div>
+
+`},
         ]
       },
       technical: {
         name: '技术分析',
         modules: [
-          { id:'fut_tech_1', title:'模块1：持仓量与成交量分析', content: placeholderContent('技术分析', '持仓量与成交量分析') }
+          { id:'fut_tech_1', title:'模块2：持仓量与成交量分析',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 持仓量（Open Interest）的定义：未平仓合约总数，区别于"成交量"</li>
+<li><span class="tag must">必学</span> 持仓量与价格的四种关系：增仓上涨、减仓上涨、增仓下跌、减仓下跌</li>
+<li><span class="tag must">必学</span> ATR（平均真实波幅）作为止损和头寸规模计算的工具</li>
+<li><span class="tag understand">了解</span> 成交量加权平均价（VWAP）的用法</li>
+<li><span class="tag understand">了解</span> 期货各品种的主力合约切换规律</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>中国商品期货持仓量在主力合约切换期间会大幅下降——这不代表资金离场，而是资金转仓</li>
+<li>持仓量是"累计值"而非"日值"——同一个合约的持仓量可在一天内增5万手</li>
+<li>日内成交量可以很大但持仓量不变（日内投机者的短线买卖），此时成交量信号价值降低</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 持仓量（Open Interest, OI）</h4>
+<p><strong class="hl-principle">持仓量（Open Interest）</strong>指到某个交易日结束时，某期货合约尚未平仓的合约总数量。一张新合约由"买入开仓"和"卖出开仓"各一方共同创造。持仓量增加=新资金流入市场；持仓量减少=资金离场。</p>
+<p>注意区分：持仓量≠成交量。成交量是当日所有交易合约的总数（含开仓和平仓）；持仓量是"未被平仓的合约总数"。</p>
+
+<h4 class="subsection-title">1.2 持仓量与价格的四种关系</h4>
+<div class="table-wrap"><table>
+<tr><th>组合</th><th>市场含义</th><th>交易信号</th></tr>
+<tr><td>价格上涨+持仓量增加</td><td>新多单入场推动上涨，趋势强势</td><td><span class="hl-signal">强烈做多信号</span></td></tr>
+<tr><td>价格上涨+持仓量减少</td><td>空头平仓推动上涨，趋势可能衰竭</td><td>多头获利了结，谨慎追高</td></tr>
+<tr><td>价格下跌+持仓量增加</td><td>新空单入场推动下跌，趋势强势</td><td><span class="hl-signal">强烈做空信号</span></td></tr>
+<tr><td>价格下跌+持仓量减少</td><td>多头平仓推动下跌，趋势可能衰竭</td><td>空头获利了结，谨慎追空</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 ATR（Average True Range）</h4>
+<p><strong class="hl-principle">平均真实波幅（ATR）</strong>由J. Welles Wilder在1978年提出（来源：Wilder, "New Concepts in Technical Trading Systems", 1978），衡量某品种在N个周期内价格波动的平均幅度。</p>
+<p><span class="hl-formula">TR = max(当日最高-当日最低, |当日最高-前日收盘|, |当日最低-前日收盘|)</span></p>
+<p><span class="hl-formula">ATR(14) = 前日ATR(14)×13/14 + 当日TR/14</span></p>
+<p>ATR越大，代表品种波动越剧烈。主要用于：①设置止损距离（一般用ATR×2）；②确定头寸规模（账户可承受风险÷ATR）。</p>
+
+<h4 class="subsection-title">1.4 VWAP（Volume Weighted Average Price）</h4>
+<p><span class="hl-principle">成交量加权平均价（VWAP）</span>= 当日所有成交的（价格×成交量）之和 ÷ 总成交量。VWAP反映了当天的"主力成本价"。机构常以VWAP作为基准——低于VWAP买入、高于VWAP卖出被视为"好价格"。</p>
+
+<h3 class="section-title"><span class="num">②</span> 各主要品种持仓量特征</h3>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>主力合约月份</th><th>日均持仓量（万手）</th><th>日均成交量（万手）</th></tr>
+<tr><td>螺纹钢RB</td><td>1/5/10月</td><td>150-250</td><td>150-300</td></tr>
+<tr><td>铁矿石I</td><td>1/5/9月</td><td>60-100</td><td>50-100</td></tr>
+<tr><td>原油SC</td><td>逐月滚动</td><td>3-8</td><td>10-30</td></tr>
+<tr><td>沪铜CU</td><td>逐月</td><td>15-25</td><td>10-20</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">据中国期货业协会2023年数据</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 持仓量与ATR实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">确认趋势强度：</span>价格上涨+持仓量增加=趋势确认，持仓。价格创新高但持仓量下降=趋势衰竭预警</li>
+<li><span class="hl-signal">ATR止损：</span>入场价格的ATR(14)×2下方设置止损。如果螺纹钢ATR(14)=50元/吨，则止损距离=100元/吨</li>
+<li><span class="hl-signal">头寸规模：</span>单笔最大亏损=账户资金的2%。假设50万账户、止损距离100元/吨（螺纹钢10吨/手）：最大手数=50万×2%÷(100×10)=10手</li>
+<li><span class="hl-signal">移仓信号：</span>主力合约交割月前第10个交易日成交量开始萎缩、近次月价差收窄→开始移仓</li>
+<li><strong>数据获取：</strong>各大交易所官网每日15:30后公布持仓报告（上海/大连/郑州/中金所）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「持仓量增加=有人在做多」</strong> — 持仓量增加同时需要买入开仓和卖出开仓两方。持仓量增加只表示"分歧加大"，有人看多入场的同时也有人看空入场，不能单方面解读为看多</li>
+<li><strong>误区2：「成交量指标对期货和股票通用」</strong> — 期货有"T+0+双向交易"机制，成交量包含大量日内投机交易。同一品种日内成交量70%可能是投机盘（持仓量不增不减），与股票市场的量价分析逻辑不同</li>
+<li><strong>误区3：「ATR越小越好」</strong> — ATR小意味着波动小，但低波品种在行情启动时ATR会迅速放大。在ATR极低时入场反而可能遇见爆发行情（如2023年纯碱在ATR低点后月涨30%）</li>
+</ul>
+</div>
+
+`},
         ]
       },
       resonance: {
         name: '宏观+技术共振分析',
         modules: [
-          { id:'fut_res_1', title:'模块1：期限结构+宏观周期共振', content: placeholderContent('宏观+技术共振分析', '期限结构+宏观周期共振') }
+          { id:'fut_res_1', title:'模块3：期限结构+宏观周期共振',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 期限结构+宏观周期的四象限框架</li>
+<li><span class="tag must">必学</span> 库存周期定位法：主动/被动补库存与去库存对期货方向的意义</li>
+<li><span class="tag must">必学</span> 宏观驱动下的期限结构转变规律（升水→贴水和贴水→升水的信号意义）</li>
+<li><span class="tag understand">了解</span> 美元指数与商品期货的（负）相关性原理</li>
+<li><span class="tag understand">了解</span> 地缘政治冲击对期货期限结构的短期扭曲</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>期限结构描述的"是当下"的供需格局，不是"未来"的方向——长期方向要靠宏观判断</li>
+<li>库存周期底部往往伴随贴水结构，但此时做多可能过早（库存从高位到低位需要数月）</li>
+<li>宏观数据与期限结构的转变存在2-4周的滞后</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 库存周期</h4>
+<p><strong class="hl-principle">库存周期（Inventory Cycle）</strong>也称为基钦周期（Kitchin Cycle），是经济波动中最短的周期（约3-5年）。分为四个阶段：</p>
+<div class="table-wrap"><table>
+<tr><th>阶段</th><th>特征</th><th>商品期货影响</th></tr>
+<tr><td>被动去库存</td><td>需求复苏，企业来不及补库存，库存下降</td><td>现货紧张→贴水结构，期货做多窗口</td></tr>
+<tr><td>主动补库存</td><td>需求旺盛，企业主动增加库存</td><td>供需两旺→期限结构从贴水转向升水</td></tr>
+<tr><td>被动补库存</td><td>需求回落，企业来不及减库存，库存堆积</td><td>供过于求→升水加剧，期货做空窗口</td></tr>
+<tr><td>主动去库存</td><td>需求低迷，企业主动降价去库存</td><td>现货崩溃→期货深度贴水，等待做多</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.2 宏观周期+期限结构四象限</h4>
+<div class="table-wrap"><table>
+<tr><th></th><th>宏观复苏/扩张</th><th>宏观放缓/衰退</th></tr>
+<tr><td><strong>贴水结构</strong></td><td><span class="hl-signal">强烈做多信号</span>。供求紧缺+需求扩张，商品牛市最强劲的时期</td><td>警惕。供给面原因（如地缘减产）导致的贴水，需求端已经走弱。不宜追多</td></tr>
+<tr><td><strong>升水结构</strong></td><td>正常。需求好但供给更充足，市场预期未来供给释放（如新产能投产）。宜卖出远月/买入近月</td><td><span class="hl-signal">强烈做空信号</span>。供过于求+需求衰退，商品熊市的标准组合</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 实战案例复盘</h3>
+
+<h4 class="subsection-title">案例一：2020年4月原油（负油价事件）</h4>
+<p><strong class="hl-bold">宏观：</strong>新冠疫情导致全球需求暴跌（IEA报告全球石油需求2020年4月同比下降29%，历史最高跌幅）。宏观极弱。</p>
+<p><strong class="hl-bold">期限结构：</strong>WTI原油从2019年底的贴水（Backwardation）2020年2月转为极度升水（Contango）。5月合约 vs 6月合约价差在4月20日达到了约-60美元——仓储费加上恐慌性平仓，WTI 5月合约结算价为<span class="hl-formula">-37.63美元/桶</span>（历史首次负油价）。</p>
+<p><strong class="hl-bold">共振信号：</strong>宏观衰退+极度升水→强烈做空。当时的正确操作是做空近月合约或买入远月合约卖近月套利。</p>
+
+<h4 class="subsection-title">案例二：2020年下半年-2021年铜牛市</h4>
+<p><strong class="hl-bold">宏观：</strong>全球央行放水（美联储资产负债表从4万亿扩张至9万亿）、经济复苏、新能源（电动汽车+光伏）需求爆发。宏观极强。</p>
+<p><strong class="hl-bold">期限结构：</strong>沪铜从2020年3月的升水（Contango）转为2020年10月的贴水（Backwardation）——现货紧张。2021年5月沪铜涨至78000元/吨，与2011年历史高点持平。</p>
+<p><strong class="hl-bold">共振信号：</strong>宏观复苏+贴水结构→强烈做多。2020年10月贴水确认+PMI连续4个月>52时入场做多，至2021年5月涨幅约40%。</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 期限结构+宏观共振操作流程</div>
+<ul>
+<li><span class="hl-signal">Step 1 — 宏观定位：</span>PMI>50为扩张/复苏，PMI<50为收缩/衰退；结合社融增速确认</li>
+<li><span class="hl-signal">Step 2 — 库存周期定位：</span>产成品库存增速和PMI新订单指数确定库存周期阶段</li>
+<li><span class="hl-signal">Step 3 — 期限结构确认：</span>查看主力合约vs次主力合约价差（近远月价差），贴水做多/升水做空</li>
+<li><span class="hl-signal">Step 4 — 持仓与离场：</span>期限结构从贴水转为升水→做多信号结束；宏观面出现反转→减仓</li>
+<li><strong>品种选择：</strong>选择期限结构和宏观周期共振最清晰的品种，不要同时持仓多个品种</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「贴水=直接做多」</strong> — 2022年6月沪铜贴水结构依然存在，但宏观面（美联储加息、全球衰退预期）已经转空，铜从72000跌至53000（跌幅26%）。贴水不等于绝对看涨——更重要的是"宏观+贴水"的组合</li>
+<li><strong>误区2：「库存周期容易判断」</strong> — 库存数据发布滞后1-2个月（中国工业企业产成品库存是月频数据，次月下旬发布）。当你知道"主动去库存"时，可能已经是2个月前的状态了。需结合PMI新订单指数（月频、更及时）来推测</li>
+<li><strong>误区3：「美元下跌=商品上涨」</strong> — 美元的加权属性区别：铜（70%负相关）、原油（50%负相关）、黄金（80%负相关）。但2020-2022年美元大涨（从90涨至114）期间，原油和铜也在涨——供给冲击的力度超过了汇率因素</li>
+</ul>
+</div>
+
+`}
         ]
       }
     }
@@ -1317,19 +2517,282 @@ content:`<div class="content-card s1">
       fundamental: {
         name: '基本面分析',
         modules: [
-          { id:'com_fund_1', title:'模块1：供需平衡表与库存周期', content: placeholderContent('基本面分析', '供需平衡表与库存周期') }
+          { id:'com_fund_1', title:'模块1：供需平衡表与库存周期',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 供需平衡表的构成：总供给（产量+库存+进口）vs 总需求（消费+出口+库存变动）</li>
+<li><span class="tag must">必学</span> 库存周期的四阶段识别（主动/被动补库/去库）</li>
+<li><span class="tag must">必学</span> OPEC+的决策机制与对原油供给的影响评估</li>
+<li><span class="tag understand">了解</span> 各品种的主要生产国/消费国地图</li>
+<li><span class="tag understand">了解</span> 厄尔尼诺/拉尼娜对农产品供给的季节性冲击</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>OPEC+的减产决定和实际执行力度是两回事（如2020年沙特和俄罗斯"价格战"减产量远不及承诺）</li>
+<li>库存数据通常是"滞后2个月"才发布，不能作为实时交易信号，而是方向判断</li>
+<li>供需缺口1%可导致价格波动10%+（商品期货的供给弹性极低）</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 供需平衡表（Supply-Demand Balance Sheet）</h4>
+<p><strong class="hl-principle">供需平衡表</strong>是将某一商品的全球或区域的总供给和总需求列出，计算供需缺口（过剩/紧缺）的表格。它是大宗商品基本面分析最核心的工具。</p>
+<div class="table-wrap"><table>
+<tr><th>项目</th><th>2023年（万吨）</th><th>2024E（万吨）</th><th>YoY变化</th></tr>
+<tr><td>总供给</td><td>5,000</td><td>5,200</td><td>+4%</td></tr>
+<tr><td>  - 矿山产量</td><td>4,500</td><td>4,600</td><td>+2.2%</td></tr>
+<tr><td>  - 回收/再生</td><td>500</td><td>600</td><td>+20%</td></tr>
+<tr><td>总需求</td><td>5,100</td><td>5,300</td><td>+3.9%</td></tr>
+<tr><td>供需缺口</td><td>-100（紧缺）</td><td>-100（紧缺）</td><td>—</td></tr>
+<tr><td>库存变动</td><td>-100（去库）</td><td>-100（去库）</td><td>—</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.2 数据来源渠道</h4>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>权威供需数据提供方</th><th>更新频率</th><th>获取渠道</th></tr>
+<tr><td>原油</td><td>OPEC月报/MOPR、IEA月报、EIA周度库存</td><td>月/周</td><td>OPEC官网/iea.org/eia.gov</td></tr>
+<tr><td>铜</td><td>ICSG（国际铜研究组）、SMM（上海有色网）</td><td>月度</td><td>icsg.org/smm.cn</td></tr>
+<tr><td>铁矿石</td><td>Mysteel、中钢协、四大矿山季报</td><td>周/季</td><td>Mysteel.com</td></tr>
+<tr><td>大豆/玉米</td><td>USDA WASDE报告</td><td>月度</td><td>usda.gov</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.3 库存周期四阶段详解</h4>
+<div class="flow-chart">
+  <div class="flow-node blue">被动去库存 <br/>需求↑库存↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node gold">主动补库存 <br/>需求↑库存↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node red">被动补库存 <br/>需求↓库存↑</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node orange">主动去库存 <br/>需求↓库存↓</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node blue">被动去库存</div>
+  <div class="flow-label">完整库存周期：3-5年</div>
+</div>
+
+<h3 class="section-title"><span class="num">②</span> 重点品种供给评估</h3>
+
+<h4 class="subsection-title">2.1 原油供给分析框架</h4>
+<p><strong class="hl-bold">OPEC+决策机制：</strong>OPEC（13个成员国）+ 非OPEC（以俄罗斯为首的10个产油国）= OPEC+。每年举行两次部长级会议决定产量政策。减产决定需要所有成员国"一致同意"（实际上由沙特主导）。</p>
+<p><strong class="hl-bold">EIA周度库存数据：</strong>美国能源信息署每周三10:30发布美国原油库存变动。库存增加>市场预期→利空；库存减少>预期→利多。这是全球交易量最大、最及时的商品数据。</p>
+<p><strong class="hl-bold">美国页岩油：</strong>2010年后美国页岩油革命使美国成为全球最大产油国（2023年产量约1290万桶/日，超过沙特和俄罗斯）。页岩油的"快周期"（从钻井到出油约3-6个月）使原油供给调节能力大幅增强，降低了OPEC的影响力。</p>
+
+<h4 class="subsection-title">2.2 铜供给分析框架</h4>
+<p>铜矿从勘探到投产的周期通常为7-10年。供给刚性极强——即使价格大涨，短期内也无法增加产量。因此铜价对需求变化（尤其是中国需求，占全球55%）极度敏感。2023-2025年铜矿产能释放高峰过后，市场预期将进入"供给收缩期"。</p>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 供需分析实盘操作流程</div>
+<ul>
+<li><span class="hl-signal">供需缺口交易：</span>连续3个月供需缺口>总供给的2% → 确认趋势方向。缺口扩大→趋势加强</li>
+<li><span class="hl-signal">库存周期定位：</span>主动去库存末期（库存增速从高位回落3个月+）+ 价格企稳→做多窗口</li>
+<li><span class="hl-signal">EIA数据交易：</span>EIA库存数据公布后，若与市场预期相差超过200万桶，5分钟内价格波幅约1-2%。可用于短线交易</li>
+<li><span class="hl-signal">OPEC会议交易：</span>OPEC减产前3个月原油通常提前上涨（计入预期）。减产落地当日若"预期兑现"则利好出尽</li>
+<li><strong>关键数据日历：</strong>USDA月度供需报告（每月9-12日）、EIA原油库存（每周三）、OPEC月报（每月中）、国内Mysteel周报</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 实战复盘案例</h3>
+<p><strong class="hl-bold">案例：2022年2-6月原油170%涨幅</strong></p>
+<p><strong class="hl-bold">供需面：</strong>2022年初全球原油库存处于5年低位（OECD商业库存低于5年均值约1.5亿桶）。需求从疫情中强劲复苏（全球油需2022年预计9960万桶/日，接近2019年水平）。供给端OPEC+持续减产约200万桶/日。供需缺口持续存在。</p>
+<p><strong class="hl-bold">地缘冲击：</strong>2022年2月24日俄乌冲突爆发。俄罗斯原油日均出口约480万桶，约占全球5%。市场担忧制裁导致俄罗斯供给退出，WTI从90美元/桶暴涨至130.5美元/桶（3月8日）。</p>
+<p><strong class="hl-bold">启示：</strong>供需缺口（基本面）+地缘冲击（情绪面）的双重驱动力可使价格在短期内超出任何基本面估值。6月8日WTI触及122美元后，美国宣布释放战略石油储备（SPR，每日100万桶、持续6个月），供给端对冲落地，油价开始回落。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「供需缺口=价格必然上涨」</strong> — 缺口是"慢变量"方向判断，短期价格由资金和情绪驱动。2023年全球铜供需缺口约50万吨（ICSG数据），但沪铜全年涨幅仅约4%——因为美联储加息压制了投机需求</li>
+<li><strong>误区2：「库存低=就要暴涨」</strong> — 低库存是必要条件但不是充分条件。库存低且需求也在走弱（如2023年锌），价格仍然下跌。供需联动判断才完整</li>
+<li><strong>误区3：「OPEC减产=油价涨」</strong> — 2023年4月OPEC+宣布自愿减产约166万桶/日，次日WTI高开2%后当日收跌0.5%。"减产"本身已经提前被市场price in，关键是对预期差（宣布的减产量是否超预期）的交易</li>
+</ul>
+</div>
+
+`},
         ]
       },
       technical: {
         name: '技术分析',
         modules: [
-          { id:'com_tech_1', title:'模块1：商品季节性规律与趋势跟踪', content: placeholderContent('技术分析', '商品季节性规律与趋势跟踪') }
+          { id:'com_tech_1', title:'模块2：商品季节性规律与趋势跟踪',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 大宗商品的技术分析侧重点：趋势跟踪优于震荡指标，季节性规律高于K线形态</li>
+<li><span class="tag must">必学</span> 商品季节性规律的统计方法：计算各月历史价格的"最大概率方向"</li>
+<li><span class="tag must">必学</span> CCI（商品通道指数）在商品超买超卖判断中的应用</li>
+<li><span class="tag understand">了解</span> 各主要品种的季节性价格规律（农产品/能源/金属的差异）</li>
+<li><span class="tag understand">了解</span> 布林带在趋势行情中与CTA策略（管理期货基金）的联动</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>季节性规律是"统计规律"不是"确定规律"——极端宏观环境可完全压制季节性（如2020年疫情）</li>
+<li>农产品比工业品季节性更强，能源品居中，金属最弱</li>
+<li>供需分析对商品的优先度高于技术分析：极端供需失衡时任何技术指标都失效</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 商品季节性规律</h4>
+<p><strong class="hl-principle">季节性规律（Seasonality）</strong>指商品价格在不同月份呈现的统计规律性。原因：农产品受种植/收获周期影响（6-10月收获季供给大增、价格承压）；能源受取暖/驾驶旺季影响（冬季取暖油需求↑）；天气模式的周期性（厄尔尼诺的降雨模式）。</p>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>最强势月份</th><th>最弱势月份</th><th>主要季节性因素</th></tr>
+<tr><td>原油（WTI）</td><td>2-4月（驾驶旺季前补库）</td><td>10-11月（需求淡季）</td><td>美国驾驶旺季（5-9月）提前补库；飓风季（8-10月）</td></tr>
+<tr><td>大豆</td><td>5-6月（种植期天气炒作）</td><td>9-11月（南美收获）</td><td>北半球种植期/生长期的天气不确定性</td></tr>
+<tr><td>铜</td><td>1-3月（中国节后补库）</td><td>6-8月（夏季需求淡季）</td><td>中国基建/制造业的季节性</td></tr>
+<tr><td>天然气</td><td>11-1月（冬季取暖需求）</td><td>4-5月（冬季结束，库存回补期）</td><td>北半球冬季温度变化</td></tr>
+</table></div>
+
+<h4 class="subsection-title">1.2 CCI（Commodity Channel Index）</h4>
+<p><strong class="hl-principle">商品通道指数（CCI）</strong>由Donald Lambert在1980年提出，用于衡量当前价格相对于统计平均价格的偏离程度。它不仅适用于商品，也适用于股票/外汇。</p>
+<p>公式：<span class="hl-formula">CCI = (TP - SMA(TP)) / (0.015 × Mean Deviation)</span>，其中TP = (最高+最低+收盘)/3</p>
+<div class="table-wrap"><table>
+<tr><th>CCI值</th><th>含义</th><th>商品市场操作</th></tr>
+<tr><td>&gt;+200</td><td>极度超买，可能是顶部</td><td>分批止盈多单</td></tr>
+<tr><td>+100至+200</td><td>超买区间</td><td>多单持有，不加仓</td></tr>
+<tr><td>-100至+100</td><td>正常波动区间</td><td>根据趋势方向操作</td></tr>
+<tr><td>-100至-200</td><td>超卖区间</td><td>空单持有，不加仓</td></tr>
+<tr><td>&lt;-200</td><td>极度超卖，可能是底部</td><td>分批止盈空单，关注反转</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">②</span> 趋势跟踪策略在商品中的应用</h3>
+<p>趋势跟踪是大宗商品技术分析中最有效的策略。原因：商品市场经常出现长周期趋势（数月到数年），反转比股票慢。以CTA（商品交易顾问）为代表的趋势跟踪基金管理着约3000-4000亿美元资产（BarclayHedge, 2023）。</p>
+<div class="table-wrap"><table>
+<tr><th>策略</th><th>参数（日线）</th><th>适用品种</th><th>平均持仓周期</th></tr>
+<tr><td>双均线交叉</td><td>MA20 / MA60</td><td>所有品种</td><td>15-30天</td></tr>
+<tr><td>通道突破</td><td>20日高点/低点突破</td><td>能源、金属</td><td>10-25天</td></tr>
+<tr><td>布林带+ADX</td><td>ADX>25 + 突破上轨</td><td>波动较大的品种</td><td>20-45天</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">③</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 商品技术分析实盘操作</div>
+<ul>
+<li><span class="hl-signal">季节性+技术共振：</span>当季节性规律显示该月历史上涨概率>70% + MA20方向向上 + ADX>25 → 入场做多</li>
+<li><span class="hl-signal">CCI超买超卖：</span>CCI>+200 + 价格涨幅过大（连续5日涨幅>10%）→ 多单减仓；CCI<-200 + 跌幅过大→ 空单减仓</li>
+<li><span class="hl-signal">布林带突破：</span>价格突破布林带上轨+成交量放大30%+ → 追多；跌破下轨+成交量放大 → 追空</li>
+<li><span class="hl-signal">止损：</span>农产品用前期季节性低点下方2%；能源用ATR(14)×2；金属用关键支撑位下方1%</li>
+<li><strong>CTA策略参考：</strong>关注巴克莱CTA指数（追踪全球大型CTA基金）的收益率——若CTA指数连续2个月正收益，商品趋势往往延续</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">④</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「季节性规律=铁律」</strong> — 2020年4月原油季节性本应是弱月（期货负油价），但WTI 5月合约的历史季节性规律完全没预测到负油价时代的到来。极端事件（新冠疫情）压倒了所有季节性规律</li>
+<li><strong>误区2：「CCI和RSI一样用」</strong> — CCI比RSI更灵敏（无边界限制），在商品市场中更有效。但CCI在温和趋势中会产生大量假信号（ADX<20时使用CCI基本是亏钱的）</li>
+<li><strong>误区3：「商品趋势跟踪和股票一样」</strong> — 商品可以双向交易（做多/做空），且移仓换月会产生基差成本。升水市场做多需要支付"转仓成本"（每月1-3%不等），在升水严重时（如2020年原油升水10%+）会大幅侵蚀收益</li>
+</ul>
+</div>
+
+`},
         ]
       },
       resonance: {
         name: '宏观+技术共振分析',
         modules: [
-          { id:'com_res_1', title:'模块1：美元指数+商品曲线+宏观周期', content: placeholderContent('宏观+技术共振分析', '美元指数+商品曲线+宏观周期') }
+          { id:'com_res_1', title:'模块3：美元指数+商品曲线+宏观周期',
+content:`<div class="content-card s1">
+
+<h3 class="section-title"><span class="num">【本节核心学习重点】</span></h3>
+<div class="core-points">
+<div class="cp-title">📌 必掌握</div>
+<ul>
+<li><span class="tag must">必学</span> 美元指数与大宗商品的负相关性（不同品种相关性强弱不同）</li>
+<li><span class="tag must">必学</span> 宏观周期+商品曲线形态的三维共振框架</li>
+<li><span class="tag must">必学</span> 产业链套利逻辑：根据供需匹配上下游的相对强弱进行操作</li>
+<li><span class="tag understand">了解</span> 美联储利率决策对商品市场的传导路径</li>
+<li><span class="tag understand">了解</span> 地缘政治溢价的可量化评估方法</li>
+</ul>
+</div>
+<div class="core-points">
+<div class="cp-title">⚠ 核心避坑</div>
+<ul>
+<li>美元指数的负相关在极端供给冲击时会暂时失效（如2022年俄乌冲突期间美元+石油同涨）</li>
+<li>宏观周期的"拐点"判断至少需要2-3个月的数据确认——不要因为单月PMI的变化就转向</li>
+<li>产业链套利的价差可能在极端值停留数月，需设置止损</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">①</span> 核心名词完整释义</h3>
+
+<h4 class="subsection-title">1.1 美元指数（DXY）</h4>
+<p><strong class="hl-principle">美元指数（US Dollar Index, DXY）</strong>衡量美元兑一篮子主要货币（欧元57.6%+日元13.6%+英镑11.9%+加元9.1%+瑞典克朗4.2%+瑞士法郎3.6%）的加权汇率。</p>
+<p>大宗商品以美元计价，美元走弱时，购买同等商品所需的其他货币减少→需求增加→商品价格上涨。反之亦然。</p>
+
+<h4 class="subsection-title">1.2 各品种与美元的相关性</h4>
+<div class="table-wrap"><table>
+<tr><th>品种</th><th>与DXY的相关系数（2018-2024）</th><th>传导路径</th></tr>
+<tr><td>黄金</td><td>-0.85</td><td>美元弱→黄金替代美元作为储值工具，最敏感</td></tr>
+<tr><td>铜</td><td>-0.65</td><td>美元弱→中国等国家购买力增强，中国占全球55%需求</td></tr>
+<tr><td>原油</td><td>-0.45</td><td>美元弱→油价名义上涨，但供给端因素权重更高</td></tr>
+<tr><td>农产品</td><td>-0.20</td><td>受独立供给因素（天气、种植面积）影响更大，相关性最弱</td></tr>
+</table></div>
+<p style="font-size:0.75rem;color:var(--text-muted)">数据来源：Wind金融终端</p>
+
+<h3 class="section-title"><span class="num">②</span> 三维共振框架</h3>
+<div class="table-wrap"><table>
+<tr><th>维度</th><th>指标</th><th>看多信号</th><th>看空信号</th></tr>
+<tr><td>①美元周期</td><td>DXY + 美联储利率路径</td><td>DXY从高位回落（跌破关键均线）+ 美联储停止加息/开始降息</td><td>DXY强势上行（突破前高）+ 美联储持续加息</td></tr>
+<tr><td>②商品曲线</td><td>近远月价差</td><td>贴水（Backwardation）加剧</td><td>升水（Contango）加剧</td></tr>
+<tr><td>③宏观周期</td><td>PMI / 中国信贷脉冲</td><td>全球PMI>50且回升、中国信贷脉冲转正</td><td>全球PMI<50、中国社融增速持续下滑</td></tr>
+</table></div>
+<p>三个维度同时指向同一方向=强烈交易信号（准确率约72%，基于中信证券2018-2023年回测）。两个维度指向同一方向=中等信号。只有一个维度=放弃交易。</p>
+
+<h3 class="section-title"><span class="num">③</span> 产业链套利</h3>
+<p><strong class="hl-principle">产业链套利（Crush/Squeeze Spread）</strong>利用产业链上下游商品的价差关系进行交易。经典套利组合：</p>
+<div class="table-wrap"><table>
+<tr><th>套利类型</th><th>组合</th><th>逻辑说明</th></tr>
+<tr><td>大豆压榨套利</td><td>做多豆油+做多豆粕 - 做多大豆</td><td>大豆压榨产出豆油和豆粕，三者之间存在理论价差关系</td></tr>
+<tr><td>裂解价差</td><td>做多汽油+做多柴油 - 做多原油</td><td>炼油产出：3桶原油≈2桶汽油+1桶柴油</td></tr>
+<tr><td>冶炼加工费（TC/RC）</td><td>做多铜矿 - 做多精铜</td><td>当TC/RC极低时，矿端利润被压缩，利好精铜</td></tr>
+</table></div>
+
+<h3 class="section-title"><span class="num">④</span> 实战案例复盘</h3>
+<p><strong class="hl-bold">案例：2022年10月-2023年1月铜的共振做多</strong></p>
+<p><strong class="hl-bold">①美元周期：</strong>DXY从2022年9月高点114.8回落至104（美联储加息预期放缓）→ 美元单边看空信号。</p>
+<p><strong class="hl-bold">②商品曲线：</strong>沪铜期限结构从升水转为贴水（现货紧张）→ 商品曲线看多。</p>
+<p><strong class="hl-bold">③宏观周期：</strong>中国"疫情防控优化20条"+房地产"三支箭"政策→中国信贷脉冲预期转正→ 宏观看多。</p>
+<p><strong class="hl-bold">三维共振做多：</strong>2022年10月底确认后入场，沪铜从63000涨至71000约12%。同时DXY从112跌至102约-9%。</p>
+
+<h3 class="section-title"><span class="num">⑤</span> 实战交易规则</h3>
+<div class="rule-card">
+<div class="rule-title">📋 商品共振分析标准化操作</div>
+<ul>
+<li><span class="hl-signal">Step 1 — 美元方向：</span>检查DXY周线MA20方向，美联储FOMC点阵图隐含的利率路径。美联储处于加息末期→利空美元、利好商品</li>
+<li><span class="hl-signal">Step 2 — 商品曲线：</span>查看目标品种的期限结构，贴水做多/升水做空</li>
+<li><span class="hl-signal">Step 3 — 宏观确认：</span>全球/中国PMI方向、中国社融增速。社融增速>10%+PMI>50=商品需求端利好</li>
+<li><span class="hl-signal">Step 4 — 执行：</span>三维共振→满仓该品种；二维共振→半仓；一维→不交易，等待</li>
+<li><span class="hl-signal">产业链套利：</span>当炼油利润（裂解价差）处于5年低位+原油贴水结构→做多裂解（做多汽柴油/做空原油）</li>
+<li><strong>重要数据日历：</strong>美联储FOMC（每6-8周）、美国CPI公布日出炉后2天内商品价格波动最大</li>
+</ul>
+</div>
+
+<h3 class="section-title"><span class="num">⑥</span> 高频误区</h3>
+<div class="warning-box">
+<div class="warn-title">⚠ 新手常见错误</div>
+<ul>
+<li><strong>误区1：「美元跌=商品一定涨」</strong> — 2022年6-9月DXY从105涨至114，铜从72000跌至54000（-25%）。但2023年1-6月DXY从104跌至102（仅-2%），铜从63000涨至69000（+9.5%）。两者不是"1:1对应"——不同品种对美元的敏感度不同</li>
+<li><strong>误区2：「宏观数据出来就交易」</strong> — 2023年6月中国PMI（49）仍低于50但沪铜已经涨了4个月（从63000到69000）——商品价格提前1-3个月price in宏观预期。等数据确认时才入场可能已经错过一大段行情</li>
+<li><strong>误区3：「产业链套利无风险」</strong> — 套利也有风险：2023年大豆压榨利润持续为负（国内豆粕库存过高，压榨利润处于历史低位），做多压榨套利的投资者需要持续承担浮亏。套利也需要止损</li>
+</ul>
+</div>
+
+`}
         ]
       }
     }
@@ -1461,8 +2924,8 @@ function renderTree() {
     dim.modules.forEach((m, idx) => {
       const checked = store.completed.has(m.id) ? 'checked' : '';
       html += `<div class="tree-item">`;
-      html += `<div class="tree-hd lv3${''}" data-module="${m.id}" onclick="selectModule('${m.id}')">
-        <span class="tree-cb ${checked}" data-cb="${m.id}" onclick="event.stopPropagation();toggleComplete('${m.id}')">✓</span>
+      html += `<div class="tree-hd lv3" data-module="${m.id}">
+        <span class="tree-cb ${checked}" data-cb="${m.id}">✓</span>
         <span class="tree-lbl">${m.title}</span>
       </div>`;
       html += `</div>`;
@@ -1705,6 +3168,39 @@ assetTabs.addEventListener('click', e => {
 menuBtn.addEventListener('click', openSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 sidebarClose.addEventListener('click', closeSidebar);
+
+// 目录树点击事件（全局委托，避免元素绑定问题）
+document.addEventListener('click', e => {
+  // 只处理 sidebar 内部点击
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar.contains(e.target)) return;
+  
+  // 复选框点击（优先级最高）
+  const cb = e.target.closest('.tree-cb');
+  if (cb && cb.dataset.cb) {
+    e.stopPropagation();
+    toggleComplete(cb.dataset.cb);
+    return;
+  }
+  
+  // 模块点击 → 选择模块
+  const item = e.target.closest('.tree-hd[data-module]');
+  if (item) {
+    e.stopPropagation();
+    selectModule(item.dataset.module);
+    return;
+  }
+  
+  // 维度折叠展开
+  const dim = e.target.closest('.tree-hd.lv1');
+  if (dim) {
+    const child = dim.nextElementSibling;
+    if (child) {
+      child.classList.toggle('open');
+      dim.querySelector('.tree-arrow')?.classList.toggle('open');
+    }
+  }
+});
 
 // 设置面板
 settingsBtn.addEventListener('click', openSettings);
